@@ -1,0 +1,7 @@
+{
+  "name": "backGeo",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
