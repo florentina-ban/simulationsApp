@@ -1,4 +1,4 @@
-import { IonButton, IonContent, IonHeader, IonItem, IonList, IonMenu, IonMenuButton, IonPage, IonRouterOutlet, IonSplitPane, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonHeader, IonItem, IonList, IonMenu, IonPage,  IonSplitPane, IonTitle, IonToolbar } from '@ionic/react';
 import React from 'react';
 import { menuController } from '@ionic/core';
 import './Home.css';

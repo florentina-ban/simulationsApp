@@ -2,7 +2,7 @@ import { IonButton, IonCard, IonCardContent, IonContent, IonHeader, IonItem, Ion
 import React, { useContext, useEffect, useState } from 'react';
 import { CoordonatesProps } from './interfaces/CoordonatesProps';
 import { addToStorage, getListFromStorage } from './LocalStorageApi';
-import {BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationEvents, BackgroundGeolocationResponse} from '@ionic-native/background-geolocation'
+import {BackgroundGeolocation, BackgroundGeolocationEvents} from '@ionic-native/background-geolocation'
 import './Monitor.css';
 import { CurrentLocationContext } from './currentLocationProvider';
 import { MyMap } from './googleMaps/MapContainer';
@@ -26,7 +26,7 @@ const MonitorComponent: React.FC<ContainerProps> = () => {
 const monitorFunctionBack = () => {
   BackgroundGeolocation.configure({
     desiredAccuracy: 10,
-    stationaryRadius: 20,
+    stationaryRadius: 10,
     distanceFilter: 30,
     debug: true, //  enable this hear sounds for background-geolocation life-cycle.
     stopOnTerminate: false
@@ -63,7 +63,7 @@ const monitorFunctionBack = () => {
       })
   })
 }
-
+const options: PositionOptions = {enableHighAccuracy: true}
 const monitorFunction = () => {
   navigator.geolocation.watchPosition(value=>{
     getListFromStorage('coordList').then(list => {
@@ -99,7 +99,7 @@ const monitorFunction = () => {
         }
         else
         console.log("update function is null")
-  })
+  },()=>{}, options)
 }
 
 const showListFunc = () => {
@@ -128,7 +128,7 @@ const showMapFunc = () => {
   }
 }
 
-useEffect(monitorFunctionBack,[]);
+useEffect(monitorFunction,[]);
 
   return (
     <IonPage>
