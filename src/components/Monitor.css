@@ -1,0 +1,18 @@
+#monitorContainerCard {
+  width: 90vw;
+  height: 30vh;
+  margin-left: 5vw;
+}
+#coordsList{
+  width: 90%;
+  height: 50%;
+  overflow-y: auto;
+}
+.container a {
+  text-decoration: none;
+}
+#mapContainer{
+  width: 90vw;
+  height: 50vh;
+  margin-left: 5vw;
+}

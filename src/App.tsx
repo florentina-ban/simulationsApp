@@ -1,7 +1,8 @@
 import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet } from '@ionic/react';
+import { IonApp, IonHeader, IonRouterOutlet, IonTitle, IonToolbar } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
+import MapContainer from './components/googleMaps/MapContainer'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -21,17 +22,19 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import MonitorComponent from './components/MonitorPositionComponent';
+import React from 'react';
+import { CurrentLocationProvider } from './components/currentLocationProvider';
 
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <IonRouterOutlet>
-        <Route exact path="/home">
-          <Home />
-        </Route>
-        <Route exact path="/">
-          <Redirect to="/home" />
-        </Route>
+        <CurrentLocationProvider>
+          <Route exact path="/home" component={Home} />
+          <Route exact path="/map" component={MapContainer} />
+          <Route exact path="/monitor" component={MonitorComponent}></Route>
+        </CurrentLocationProvider>
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>
