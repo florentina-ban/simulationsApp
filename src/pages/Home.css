@@ -2,3 +2,9 @@
 #mainHeader{
     width: 100%;
 }
+
+#modalMenu{
+    width: 60vw;
+    height: 60vh;
+    margin-top: 10vh;
+}

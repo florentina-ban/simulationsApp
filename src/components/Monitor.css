@@ -16,3 +16,19 @@
   height: 50vh;
   margin-left: 5vw;
 }
+#menuButton{
+  display: inline;
+}
+#mainHeader{
+ display: flex;
+ justify-content: space-between;
+}
+#titleDiv{
+  width: 50vw;
+  border: 1px solid green;
+}
+#monitorList{
+  display: flex;
+  justify-content: space-between;
+  
+}

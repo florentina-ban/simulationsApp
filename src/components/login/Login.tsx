@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router';
 import { IonCard, IonCardContent, IonCardTitle, IonContent, IonFabButton, IonHeader, IonIcon, IonInput, IonLoading, IonPage, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import { AuthContext } from './AuthProvider';
-import './auth.css'
+import './login.css'
 import { logIn, personAdd } from 'ionicons/icons';
 
 interface LoginState {
@@ -30,8 +30,8 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="tertiary">
-          <IonTitle>Cool Recipies App - Login</IonTitle>
+        <IonToolbar color="success">
+          <IonTitle>Stay Safe</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -57,8 +57,8 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
                 <IonText id="errorText">{'Failed to authenticate: '+authenticationError.message }</IonText>
               )}
               <div id="loginDiv">
-              <IonFabButton id="loginButton" color="tertiary" onClick={handleLogin}> <IonIcon icon={logIn}></IonIcon></IonFabButton>                     
-              <IonFabButton id="registerButton" color="tertiary" onClick={handleRegister}> <IonIcon icon={personAdd}></IonIcon></IonFabButton>                      
+              <IonFabButton id="loginButton" color="success" onClick={handleLogin}> <IonIcon icon={logIn}></IonIcon></IonFabButton>                     
+              <IonFabButton id="registerButton" color="success" onClick={handleRegister}> <IonIcon icon={personAdd}></IonIcon></IonFabButton>                      
               </div>            
             </IonCardContent>
         </IonCard>

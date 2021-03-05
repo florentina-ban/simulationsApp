@@ -1,4 +1,4 @@
-import { IonButton, IonCard, IonCardContent, IonContent, IonHeader, IonItem, IonList, IonNote, IonPage, IonText, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonCard, IonCardContent, IonContent, IonHeader, IonIcon, IonItem, IonList, IonMenuButton, IonNote, IonPage, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { CoordonatesProps } from './interfaces/CoordonatesProps';
 import { addToStorage, getListFromStorage } from './LocalStorageApi';
@@ -6,6 +6,9 @@ import {BackgroundGeolocation, BackgroundGeolocationEvents} from '@ionic-native/
 import './Monitor.css';
 import { CurrentLocationContext } from './currentLocationProvider';
 import { MyMap } from './googleMaps/MapContainer';
+import MenuComponent from './menuStuff/MenuComponent';
+import ToolbarComponent from './menuStuff/ToolbarComponent';
+import { MenuContext } from './menuStuff/MenuProvider';
 
 
 interface ContainerProps { }
@@ -19,7 +22,8 @@ const MonitorComponent: React.FC<ContainerProps> = () => {
   const [showCoordList, setShowCoordList] = useState(false)
   const [showMap, setShowMap] = useState(false);
   const [listSoFar, setListSoFar] = useState<CoordonatesProps[]>([])
-  
+
+  const { isMenuOpened, updateMenuState} = useContext(MenuContext)
   const {updateCurrentLocation}= useContext(CurrentLocationContext)
 
   
@@ -132,11 +136,7 @@ useEffect(monitorFunction,[]);
 
   return (
     <IonPage>
-      <IonHeader >
-        <IonToolbar >
-          <IonTitle id="mainHeader">GeoApp_StaySafe</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <ToolbarComponent/>
       <IonContent>
         <IonCard id="monitorContainerCard">
           <IonTitle>You are here</IonTitle>
@@ -150,8 +150,8 @@ useEffect(monitorFunction,[]);
                   <IonText>{longitude}</IonText>
                 </IonItem>
                 <IonItem id="monitorList">
-                  <IonButton onClick={showListFunc}>Show list</IonButton>
-                  <IonButton onClick={showMapFunc}>Show on Map</IonButton>
+                  <IonButton onClick={showListFunc} color="success">Show list</IonButton>
+                  <IonButton onClick={showMapFunc} color="success">Show on Map</IonButton>
                 </IonItem>
               </IonList>
           </IonCardContent>
@@ -169,6 +169,9 @@ useEffect(monitorFunction,[]);
           <div id="mapContainer">
             <MyMap lat={latitude} lng={longitude} markPosition={true}/>
           </div>
+        }
+        {isMenuOpened &&
+          <MenuComponent/>
         }
         </IonContent>
         </IonPage>

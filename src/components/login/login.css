@@ -1,0 +1,22 @@
+
+#loginCard{
+    height: 55%;
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 5%;
+}
+#cardTitle{
+    margin: 6%;
+}
+#cardContent{
+    margin-left: 10%;
+}
+
+#errorText{
+    color: red;
+}
+#loginDiv{
+    margin-top: 5%;
+    display: flex;
+    justify-content: space-around;
+}

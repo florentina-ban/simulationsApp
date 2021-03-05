@@ -24,18 +24,28 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import MonitorComponent from './components/MonitorPositionComponent';
 import React from 'react';
-import { CurrentLocationProvider } from './components/currentLocationProvider';
+import { MenuProvider } from './components/menuStuff/MenuProvider';
+import Login from './components/login/Login';
+import { AuthProvider } from './components/login/AuthProvider';
+import Routes from './components/googleMaps/Routes';
+import RoutesComponet from './components/googleMaps/RoutesComponent';
+import { CurrentLocationContext, CurrentLocationProvider } from './components/currentLocationProvider';
 
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <IonRouterOutlet>
+        <AuthProvider>   
+        <Route exact path="/login" component={Login}></Route>
+        <MenuProvider>
         <CurrentLocationProvider>
-        <Route exact path="/home" component={Home} />
-        <Route exact path="/map" component={MapContainer} />
-        <Route exact path="/" > <Redirect to="/home" />  </Route>
-        <Route exact path="/monitor" component={MonitorComponent}></Route>
+          <Route exact path="/home" component={Home} />
+          <Route exact path="/routes" component={RoutesComponet} />
+          <Route exact path="/" > <Redirect to="/login" />  </Route>
+          <Route exact path="/monitor" component={MonitorComponent}></Route>
         </CurrentLocationProvider>
+        </MenuProvider>
+        </AuthProvider>
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>

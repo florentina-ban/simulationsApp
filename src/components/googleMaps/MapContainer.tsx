@@ -3,9 +3,8 @@ import { mapsApiKey } from './MyMapKey'
 //import { GoogleMap, useLoadScript, InfoWindow, Marker } from '@react-google-maps/api';
 import { GoogleMap, Marker, withGoogleMap, withScriptjs } from "react-google-maps"
 import { Libraries } from '@react-google-maps/api/dist/utils/make-load-script-url';
-import { RouteComponentProps, useLocation } from 'react-router';
 import { CurrentLocationContext } from '../currentLocationProvider';
-import { compose, lifecycle, withProps } from 'recompose';
+import { compose, withProps } from 'recompose';
 interface MyMapProps {
   lat: number;
   lng: number;
@@ -34,25 +33,6 @@ export const MyMap = compose<MyMapProps, any>(
   }),
   withScriptjs,
   withGoogleMap,
-  // lifecycle({
-  //     componentDidMount() {
-          // const DirectionsService = new google.maps.DirectionsService();
-
-          // DirectionsService.route({
-          //     origin: new google.maps.LatLng(45.29233869999999, -70.06117489999997),
-          //     destination: new google.maps.LatLng(45.3570637, -70.06257679999999),
-          //     travelMode: google.maps.TravelMode.DRIVING,
-          // }, (result, status) => {
-          //     if (status === google.maps.DirectionsStatus.OK) {
-          //         this.setState({
-          //             directions: result,
-          //         });
-          //     } else {
-          //         console.error(`error fetching directions ${result}`);
-          //     }
-          // });
-  //     }
-  // })
 )(props => (
   <GoogleMap
       zoom={12}
@@ -76,19 +56,6 @@ const MapContainer: React.FC<MyMapProps> = ({lat, lng}) => {
   else {
     console.log("no current Location")
   }
-//  const {isLoaded, loadError} = useLoadScript({
-//    googleMapsApiKey: mapsApiKey,
-//    libraries: lib
-//  });
-
-  // if (navigator.geolocation){
-  //   navigator.geolocation.getCurrentPosition((response)=>{
-  //     setLat(response.coords.latitude)
-  //     setLng(response.coords.longitude)
-  //     setLocation( { lat: response.coords.latitude, lng: response.coords.longitude})
-     
-  //   });
-  // }
 
   return(
     <MyMap lat={lat} lng={lng} />
