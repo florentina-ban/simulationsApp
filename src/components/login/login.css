@@ -3,7 +3,8 @@
     height: 55%;
     width: 80%;
     margin: 0 auto;
-    margin-top: 5%;
+    vertical-align: center;
+    margin-top: 15vh;
 }
 #cardTitle{
     margin: 6%;

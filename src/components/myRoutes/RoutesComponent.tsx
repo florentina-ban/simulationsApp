@@ -16,7 +16,7 @@ const RoutesComponet: React.FC = () => {
         { lat: 46.766435, lng: 23.624440 },
         { lat: 46.767155, lng: 23.623903 }
     ]
-    const {isMenuOpened, updateMenuState} = useContext(MenuContext);
+    const {isMenuOpened} = useContext(MenuContext);
 
     console.log(myRoute)
     return(
@@ -32,8 +32,9 @@ const RoutesComponet: React.FC = () => {
                         <IonLabel>End</IonLabel>
                         <IonDatetime displayFormat={"DD-MM-YYYY HH:mm"}></IonDatetime>
                     </IonItem>
-
-                    <IonButton color="success" onClick={()=> {setWhowRoute(true)}}>Show route</IonButton>
+                    <div id="showRouteButtonContainer">
+                        <IonButton color="success" onClick={()=> {setWhowRoute(true)}}>Show route</IonButton>
+                    </div>
                 </IonCard>
                 <div id="routesMapContainer">
                     <MyRouteMap route={myRoute} markPosition={true}/>

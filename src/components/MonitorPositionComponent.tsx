@@ -5,7 +5,7 @@ import { addToStorage, getListFromStorage } from './LocalStorageApi';
 import {BackgroundGeolocation, BackgroundGeolocationEvents} from '@ionic-native/background-geolocation'
 import './Monitor.css';
 import { CurrentLocationContext } from './currentLocationProvider';
-import { MyMap } from './googleMaps/MapContainer';
+import { MyMap } from './myRoutes/MapContainer';
 import MenuComponent from './menuStuff/MenuComponent';
 import ToolbarComponent from './menuStuff/ToolbarComponent';
 import { MenuContext } from './menuStuff/MenuProvider';
@@ -149,10 +149,10 @@ useEffect(monitorFunction,[]);
                   <IonNote>Longitute: </IonNote>
                   <IonText>{longitude}</IonText>
                 </IonItem>
-                <IonItem id="monitorList">
+                <div id="monitorList">
                   <IonButton onClick={showListFunc} color="success">Show list</IonButton>
                   <IonButton onClick={showMapFunc} color="success">Show on Map</IonButton>
-                </IonItem>
+                </div>
               </IonList>
           </IonCardContent>
         </IonCard>

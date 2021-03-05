@@ -31,7 +31,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
     <IonPage>
       <IonHeader>
         <IonToolbar color="success">
-          <IonTitle>Stay Safe</IonTitle>
+        <IonTitle>Stay Safe App</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>

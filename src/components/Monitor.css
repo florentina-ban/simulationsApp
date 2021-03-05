@@ -1,6 +1,6 @@
 #monitorContainerCard {
   width: 90vw;
-  height: 30vh;
+  height: 28vh;
   margin-left: 5vw;
 }
 #coordsList{
@@ -13,22 +13,13 @@
 }
 #mapContainer{
   width: 90vw;
-  height: 50vh;
+  height: 55vh;
   margin-left: 5vw;
 }
 #menuButton{
   display: inline;
 }
-#mainHeader{
- display: flex;
- justify-content: space-between;
-}
-#titleDiv{
-  width: 50vw;
-  border: 1px solid green;
-}
 #monitorList{
   display: flex;
   justify-content: space-between;
-  
 }

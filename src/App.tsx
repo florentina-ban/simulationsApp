@@ -2,7 +2,7 @@ import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonHeader, IonRouterOutlet, IonTitle, IonToolbar } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
-import MapContainer from './components/googleMaps/MapContainer'
+import MapContainer from './components/myRoutes/MapContainer'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -27,8 +27,8 @@ import React from 'react';
 import { MenuProvider } from './components/menuStuff/MenuProvider';
 import Login from './components/login/Login';
 import { AuthProvider } from './components/login/AuthProvider';
-import Routes from './components/googleMaps/Routes';
-import RoutesComponet from './components/googleMaps/RoutesComponent';
+import Routes from './components/myRoutes/Routes';
+import RoutesComponet from './components/myRoutes/RoutesComponent';
 import { CurrentLocationContext, CurrentLocationProvider } from './components/currentLocationProvider';
 
 const App: React.FC = () => (
