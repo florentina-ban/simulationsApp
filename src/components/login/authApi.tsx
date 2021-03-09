@@ -1,16 +1,16 @@
 import axios from 'axios';
 import { config, withLogs } from './utils';
 
-export const baseUrl = '192.168.100.2:3000';
-const authUrl = `http://${baseUrl}/api/auth/login`;
-const registerUrl = `http://${baseUrl}/api/auth/signup`;
+export const baseUrl = '192.168.100.2:8080/staySafe';
+const authUrl = `http://${baseUrl}/login`;
+const registerUrl = `http://${baseUrl}/register`;
 
 export interface AuthProps {
   token: string;
 }
 
-export const login: (username?: string, password?: string) => Promise<AuthProps> = (username, password) => {
-  return withLogs(axios.post(authUrl, { username, password }, config), 'login');
+export const login: (userName?: string, password?: string) => Promise<AuthProps> = (userName, password) => {
+  return withLogs(axios.post(authUrl, { userName: userName, password }, config), 'login');
 }
 
 export const register: (username?: string, password?: string) => Promise<AuthProps> = (username, password) => {

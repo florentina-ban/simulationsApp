@@ -1,5 +1,6 @@
 import { Plugins } from '@capacitor/core';
 import { CoordonatesProps } from './interfaces/CoordonatesProps';
+import { sendLocations } from './UpdateLocationApi';
 const { Storage } = Plugins;
 
 
@@ -7,10 +8,8 @@ interface FromStorage{
   myValue: CoordonatesProps[]
 }
 
-// Saving ({ key: string, value: string }) => Promise<void>
 export async function addToStorage (key: string, coordToStore: any) {
   getListFromStorage(key).then( fromStorageObj => {
-      console.log("got from storage: "+JSON.stringify(fromStorageObj))
       fromStorageObj.myValue.splice(fromStorageObj.myValue.length, 0, coordToStore)
       console.log("after push: "+JSON.stringify(fromStorageObj))
       Storage.set({
@@ -40,8 +39,15 @@ export async function removeFromStorage(key: string) {
     //console.log('Keys found after remove', await Storage.keys());
 }
 
+export async function clear(){
+  Storage.clear();
+}
+
 
 //  Clear storage () => Promise<void>   
-export async function clear() {
-  return await Storage.clear();
+export async function clearCoords() {
+  return await Storage.set({
+    key: "coordList",
+    value: JSON.stringify({
+      myValue: []})});
 };

@@ -1,7 +1,7 @@
 import { IonButton, IonButtons, IonCard, IonCardContent, IonContent, IonHeader, IonIcon, IonItem, IonList, IonMenuButton, IonNote, IonPage, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { CoordonatesProps } from './interfaces/CoordonatesProps';
-import { addToStorage, getListFromStorage } from './LocalStorageApi';
+import { addToStorage, clearCoords, getListFromStorage } from './LocalStorageApi';
 import {BackgroundGeolocation, BackgroundGeolocationEvents} from '@ionic-native/background-geolocation'
 import './Monitor.css';
 import { CurrentLocationContext } from './currentLocationProvider';
@@ -9,6 +9,8 @@ import { MyMap } from './myRoutes/MapContainer';
 import MenuComponent from './menuStuff/MenuComponent';
 import ToolbarComponent from './menuStuff/ToolbarComponent';
 import { MenuContext } from './menuStuff/MenuProvider';
+import { sendLocations } from './UpdateLocationApi';
+import { AuthContext } from './login/AuthProvider';
 
 
 interface ContainerProps { }
@@ -25,6 +27,7 @@ const MonitorComponent: React.FC<ContainerProps> = () => {
 
   const { isMenuOpened, updateMenuState} = useContext(MenuContext)
   const {updateCurrentLocation}= useContext(CurrentLocationContext)
+  const { token } = useContext(AuthContext)
 
   
 const monitorFunctionBack = () => {
@@ -43,16 +46,15 @@ const monitorFunctionBack = () => {
     setAccuracy(location.accuracy)
     if (updateCurrentLocation){
     updateCurrentLocation( { accuracy: location.accuracy,
-      location: {
-          lat: location.latitude,
-          lng: location.longitude,
-          time: location.time,
-          alt: location.altitude
-      }})
+          latitude: location.latitude,
+          longitude: location.longitude,
+          timestamp: location.time,
+          altitude: location.altitude,
+          coord: "POINT("+location.latitude+" "+location.longitude+");"
+      })
     }
     getListFromStorage('coordList').then(list => {
       const size = list.myValue.length;
-      if ( size==0 || location.latitude != list.myValue[size-1].location.lat || location.longitude != list.myValue[size-1].location.lng ){
         console.log("diferent from before or empty list" )
         addToStorage('coordList',
           { accuracy: accuracy, 
@@ -60,31 +62,30 @@ const monitorFunctionBack = () => {
               { lat: location.latitude, 
                 lng: location.longitude,
                 alt: location.altitude,
-                time: location.time
+                time: location.time,
+                coord: "POINT("+location.latitude+" "+location.longitude+");"
               }
           })
-        }
       })
   })
 }
 const options: PositionOptions = {enableHighAccuracy: true}
+
 const monitorFunction = () => {
   navigator.geolocation.watchPosition(value=>{
     getListFromStorage('coordList').then(list => {
         const size = list.myValue.length;
-        if ( size==0 || value.coords.latitude != list.myValue[size-1].location.lat || value.coords.longitude != list.myValue[size-1].location.lng ){
-          console.log("diferent from before or empty list" )
-          addToStorage('coordList',
-            { accuracy: accuracy, 
-              location: 
-                { lat: value.coords.latitude, 
-                  lng: value.coords.longitude,
-                  alt: value.coords.altitude,
-                  time: value.timestamp
-                }
-            })
-          }
-        })
+        addToStorage('coordList',
+          { accuracy: accuracy, 
+            latitude: value.coords.latitude, 
+            longitute: value.coords.longitude,
+            altiude: value.coords.altitude? value.coords.altitude : 0,
+            timestamp: value.timestamp
+          })
+         if (size>1){
+           sendLocations(list.myValue, token).then(()=>{clearCoords()})
+         } 
+      })
       setlatitude(value.coords.latitude)
       setLongitute(value.coords.longitude)
       setAltitude(value.coords.altitude || 0)
@@ -94,12 +95,12 @@ const monitorFunction = () => {
       if (updateCurrentLocation){
         console.log("inside update")
         updateCurrentLocation( { accuracy: value.coords.accuracy,
-          location: {
-              lat:value.coords.latitude,
-              lng: value.coords.longitude,
-              time: value.timestamp,
-              alt: 0
-          }})
+              latitude:value.coords.latitude,
+              longitude: value.coords.longitude,
+              timestamp: value.timestamp,
+              altitude: 0,
+              coord: "POINT("+value.coords.latitude+" "+value.coords.longitude+");"
+          })
         }
         else
         console.log("update function is null")
@@ -158,10 +159,10 @@ useEffect(monitorFunction,[]);
         </IonCard>
         {showCoordList &&
           <IonList id="coordsList">
-            {listSoFar.map( (coord) => <IonItem key={coord.location.time.toString()}>
-                <IonNote>lat: </IonNote><IonText>{coord.location.lat}</IonText>
-                <IonNote>lng: </IonNote><IonText>{coord.location.lng}</IonText>
-                <IonNote>time: </IonNote><IonText>{coord.location.time}</IonText>
+            {listSoFar.map( (coord) => <IonItem key={coord.timestamp.toString()}>
+                <IonNote>lat: </IonNote><IonText>{coord.latitude}</IonText>
+                <IonNote>lng: </IonNote><IonText>{coord.longitude}</IonText>
+                <IonNote>time: </IonNote><IonText>{coord.timestamp}</IonText>
             </IonItem>)}
           </IonList>
         }

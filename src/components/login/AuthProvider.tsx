@@ -13,7 +13,6 @@ type RegisterFn = (username?: string, password?: string) => void;
 export interface AuthState {
   authenticationError: Error | null;
   isAuthenticated: boolean;
-  isAuthenticating: boolean;
   isRegistering: boolean;
   isRegistered: boolean;
   registerError: Error | null;
@@ -29,7 +28,6 @@ export interface AuthState {
 
 const initialState: AuthState = {
   isAuthenticated: false,
-  isAuthenticating: false,
   authenticationError: null,
   isRegistered: false,
   isRegistering: false,
@@ -47,7 +45,7 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [state, setState] = useState<AuthState>(initialState);
-  const { isAuthenticated, isAuthenticating, authenticationError,isRegistered, isRegistering, registerError, pendingAuthentication,pendingRegistration, token } = state;
+  const { isAuthenticated, authenticationError,isRegistered, isRegistering, registerError, pendingAuthentication,pendingRegistration, token } = state;
   const login = useCallback<LoginFn>(loginCallback, []);
   const register = useCallback<RegisterFn>(registerCallback, []);
   const logout = useCallback<LogoutFn>(logoutCallback, []);
@@ -57,7 +55,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(localStorageEffect, []);
 
 
-  const value = { isAuthenticated, isRegistered, isRegistering, registerError, login, logout, register, isAuthenticating, authenticationError, token };
+  const value = { isAuthenticated, isRegistered, isRegistering, registerError, login, logout, register, authenticationError, token };
   console.log('render');
   return (
     <AuthContext.Provider value={value}>
@@ -89,7 +87,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     clearStorage();
     setState({
       isAuthenticated: false,
-      isAuthenticating: false,
       authenticationError: null,
       isRegistered: false,
       isRegistering: false,
@@ -115,7 +112,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
               token,
               pendingRegistration: false,
               isAuthenticated: true,
-              isAuthenticating: false,  
           });
         }
       });
@@ -154,7 +150,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           token,
           pendingRegistration: false,
           isAuthenticated: true,
-          isAuthenticating: false,
           isRegistering: false,
           
         });
@@ -188,19 +183,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
       try {   
         console.log('authenticate...');
-        setState({
-          ...state,
-          isAuthenticating: true,
-        });
         const token_storage = (await getFromStorage("token")).value;
-        if (token_storage){
+        if (token_storage && token_storage.length>0){
             console.log('authenticate succeeded');
           setState({
             ...state,
             token: token_storage,
             pendingAuthentication: false,
             isAuthenticated: true,
-            isAuthenticating: false,
             });
           }
           else{
@@ -210,29 +200,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
               return;
             }
             console.log('authenticate succeeded');
-            addToStorage('token',token);
-            addToStorage('last_token', token);
+            //addToStorage('token',token);
          
             setState({
               ...state,
               token,
               pendingAuthentication: false,
               isAuthenticated: true,
-              isAuthenticating: false,
             });
             }
         }catch (error) {
-        if (canceled) {
-          return;
+          if (canceled) {
+            return;
+          }
+          console.log('authenticate failed');
+          setState({
+            ...state,
+            authenticationError: error,
+            pendingAuthentication: false,
+          });
         }
-        console.log('authenticate failed');
-        setState({
-          ...state,
-          authenticationError: error,
-          pendingAuthentication: false,
-          isAuthenticating: false,
-        });
-      }
     }
   }
 };

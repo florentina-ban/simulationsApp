@@ -12,7 +12,7 @@ interface LoginState {
 }
 
 export const Login: React.FC<RouteComponentProps> = ({ history }) => {
-  const { isAuthenticated, isAuthenticating, login, register ,authenticationError } = useContext(AuthContext);
+  const { isAuthenticated, login, register ,authenticationError } = useContext(AuthContext);
   const [state, setState] = useState<LoginState>({});
   const { username, password } = state;
   const handleLogin = () => {
@@ -44,15 +44,17 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
               onIonChange={e => setState({
                 ...state,
                 username: e.detail.value || ''
-              })}/>
+              })}
+              />
             <IonInput
               placeholder="Password"
               value={password}
               onIonChange={e => setState({
                 ...state,
                 password: e.detail.value || ''
-              })}/>
-              <IonLoading isOpen={isAuthenticating}/>
+              })}
+              />
+              {/* <IonLoading isOpen={isAuthenticating}/> */}
               {authenticationError && (
                 <IonText id="errorText">{'Failed to authenticate: '+authenticationError.message }</IonText>
               )}

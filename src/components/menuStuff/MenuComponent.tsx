@@ -24,6 +24,11 @@ const MenuComponent: React.FC = () => {
     updateMenuState && updateMenuState(false)
   }
 
+  const getDirections = () => {
+    updateMenuState && updateMenuState(false);
+    history.push({pathname: "/directions"})
+  }
+
   const enterAnimation = (baseEl: any) => {
     const backdropAnimation = createAnimation()
       .addElement(baseEl.querySelector('ion-backdrop')!)
@@ -58,6 +63,7 @@ const leaveAnimation = (baseEl: any) => {
         <IonItem key="ShowLocationMenuItem" onClick={goToMonitor}>Current location</IonItem>
         <IonItem key="ShowRoutesMenuItem" onClick={goToRoutes}>My routes</IonItem>
         <IonItem key="ZoneMonitorMenuItem">Zone Monitor</IonItem>
+        <IonItem key="GetDirectionMenuItem"onClick={getDirections}>Directions</IonItem>
         <IonItem key="CloseMenuItem" onClick={closeMenu}>Close menu</IonItem>
       </IonList>
     </IonModal>

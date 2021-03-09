@@ -30,21 +30,22 @@ import { AuthProvider } from './components/login/AuthProvider';
 import Routes from './components/myRoutes/Routes';
 import RoutesComponet from './components/myRoutes/RoutesComponent';
 import { CurrentLocationContext, CurrentLocationProvider } from './components/currentLocationProvider';
+import { PrivateRoute } from './components/login/PrivateRoute';
 
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <IonRouterOutlet>
         <AuthProvider>   
-        <Route exact path="/login" component={Login}></Route>
-        <MenuProvider>
-        <CurrentLocationProvider>
-          <Route exact path="/home" component={Home} />
-          <Route exact path="/routes" component={RoutesComponet} />
-          <Route exact path="/" > <Redirect to="/login" />  </Route>
-          <Route exact path="/monitor" component={MonitorComponent}></Route>
-        </CurrentLocationProvider>
-        </MenuProvider>
+          <Route exact path="/login" component={Login}></Route>
+          <MenuProvider>
+            <CurrentLocationProvider>
+              <Route exact path="/" render={() => <Redirect to="/home" />} />
+              <PrivateRoute exact path="/home" component={Home} />
+              <PrivateRoute exact path="/routes" component={RoutesComponet} />
+              <PrivateRoute exact path="/monitor" component={MonitorComponent}/>
+            </CurrentLocationProvider>
+          </MenuProvider>
         </AuthProvider>
       </IonRouterOutlet>
     </IonReactRouter>

@@ -1,9 +1,8 @@
 export interface CoordonatesProps{
     accuracy: number,
-    location: {
-        lat: number,
-        lng: number,
-        time: number,
-        alt: number
-    }
+    latitude: number,
+    longitude: number,
+    timestamp: number,
+    altitude: number,
+    coord: string
 }
