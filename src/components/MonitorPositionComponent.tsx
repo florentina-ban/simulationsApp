@@ -9,7 +9,7 @@ import { MyMap } from './myRoutes/MapContainer';
 import MenuComponent from './menuStuff/MenuComponent';
 import ToolbarComponent from './menuStuff/ToolbarComponent';
 import { MenuContext } from './menuStuff/MenuProvider';
-import { sendLocations } from './UpdateLocationApi';
+import { sendLocations } from './ServerApi';
 import { AuthContext } from './login/AuthProvider';
 
 
@@ -80,7 +80,7 @@ const monitorFunction = () => {
             latitude: value.coords.latitude, 
             longitute: value.coords.longitude,
             altiude: value.coords.altitude? value.coords.altitude : 0,
-            timestamp: value.timestamp
+            timestamp: Math.ceil(value.timestamp/1000)
           })
          if (size>1){
            sendLocations(list.myValue, token).then(()=>{clearCoords()})
@@ -89,15 +89,17 @@ const monitorFunction = () => {
       setlatitude(value.coords.latitude)
       setLongitute(value.coords.longitude)
       setAltitude(value.coords.altitude || 0)
-      setTimeStamp(value.timestamp)
+      setTimeStamp(Math.ceil(value.timestamp/1000))
       setAccuracy(value.coords.accuracy)
+
+      console.log("timestamp: "+Math.ceil(value.timestamp/1000))
 
       if (updateCurrentLocation){
         console.log("inside update")
         updateCurrentLocation( { accuracy: value.coords.accuracy,
               latitude:value.coords.latitude,
               longitude: value.coords.longitude,
-              timestamp: value.timestamp,
+              timestamp: Math.ceil(value.timestamp/1000),
               altitude: 0,
               coord: "POINT("+value.coords.latitude+" "+value.coords.longitude+");"
           })

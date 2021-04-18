@@ -9,7 +9,7 @@ interface MyMapProps {
   lat: number;
   lng: number;
   markPosition: boolean
-  // onMapClick?: (e: any) => void,
+  onMapClick?: (e: any) => void,
   // onMarkerClick?: (e: any) => void,
 }
 const mapStyles = {
@@ -33,16 +33,22 @@ export const MyMap = compose<MyMapProps, any>(
   }),
   withScriptjs,
   withGoogleMap,
-)(props => (
+)(props =>{ 
+  const write = (e: any) => {
+    console.log(JSON.stringify(e))
+
+  }
+  return (
   <GoogleMap
       zoom={12}
       center={ {lat: props.lat? props.lat : 10, lng: props.lng ? props.lng : 20} }
+      onClick={props.onMapClick}
   >
       { props.markPosition && 
         <Marker position={ { lat: props.lat, lng: props.lng } }/>
       }
   </GoogleMap> 
-))
+)})
 
 const MapContainer: React.FC<MyMapProps> = ({lat, lng}) => {  
   const {haveCurrentLocation, currentLocationError, currentLocation} = useContext(CurrentLocationContext);

@@ -1,0 +1,14 @@
+.simulationSelector{
+    min-width: 80% !important;
+    width: 80% !important;
+
+}
+.textBox{
+    padding-top: 6px ;
+}
+#dayButtons{
+    width: 100%;
+    border: 2px solid red;
+    display: flex;
+    justify-content: space-around;
+}

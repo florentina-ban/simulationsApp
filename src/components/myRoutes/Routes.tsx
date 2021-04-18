@@ -5,11 +5,11 @@ import { Circle, GoogleMap, Marker, withGoogleMap, withScriptjs } from "react-go
 import { Libraries } from '@react-google-maps/api/dist/utils/make-load-script-url';
 import { compose, lifecycle, withProps } from 'recompose';
 import { SimpleCoordProps } from '../interfaces/SimpleCoordProps';
-import { type } from 'os';
+import { CoordonatesProps } from '../interfaces/CoordonatesProps';
 interface MyRouteProps {
-  route: SimpleCoordProps[]
+  route: CoordonatesProps[]
   markPosition: boolean
-  // onMapClick?: (e: any) => void,
+  onMapClick?: (e: any) => void,
   // onMarkerClick?: (e: any) => void,
 }
 const mapStyles = {
@@ -35,17 +35,21 @@ export const MyRouteMap = compose<MyRouteProps, any>(
   withScriptjs,
   withGoogleMap,
 
-)(props => (
+)(props => {
+  console.log("contactPointsSize: "+ props.route.length)
+  return(
     
   <GoogleMap
-      zoom={15}
-      center={props.route.length>0? { lat: props.route[0].lat, lng: props.route[0].lng} : center}
+      zoom={12}
+      center={props.route.length>0? { lat: props.route[0].latitude, lng: props.route[0].longitude} : center}
+      onClick={props.onMapClick}
   >  
-  { props.route &&   
-    props.route.map( ({lat, lng }) => { 
-      return <Circle center={{lat: lat, lng: lng}} defaultRadius={15} /> } ) }
+  { props.route &&  props.route.length>0 && 
+    props.route.map( ({latitude, longitude }) => { 
+      const a: google.maps.LatLng = new google.maps.LatLng({lat: latitude, lng: longitude})
+      return <Circle center={a} defaultRadius={15} defaultOptions={ {fillColor:"red", strokeColor: "red"}} /> } ) }
   </GoogleMap> 
-))
+)})
 
 const Routes: React.FC<MyRouteProps> = ({route, markPosition}) => {  
  

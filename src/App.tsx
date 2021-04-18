@@ -1,8 +1,7 @@
 import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonHeader, IonRouterOutlet, IonTitle, IonToolbar } from '@ionic/react';
+import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
-import MapContainer from './components/myRoutes/MapContainer'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -27,10 +26,14 @@ import React from 'react';
 import { MenuProvider } from './components/menuStuff/MenuProvider';
 import Login from './components/login/Login';
 import { AuthProvider } from './components/login/AuthProvider';
-import Routes from './components/myRoutes/Routes';
 import RoutesComponet from './components/myRoutes/RoutesComponent';
-import { CurrentLocationContext, CurrentLocationProvider } from './components/currentLocationProvider';
+import { CurrentLocationProvider } from './components/currentLocationProvider';
 import { PrivateRoute } from './components/login/PrivateRoute';
+import MyDirection from './components/directions/MyDirection';
+import DirectionComponent from './components/directions/DirectionComponent';
+import RegionComponent from './components/regions/RegionComponent';
+import SimulationComp from './components/simulations/SimulationComp';
+import { SimulationProvider } from './components/simulations/SimulationProvider';
 
 const App: React.FC = () => (
   <IonApp>
@@ -44,11 +47,17 @@ const App: React.FC = () => (
               <PrivateRoute exact path="/home" component={Home} />
               <PrivateRoute exact path="/routes" component={RoutesComponet} />
               <PrivateRoute exact path="/monitor" component={MonitorComponent}/>
+              <PrivateRoute exact path="/directions" component={DirectionComponent}/>
+              <PrivateRoute exact path="/region" component={RegionComponent}/>
+              <SimulationProvider>
+                <PrivateRoute exact path="/simulations" component={SimulationComp}/>
+              </SimulationProvider>
             </CurrentLocationProvider>
           </MenuProvider>
         </AuthProvider>
       </IonRouterOutlet>
     </IonReactRouter>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYRUwvMWxSjJgyG1MFleM4v692c3u0io4"></script>
   </IonApp>
 );
 

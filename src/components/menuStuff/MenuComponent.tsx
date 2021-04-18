@@ -29,6 +29,16 @@ const MenuComponent: React.FC = () => {
     history.push({pathname: "/directions"})
   }
 
+  const addRegion = () => {
+    updateMenuState && updateMenuState(false);
+    history.push({pathname: "/region"})
+  }
+
+  const goToSimulations = () => {
+    updateMenuState && updateMenuState(false);
+    history.push({pathname: "/simulations"})
+  }
+
   const enterAnimation = (baseEl: any) => {
     const backdropAnimation = createAnimation()
       .addElement(baseEl.querySelector('ion-backdrop')!)
@@ -64,6 +74,8 @@ const leaveAnimation = (baseEl: any) => {
         <IonItem key="ShowRoutesMenuItem" onClick={goToRoutes}>My routes</IonItem>
         <IonItem key="ZoneMonitorMenuItem">Zone Monitor</IonItem>
         <IonItem key="GetDirectionMenuItem"onClick={getDirections}>Directions</IonItem>
+        <IonItem key="AddRegionMenuItem" onClick={addRegion}>Add region</IonItem>
+        <IonItem key="SimulationMenuItem" onClick={goToSimulations}>Simulations</IonItem>
         <IonItem key="CloseMenuItem" onClick={closeMenu}>Close menu</IonItem>
       </IonList>
     </IonModal>

@@ -9,7 +9,7 @@ import { MenuContext } from '../components/menuStuff/MenuProvider';
 const Home: React.FC<RouteComponentProps> = (props) => {
   const { isMenuOpened, updateMenuState} = useContext(MenuContext)
 
-
+console.log("render home")
   return (
     <IonPage >
       <ToolbarComponent></ToolbarComponent>

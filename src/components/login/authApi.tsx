@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { config, withLogs } from './utils';
 
-export const baseUrl = '192.168.100.2:8080/staySafe';
+export const baseUrl = '192.168.100.2:8083/staySafe';
 const authUrl = `http://${baseUrl}/login`;
 const registerUrl = `http://${baseUrl}/register`;
 

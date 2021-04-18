@@ -25,4 +25,5 @@ export const getCurrentLocation: () => Promise<CoordonatesProps> = () => {
     return withLogs(axios.post(coordUrl), 'getCurrentCoordonates');
   }
 
+
  

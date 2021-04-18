@@ -1,6 +1,5 @@
 import { Plugins } from '@capacitor/core';
 import { CoordonatesProps } from './interfaces/CoordonatesProps';
-import { sendLocations } from './UpdateLocationApi';
 const { Storage } = Plugins;
 
 

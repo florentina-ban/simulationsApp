@@ -54,9 +54,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(registerEffect, [pendingRegistration]);
   useEffect(localStorageEffect, []);
 
-
   const value = { isAuthenticated, isRegistered, isRegistering, registerError, login, logout, register, authenticationError, token };
-  console.log('render');
   return (
     <AuthContext.Provider value={value}>
       {children}
@@ -200,7 +198,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
               return;
             }
             console.log('authenticate succeeded');
-            //addToStorage('token',token);
+            addToStorage('token',token);
          
             setState({
               ...state,
