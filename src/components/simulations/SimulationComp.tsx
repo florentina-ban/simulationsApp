@@ -1,10 +1,12 @@
-import { IonButton, IonCard, IonContent, IonItem, IonItemOption, IonLabel, IonList, IonNote, IonPage, IonSelect, IonSelectOption, IonText, IonTitle } from "@ionic/react";
+import { IonButton, IonCard, IonCardContent, IonCardTitle, IonContent, IonModal, IonNote, IonPage, IonSelect, IonSelectOption, IonText, IonTitle } from "@ionic/react";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../login/AuthProvider";
+import InfectedComponent from "../menuStuff/InfectedComponent";
+import MenuComponent from "../menuStuff/MenuComponent";
 import ToolbarComponent from "../menuStuff/ToolbarComponent";
-import MapContainer, { MyMap } from "../myRoutes/MapContainer";
 import { MyRouteMap } from "../myRoutes/Routes";
-import { getAllSimulations, getSimulationDays } from "../ServerApi";
+import { deleteSim, getAllSimulations, getSimulationDays } from "../../utils/ServerApi";
+import AddSimulationComp from "./AddSimulationComponent";
 import "./simulation.css";
 
 export interface SimulationProps{
@@ -38,13 +40,14 @@ const SimulationComp: React.FC = () => {
     const [simulationDays, setSimulationDays] = useState(emptyDayList)
     const [stateUpdated, setStateUpdated] = useState(false)
     const [currentDay, setCurrentDay]=useState(0);
+    const [isModalOpened, setIsModalOpened]=useState(false);
 
     const getAllSim = () =>{
+        console.log("token: "+token)
         getAllSimulations(token).then(sims =>{
             console.log(sims[0].regionName.toString())
             setAllSim(sims)
-            setStateUpdated(!stateUpdated)
-            
+            setStateUpdated(!stateUpdated)     
         })
     }
 
@@ -56,26 +59,45 @@ const SimulationComp: React.FC = () => {
     const simulate = () => {
         getSimulationDays(token, selectedSim.id).then(days=>{
             console.log(days.length)
-            setSimulationDays(days)
+            setSimulationDays(days.sort((a,b) => (a.dayNo - b.dayNo) ))
+            setCurrentDay(0)
             setStateUpdated(!stateUpdated)
         })
     }
 
     const goForward = () => {
-        if (currentDay+1<simulationDays.length)
+        if (selectedSim.id>0 && currentDay+1<simulationDays.length)
             setCurrentDay(currentDay+1)
     }
 
     const goBackward = () => {
-        if (currentDay>0)
+        if (selectedSim.id>0 && currentDay>0)
             setCurrentDay(currentDay-1)
     }
+
+    const delSim = () => {
+        if (selectedSim.id>0)
+            deleteSim(token, selectedSim.id).then(sims =>{
+                    console.log(sims[0].regionName.toString())
+                    setAllSim(sims)
+                    setSelectedSim(emptySim)
+                    setCurrentDay(0);
+                    setStateUpdated(!stateUpdated)
+            })
+    }
+
+     const openCloseAddModal = (isOpened: boolean) => {
+        setIsModalOpened(isOpened);
+    }
+
 
     return(
         <IonPage>
         <ToolbarComponent/>
+        <MenuComponent/>
+        <InfectedComponent/>
         <IonContent>
-        <IonCard>
+        <IonCard id="simcard">
             <IonSelect class="simulationSelector" placeholder={"Choose Simulation"} onIonChange={e => setSelectedSim(e.detail.value)}>
                 {allSimulations?.map(sim=>{
                     return <IonSelectOption key={sim.id} value={sim}> 
@@ -83,27 +105,43 @@ const SimulationComp: React.FC = () => {
                         </IonSelectOption>
                 })}
             </IonSelect>
-            <IonButton color="success" onClick={simulate}>Start</IonButton>
+            <div id="simDiv">
+            <IonButton color="warning" onClick={simulate}>View</IonButton>
+            <IonButton color="warning" onClick={delSim}>Delete</IonButton>
+            <IonButton color="warning" onClick={()=>setIsModalOpened(true)}>New</IonButton>
+            </div>
         </IonCard>
         <div id="dayButtons">
-            <IonButton color="success" size="small" onClick={goBackward}>before</IonButton>
+            <IonButton color="warning" size="small" onClick={goBackward}>before</IonButton>
             <div className="textBox">
                 <IonNote >Day No. </IonNote> 
-                <IonText><em><strong>{currentDay}</strong></em></IonText>
+                <IonText><em><strong>{currentDay+1}</strong></em></IonText>
             </div>
-            <IonButton color="success" size="small" onClick={goForward}>after</IonButton>
+            <IonButton color="warning" size="small" onClick={goForward}>after</IonButton>
             { simulationDays.length>0 && 
             <div className="textBox">
             <IonNote>Infected </IonNote>
             <IonText ><em><strong>{
-            simulationDays[currentDay].infNo}</strong></em></IonText>
+                simulationDays[currentDay].infNo}</strong></em></IonText>
             </div>
             }
         </div>
         { simulationDays.length>0 && 
-        <MyRouteMap route={simulationDays[currentDay].contactPoints.map(cp=> {return {latitude: cp.lat, longitude: cp.lng, timestamp: 0}; })} markPosition={true} />
-}
-        </IonContent>
+        <div id="mapDiv">
+        <MyRouteMap forSimulation={true} route={simulationDays[currentDay].contactPoints.map(cp=> {return {latitude: cp.lat, longitude: cp.lng, timestamp: 0, noEncouters:cp.noEncouters}; })} markPosition={true} />
+        </div>
+        }
+        {isModalOpened && 
+             <IonModal isOpen={isModalOpened} id="simModal"> 
+               <IonCard id="modalContainer">
+                <IonCardTitle id="modalTitle">Create new simulation</IonCardTitle>
+                <IonCardContent>
+                <AddSimulationComp openClose={openCloseAddModal}/>
+                </IonCardContent>
+                </IonCard>
+             </IonModal>  
+           }
+            </IonContent>
         </IonPage>
     );
 }

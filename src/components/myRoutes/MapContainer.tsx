@@ -3,7 +3,7 @@ import { mapsApiKey } from './MyMapKey'
 //import { GoogleMap, useLoadScript, InfoWindow, Marker } from '@react-google-maps/api';
 import { GoogleMap, Marker, withGoogleMap, withScriptjs } from "react-google-maps"
 import { Libraries } from '@react-google-maps/api/dist/utils/make-load-script-url';
-import { CurrentLocationContext } from '../currentLocationProvider';
+import { CurrentLocationContext } from '../locationMonitor/currentLocationProvider';
 import { compose, withProps } from 'recompose';
 interface MyMapProps {
   lat: number;

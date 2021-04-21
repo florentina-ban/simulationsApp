@@ -1,5 +1,5 @@
 import { Plugins } from '@capacitor/core';
-import { CoordonatesProps } from './interfaces/CoordonatesProps';
+import { CoordonatesProps } from '../components/interfaces/CoordonatesProps';
 const { Storage } = Plugins;
 
 
@@ -7,7 +7,7 @@ interface FromStorage{
   myValue: CoordonatesProps[]
 }
 
-export async function addToStorage (key: string, coordToStore: any) {
+export async function addListToStorage (key: string, coordToStore: any) {
   getListFromStorage(key).then( fromStorageObj => {
       fromStorageObj.myValue.splice(fromStorageObj.myValue.length, 0, coordToStore)
       console.log("after push: "+JSON.stringify(fromStorageObj))
@@ -20,8 +20,17 @@ export async function addToStorage (key: string, coordToStore: any) {
   })
 }
 
+export async function addValueToStorage (key: string, val: any) {
+      Storage.set({
+        key: key,
+        value: JSON.stringify(
+        { myValue: val }
+      )
+    })
+    console.log("after push: "+JSON.stringify({ myValue: val }))
+}
+
   export async function getFromStorage(key: string){
-    //clear()
     const x = await Storage.get({key : key });
     return x;
   }

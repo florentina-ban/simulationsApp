@@ -1,12 +1,13 @@
 import axios from 'axios';
-import { config, withLogs } from './utils';
+import { baseUrl } from '../../utils/ServerApi';
+import { config, withLogs } from '../../utils/utils';
 
-export const baseUrl = '192.168.100.2:8083/staySafe';
 const authUrl = `http://${baseUrl}/login`;
 const registerUrl = `http://${baseUrl}/register`;
 
 export interface AuthProps {
   token: string;
+  infected: number;
 }
 
 export const login: (userName?: string, password?: string) => Promise<AuthProps> = (userName, password) => {
@@ -17,9 +18,4 @@ export const register: (username?: string, password?: string) => Promise<AuthPro
   return withLogs(axios.post(registerUrl, { username, password }, config), 'signup');
 }
 
-export const authConfig = (token?: string) => ({
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
-  }
-});
+

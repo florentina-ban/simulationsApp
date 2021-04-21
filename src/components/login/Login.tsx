@@ -9,12 +9,15 @@ import { logIn, personAdd } from 'ionicons/icons';
 interface LoginState {
   username?: string;
   password?: string;
+  email?: string;
 }
 
 export const Login: React.FC<RouteComponentProps> = ({ history }) => {
   const { isAuthenticated, login, register ,authenticationError } = useContext(AuthContext);
   const [state, setState] = useState<LoginState>({});
+  const [email, setEmail] = useState("");
   const { username, password } = state;
+  const [registerOn, setResigter] = useState(false);
   const handleLogin = () => {
     console.log('handleLogin...');
     login?.(username, password);
@@ -38,6 +41,8 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
         <IonCard id="loginCard">
           <IonCardTitle id="cardTitle">Login</IonCardTitle>
           <IonCardContent id="cardContent">
+            { !registerOn &&
+            <div>
             <IonInput
               placeholder="Username"
               value={username}
@@ -54,13 +59,45 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
                 password: e.detail.value || ''
               })}
               />
-              {/* <IonLoading isOpen={isAuthenticating}/> */}
               {authenticationError && (
                 <IonText id="errorText">{'Failed to authenticate: '+authenticationError.message }</IonText>
-              )}
+              )} </div>
+              }
+
+          { registerOn &&
+            <div>
+            <IonInput
+              placeholder="Username"
+              value={username}
+              onIonChange={e => setState({
+                ...state,
+                username: e.detail.value || ''
+              })}
+              />
+            <IonInput
+              placeholder="Password"
+              value={password}
+              onIonChange={e => setState({
+                ...state,
+                password: e.detail.value || ''
+              })} />
+              <IonInput
+              placeholder="Email"
+              value={email}
+              onIonChange={e => setState({
+                ...state,
+                email: e.detail.value || ''
+              })}
+              />
+              {authenticationError && (
+                <IonText id="errorText">{'Failed to authenticate: '+authenticationError.message }</IonText>
+              )} </div>
+              }
+
+
               <div id="loginDiv">
               <IonFabButton id="loginButton" color="success" onClick={handleLogin}> <IonIcon icon={logIn}></IonIcon></IonFabButton>                     
-              <IonFabButton id="registerButton" color="success" onClick={handleRegister}> <IonIcon icon={personAdd}></IonIcon></IonFabButton>                      
+              <IonFabButton id="registerButton" color="success" onClick={()=>setResigter(true)}> <IonIcon icon={personAdd}></IonIcon></IonFabButton>                      
               </div>            
             </IonCardContent>
         </IonCard>

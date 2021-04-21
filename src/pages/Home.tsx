@@ -4,18 +4,17 @@ import './Home.css';
 import { RouteComponentProps, useHistory } from 'react-router';
 import MenuComponent from '../components/menuStuff/MenuComponent';
 import ToolbarComponent from '../components/menuStuff/ToolbarComponent';
-import { MenuContext } from '../components/menuStuff/MenuProvider';
+import InfectedComponent from '../components/menuStuff/InfectedComponent';
 
 const Home: React.FC<RouteComponentProps> = (props) => {
-  const { isMenuOpened, updateMenuState} = useContext(MenuContext)
+  //const { isMenuOpened, updateMenuState} = useContext(MenuContext)
 
 console.log("render home")
   return (
     <IonPage >
       <ToolbarComponent></ToolbarComponent>
-      {isMenuOpened && 
       <MenuComponent/> 
-      }
+      <InfectedComponent/>
     </IonPage>
   );
 };

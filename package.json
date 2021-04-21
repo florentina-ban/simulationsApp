@@ -25,6 +25,7 @@
     "@types/react-router-dom": "^5.1.7",
     "axios": "^0.21.1",
     "google-maps-react": "^2.0.6",
+    "highcharts": "^9.0.1",
     "ionicons": "^5.4.0",
     "plugins": "^0.4.2",
     "react": "^17.0.1",

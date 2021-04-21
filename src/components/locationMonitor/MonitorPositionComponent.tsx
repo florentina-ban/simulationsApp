@@ -1,16 +1,17 @@
 import { IonButton, IonButtons, IonCard, IonCardContent, IonContent, IonHeader, IonIcon, IonItem, IonList, IonMenuButton, IonNote, IonPage, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
-import { CoordonatesProps } from './interfaces/CoordonatesProps';
-import { addToStorage, clearCoords, getListFromStorage } from './LocalStorageApi';
+import { CoordonatesProps } from '../interfaces/CoordonatesProps';
+import { addListToStorage, clearCoords, getListFromStorage } from '../../utils/LocalStorageApi';
 import {BackgroundGeolocation, BackgroundGeolocationEvents} from '@ionic-native/background-geolocation'
 import './Monitor.css';
 import { CurrentLocationContext } from './currentLocationProvider';
-import { MyMap } from './myRoutes/MapContainer';
-import MenuComponent from './menuStuff/MenuComponent';
-import ToolbarComponent from './menuStuff/ToolbarComponent';
-import { MenuContext } from './menuStuff/MenuProvider';
-import { sendLocations } from './ServerApi';
-import { AuthContext } from './login/AuthProvider';
+import { MyMap } from '../myRoutes/MapContainer';
+import MenuComponent from '../menuStuff/MenuComponent';
+import ToolbarComponent from '../menuStuff/ToolbarComponent';
+import { MenuContext } from '../menuStuff/MenuProvider';
+import { sendLocations } from '../../utils/ServerApi';
+import { AuthContext } from '../login/AuthProvider';
+import InfectedComponent from '../menuStuff/InfectedComponent';
 
 
 interface ContainerProps { }
@@ -56,7 +57,7 @@ const monitorFunctionBack = () => {
     getListFromStorage('coordList').then(list => {
       const size = list.myValue.length;
         console.log("diferent from before or empty list" )
-        addToStorage('coordList',
+        addListToStorage('coordList',
           { accuracy: accuracy, 
             location: 
               { lat: location.latitude, 
@@ -75,7 +76,7 @@ const monitorFunction = () => {
   navigator.geolocation.watchPosition(value=>{
     getListFromStorage('coordList').then(list => {
         const size = list.myValue.length;
-        addToStorage('coordList',
+        addListToStorage('coordList',
           { accuracy: accuracy, 
             latitude: value.coords.latitude, 
             longitute: value.coords.longitude,
@@ -140,6 +141,8 @@ useEffect(monitorFunction,[]);
   return (
     <IonPage>
       <ToolbarComponent/>
+      <MenuComponent/>
+      <InfectedComponent/>
       <IonContent>
         <IonCard id="monitorContainerCard">
           <IonTitle>You are here</IonTitle>
@@ -153,8 +156,8 @@ useEffect(monitorFunction,[]);
                   <IonText>{longitude}</IonText>
                 </IonItem>
                 <div id="monitorList">
-                  <IonButton onClick={showListFunc} color="success">Show list</IonButton>
-                  <IonButton onClick={showMapFunc} color="success">Show on Map</IonButton>
+                  <IonButton onClick={showListFunc} color="warning">Show list</IonButton>
+                  <IonButton onClick={showMapFunc} color="warning">Show on Map</IonButton>
                 </div>
               </IonList>
           </IonCardContent>
@@ -172,9 +175,6 @@ useEffect(monitorFunction,[]);
           <div id="mapContainer">
             <MyMap lat={latitude} lng={longitude} markPosition={true}/>
           </div>
-        }
-        {isMenuOpened &&
-          <MenuComponent/>
         }
         </IonContent>
         </IonPage>

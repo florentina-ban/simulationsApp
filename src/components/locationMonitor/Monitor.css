@@ -23,3 +23,10 @@
   display: flex;
   justify-content: space-between;
 }
+
+/* toolbar */
+
+#modalMenu{
+  --height: 80%;
+  margin-top: 10;
+}

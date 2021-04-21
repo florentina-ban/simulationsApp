@@ -1,14 +1,12 @@
 import { IonButton, IonCard, IonCardContent, IonContent, IonInput, IonItem, IonList, IonNote, IonPage, IonText, IonTitle, IonToolbar } from '@ionic/react';
-import React, { useContext, useEffect, useState } from 'react';
-import { CoordonatesProps } from '../interfaces/CoordonatesProps';
-import '../Monitor.css';
-import { CurrentLocationContext } from '../currentLocationProvider';
+import React, { useContext,  useState } from 'react';
+import '../locationMonitor/Monitor.css';
 import MenuComponent from '../menuStuff/MenuComponent';
 import ToolbarComponent from '../menuStuff/ToolbarComponent';
 import { MenuContext } from '../menuStuff/MenuProvider';
 import Region from './RegionProps';
 import { MyRouteMap } from '../myRoutes/Routes';
-import { sendBoundaries } from '../ServerApi';
+import { sendBoundaries } from '../../utils/ServerApi';
 import { AuthContext } from '../login/AuthProvider';
 
 export interface OrderedSimpleCoordProps {

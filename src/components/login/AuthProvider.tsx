@@ -2,12 +2,14 @@ import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { login as loginApi } from './authApi';
 import { register as registerApi } from './authApi';
-import { addToStorage, getFromStorage, clear as clearStorage, removeFromStorage } from '../LocalStorageApi';
+import { addListToStorage, getFromStorage, clear as clearStorage, removeFromStorage, addValueToStorage } from '../../utils/LocalStorageApi';
+import { updateUserState } from '../../utils/ServerApi';
 
 
 type LoginFn = (username?: string, password?: string) => void;
 type LogoutFn = () => void;
 type RegisterFn = (username?: string, password?: string) => void;
+type ChangeState = (infState: number) => void;
 
 
 export interface AuthState {
@@ -15,15 +17,19 @@ export interface AuthState {
   isAuthenticated: boolean;
   isRegistering: boolean;
   isRegistered: boolean;
+  changingState: boolean;
+  newState: number;
   registerError: Error | null;
   login?: LoginFn;
   register?: RegisterFn;
   logout? : LogoutFn;
+  changeInfState? : ChangeState;
   pendingAuthentication?: boolean;
   pendingRegistration?:boolean;
   username?: string;
   password?: string;
   token: string;
+  infected: number;
 }
 
 const initialState: AuthState = {
@@ -35,6 +41,9 @@ const initialState: AuthState = {
   pendingAuthentication: false,
   pendingRegistration: false,
   token: '',
+  infected: 0,
+  changingState: false,
+  newState: 0
 };
 
 export const AuthContext = React.createContext<AuthState>(initialState);
@@ -45,21 +54,33 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [state, setState] = useState<AuthState>(initialState);
-  const { isAuthenticated, authenticationError,isRegistered, isRegistering, registerError, pendingAuthentication,pendingRegistration, token } = state;
+  const { isAuthenticated, newState, changingState, authenticationError,isRegistered, isRegistering, registerError, pendingAuthentication,pendingRegistration, token, infected} = state;
   const login = useCallback<LoginFn>(loginCallback, []);
   const register = useCallback<RegisterFn>(registerCallback, []);
   const logout = useCallback<LogoutFn>(logoutCallback, []);
+  const chState = useCallback<ChangeState>(changeStateCallback,[]);
 
   useEffect(authenticationEffect, [pendingAuthentication]);
   useEffect(registerEffect, [pendingRegistration]);
   useEffect(localStorageEffect, []);
+  useEffect(changeStateEffect, [changingState]);
 
-  const value = { isAuthenticated, isRegistered, isRegistering, registerError, login, logout, register, authenticationError, token };
+
+  const value = { isAuthenticated, newState, changingState, isRegistered, isRegistering, registerError, login, logout, register, changeInfState: chState, authenticationError, token, infected };
   return (
     <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
+
+  function changeStateCallback(newS: number){
+    console.log('change state - oldState: '+changingState);
+    setState({
+      ...state,
+      changingState: true,
+      newState: newS
+    });
+  }
 
   function loginCallback(username?: string, password?: string): void {
     console.log('login');
@@ -80,6 +101,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       password
     });   
   }
+  
   function logoutCallback(): void {
     console.log('logout');
     clearStorage();
@@ -91,7 +113,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       registerError: null,
       pendingAuthentication: false,
       pendingRegistration: false,
+      changingState: false,
+      newState: 0,
       token: '',
+      infected: 0
     });   
   }
 
@@ -113,6 +138,40 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           });
         }
       });
+    }
+   
+    getFromStorage('infected').then(function (res) {
+      if ( res.value && res.value.length>0){
+          const { myValue } = JSON.parse(res.value);
+          const inf = +myValue;
+          setState({
+            ...state,
+            infected: inf
+        });
+      }
+    });
+  }
+
+  function changeStateEffect(){
+    const {newState, changingState, token}=state;
+    if (changingState)
+      chStateActual()
+
+    async function chStateActual() {
+      console.log("actual changing state")
+      const val = (await updateUserState(token, newState))
+      
+      if (val==0)
+        setState({...state,
+          changingState: false,
+          newState: 0,
+          infected: newState
+        })
+      else
+      setState({...state,
+        changingState: false,
+        newState: 0,
+      })
     }
   }
 
@@ -140,8 +199,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           return;
         }
         console.log('register succeeded');
-        addToStorage('token', token);
-        addToStorage('last_token',token);
+        addValueToStorage('token', token);
      
         setState({
           ...state,
@@ -182,27 +240,32 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       try {   
         console.log('authenticate...');
         const token_storage = (await getFromStorage("token")).value;
+        const infected_storage = (await getFromStorage("infected")).value;
+        console.log("got from storage: "+token_storage+" infected: "+infected_storage);
         if (token_storage && token_storage.length>0){
             console.log('authenticate succeeded');
           setState({
             ...state,
-            token: token_storage,
+            token: JSON.parse(token_storage).myValue,
+            infected: +(JSON.parse(infected_storage!).myValue),
             pendingAuthentication: false,
             isAuthenticated: true,
             });
           }
           else{
             const { username, password } = state;
-            const { token } = await loginApi(username, password);
+            const { token, infected } = await loginApi(username, password);
             if (canceled) {
               return;
             }
-            console.log('authenticate succeeded');
-            addToStorage('token',token);
+            console.log('authenticate succeeded from server: '+token);
+            addValueToStorage('token',token);
+            addValueToStorage('infected', infected);
          
             setState({
               ...state,
               token,
+              infected,
               pendingAuthentication: false,
               isAuthenticated: true,
             });

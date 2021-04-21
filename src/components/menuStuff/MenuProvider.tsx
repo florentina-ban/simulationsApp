@@ -5,11 +5,15 @@ type UpdateMenuState = (isOpened: boolean) => void;
 
 export interface MenuState {
     isMenuOpened: boolean,
-    updateMenuState?: UpdateMenuState
+    updateMenuState?: UpdateMenuState,
+    isInfectedOpened: boolean,
+    updateInfectedState?: UpdateMenuState
+
 }
 
 const initialState: MenuState = {
-    isMenuOpened: false
+    isMenuOpened: false,
+    isInfectedOpened: false
 };
 
 export const MenuContext = React.createContext<MenuState>(initialState);
@@ -20,13 +24,13 @@ interface MenuProviderProps {
 
 export const MenuProvider: React.FC<MenuProviderProps> = ({ children }) => {
   const [ state, setState ] = useState<MenuState>(initialState);
-  const { isMenuOpened, updateMenuState } = state;
-  const update = useCallback(updateMenuStateActual,[])
-  //useEffect(getCurrentLocationEffect, []);
-  //useEffect(localStorageEffect, []);
+  const { isMenuOpened, updateMenuState, isInfectedOpened, updateInfectedState } = state;
+  const updateMenu = useCallback(updateMenuStateActual,[])
+  const updateInfected = useCallback(updateInfectedActual,[])
 
 
-  const value = {isMenuOpened, updateMenuState: update};
+
+  const value = {isMenuOpened, updateMenuState: updateMenu, isInfectedOpened, updateInfectedState: updateInfected};
   return (
     <MenuContext.Provider value={value}>
       {children}
@@ -34,7 +38,12 @@ export const MenuProvider: React.FC<MenuProviderProps> = ({ children }) => {
   );
 
   function updateMenuStateActual (isOpened: boolean){
-      console.log("update menu state");
+      console.log("update menu state "+isOpened.valueOf());
       setState({...state, isMenuOpened: isOpened})
   }
+
+  function updateInfectedActual (isOpened: boolean){
+    console.log("update inf state "+isOpened.valueOf());
+    setState({...state, isInfectedOpened: isOpened})
+}
 };

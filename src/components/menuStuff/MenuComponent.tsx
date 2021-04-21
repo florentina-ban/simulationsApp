@@ -5,9 +5,11 @@ import '../../pages/Home.css';
 import { useHistory } from 'react-router';
 import { MenuContext } from './MenuProvider';
 import { createAnimation, Animation } from '@ionic/core';
+import { AuthContext } from '../login/AuthProvider';
 
 const MenuComponent: React.FC = () => {
   const { isMenuOpened, updateMenuState} = useContext(MenuContext);
+  const { logout } = useContext(AuthContext);
     const history = useHistory();
 
   const goToMonitor = () => {
@@ -24,11 +26,6 @@ const MenuComponent: React.FC = () => {
     updateMenuState && updateMenuState(false)
   }
 
-  const getDirections = () => {
-    updateMenuState && updateMenuState(false);
-    history.push({pathname: "/directions"})
-  }
-
   const addRegion = () => {
     updateMenuState && updateMenuState(false);
     history.push({pathname: "/region"})
@@ -37,6 +34,12 @@ const MenuComponent: React.FC = () => {
   const goToSimulations = () => {
     updateMenuState && updateMenuState(false);
     history.push({pathname: "/simulations"})
+  }
+
+  const logOut = () => {
+    localStorage.clear();
+    if (logout)
+      logout();
   }
 
   const enterAnimation = (baseEl: any) => {
@@ -52,7 +55,7 @@ const MenuComponent: React.FC = () => {
       .keyframes([
         { offset: 0, transform: 'translateY(-500px)' },
         { offset: 0, opacity: '1'},
-        { offset: 1, transform: 'translateY(0px)'},
+        { offset: 1, transform: 'translateY(-50px)'},
         { offset: 1, opacity: 1}
       ]);
     
@@ -70,12 +73,11 @@ const leaveAnimation = (baseEl: any) => {
   return (
     <IonModal isOpen={isMenuOpened} id="modalMenu" enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
       <IonList>
-        <IonItem key="ShowLocationMenuItem" onClick={goToMonitor}>Current location</IonItem>
+        <IonItem key="ShowLocationMenuItem" onClick={goToMonitor}>My state</IonItem>
         <IonItem key="ShowRoutesMenuItem" onClick={goToRoutes}>My routes</IonItem>
-        <IonItem key="ZoneMonitorMenuItem">Zone Monitor</IonItem>
-        <IonItem key="GetDirectionMenuItem"onClick={getDirections}>Directions</IonItem>
         <IonItem key="AddRegionMenuItem" onClick={addRegion}>Add region</IonItem>
         <IonItem key="SimulationMenuItem" onClick={goToSimulations}>Simulations</IonItem>
+        <IonItem key="LogoutItem" onClick={logOut}>Logout</IonItem>
         <IonItem key="CloseMenuItem" onClick={closeMenu}>Close menu</IonItem>
       </IonList>
     </IonModal>

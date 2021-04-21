@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { CoordonatesProps } from './interfaces/CoordonatesProps';
+import { CoordonatesProps } from '../interfaces/CoordonatesProps';
 
 type UpdateCurrentLocationFn = (newCurrentLocation: CoordonatesProps) => void;
 

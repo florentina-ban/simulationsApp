@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { SimulationProps } from './SimulationComp';
 import { AuthContext } from '../login/AuthProvider';
-import { getAllSimulations } from '../ServerApi';
+import { getAllSimulations } from '../../utils/ServerApi';
 
 
 type getSimFn = () => void;

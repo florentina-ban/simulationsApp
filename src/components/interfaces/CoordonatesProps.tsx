@@ -6,5 +6,6 @@ export interface CoordonatesProps{
     altitude?: number,
     coord?: string,
     coord_id?: number,
-    restTimes?: number
+    restTimes?: number,
+    noEncouters?:number
 }

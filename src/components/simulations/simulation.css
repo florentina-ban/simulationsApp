@@ -1,14 +1,72 @@
 .simulationSelector{
-    min-width: 80% !important;
-    width: 80% !important;
-
+    min-width: 100% !important;
+    width: 100% !important;
+    background-color: honeydew;
 }
 .textBox{
     padding-top: 6px ;
 }
+#simDiv{
+    width: 100%;
+    display: flex;
+    justify-content: space-around; 
+    margin-top: 3%;
+}
 #dayButtons{
     width: 100%;
-    border: 2px solid red;
     display: flex;
     justify-content: space-around;
+    margin-top: 2%;
+    margin-bottom: 2%;
+
+}
+#simcard{
+    background-color: lavender;
+    height: 20%;
+}
+#mapDiv{
+    height: 65%;
+    margin: 3%;
+}
+
+/* modal */
+
+#modalContainer{
+    margin: 0 auto;
+    overflow-y: hidden;
+    --background:  honeydew
+}
+#simModal{
+    height: 50% !important;
+    width: 90% !important;
+    margin: auto 0;
+    margin-left: 5%;
+}
+
+.simItem{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    --background:  honeydew;
+}
+.inputNo{
+    size: 1;
+    text-align: right;
+}
+#modalTitle{
+    padding: 5%;
+}
+#modalButtons{
+    margin-top: 10%;
+    display: flex;
+    justify-content: space-between;
+    background-color:  honeydew;
+}
+#setBackground{
+    background-color:  honeydew;
+}
+#labelChild{
+    /* display: inline-block; */
+    width: 60%;
 }

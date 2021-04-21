@@ -7,4 +7,12 @@
     width: 50vw;
     height: 60vh;
     margin-top: 10vh;
+    z-index: 100;
+}
+#infModal{
+    width: 50vw;
+    height: 30vh;
+    margin-left: 50%;
+    margin-top: 10vh;
+    z-index: 100;
 }

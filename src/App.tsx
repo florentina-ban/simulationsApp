@@ -21,16 +21,14 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import MonitorComponent from './components/MonitorPositionComponent';
+import MonitorComponent from './components/locationMonitor/MonitorPositionComponent';
 import React from 'react';
 import { MenuProvider } from './components/menuStuff/MenuProvider';
 import Login from './components/login/Login';
 import { AuthProvider } from './components/login/AuthProvider';
 import RoutesComponet from './components/myRoutes/RoutesComponent';
-import { CurrentLocationProvider } from './components/currentLocationProvider';
+import { CurrentLocationProvider } from './components/locationMonitor/currentLocationProvider';
 import { PrivateRoute } from './components/login/PrivateRoute';
-import MyDirection from './components/directions/MyDirection';
-import DirectionComponent from './components/directions/DirectionComponent';
 import RegionComponent from './components/regions/RegionComponent';
 import SimulationComp from './components/simulations/SimulationComp';
 import { SimulationProvider } from './components/simulations/SimulationProvider';
@@ -47,7 +45,6 @@ const App: React.FC = () => (
               <PrivateRoute exact path="/home" component={Home} />
               <PrivateRoute exact path="/routes" component={RoutesComponet} />
               <PrivateRoute exact path="/monitor" component={MonitorComponent}/>
-              <PrivateRoute exact path="/directions" component={DirectionComponent}/>
               <PrivateRoute exact path="/region" component={RegionComponent}/>
               <SimulationProvider>
                 <PrivateRoute exact path="/simulations" component={SimulationComp}/>

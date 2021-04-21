@@ -9,6 +9,7 @@ import { CoordonatesProps } from '../interfaces/CoordonatesProps';
 interface MyRouteProps {
   route: CoordonatesProps[]
   markPosition: boolean
+  forSimulation: boolean
   onMapClick?: (e: any) => void,
   // onMarkerClick?: (e: any) => void,
 }
@@ -41,13 +42,20 @@ export const MyRouteMap = compose<MyRouteProps, any>(
     
   <GoogleMap
       zoom={12}
-      center={props.route.length>0? { lat: props.route[0].latitude, lng: props.route[0].longitude} : center}
+      center={center}
       onClick={props.onMapClick}
   >  
-  { props.route &&  props.route.length>0 && 
-    props.route.map( ({latitude, longitude }) => { 
+  { props.route &&  props.route.length>0 && props.forSimulation==false &&
+    props.route.map( ({latitude, longitude}) => { 
       const a: google.maps.LatLng = new google.maps.LatLng({lat: latitude, lng: longitude})
       return <Circle center={a} defaultRadius={15} defaultOptions={ {fillColor:"red", strokeColor: "red"}} /> } ) }
+
+      {
+        props.route &&  props.route.length>0 && props.forSimulation &&
+        props.route.map( ({latitude, longitude, noEncouters}) => { 
+          const a: google.maps.LatLng = new google.maps.LatLng({lat: latitude, lng: longitude})
+          return <Circle center={a} defaultRadius={15*noEncouters!} defaultOptions={ {fillColor:"red", strokeColor: "red"}} /> } ) }
+    
   </GoogleMap> 
 )})
 
