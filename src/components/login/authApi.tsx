@@ -14,8 +14,9 @@ export const login: (userName?: string, password?: string) => Promise<AuthProps>
   return withLogs(axios.post(authUrl, { userName: userName, password }, config), 'login');
 }
 
-export const register: (username?: string, password?: string) => Promise<AuthProps> = (username, password) => {
-  return withLogs(axios.post(registerUrl, { username, password }, config), 'signup');
+export const register: (username?: string, password?: string, email?: string, infected?: number) => Promise<AuthProps> = (username, password, email, infected) => {
+  console.log("inside authAPi: "+username+" "+password+" "+email+" "+infected)
+  return withLogs(axios.post(registerUrl, { userName:username, password, email, infected }, config), 'signup');
 }
 
 

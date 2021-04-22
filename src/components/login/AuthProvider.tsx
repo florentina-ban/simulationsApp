@@ -2,14 +2,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { login as loginApi } from './authApi';
 import { register as registerApi } from './authApi';
-import { addListToStorage, getFromStorage, clear as clearStorage, removeFromStorage, addValueToStorage } from '../../utils/LocalStorageApi';
-import { updateUserState } from '../../utils/ServerApi';
+import { getFromStorage, clear as clearStorage, addValueToStorage } from '../../utils/LocalStorageApi';
 
 
 type LoginFn = (username?: string, password?: string) => void;
 type LogoutFn = () => void;
 type RegisterFn = (username?: string, password?: string, email?: string, infected?: number) => void;
-type ChangeState = (infState: number) => void;
+type ChangeInfState = (infState: number) => void;
 
 
 export interface AuthState {
@@ -21,14 +20,14 @@ export interface AuthState {
   login?: LoginFn;
   register?: RegisterFn;
   logout? : LogoutFn;
-  changeInfState? : ChangeState;
+  changeInfState? : ChangeInfState;
   pendingAuthentication?: boolean;
   pendingRegistration?:boolean;
   username?: string;
   password?: string;
   email?: string;
   token: string;
-  infected?: number;
+  infected: number;
 }
 
 const initialState: AuthState = {
@@ -40,7 +39,7 @@ const initialState: AuthState = {
   pendingAuthentication: false,
   pendingRegistration: false,
   token: '',
-  infected: 0,
+  infected: -1,
 };
 
 export const AuthContext = React.createContext<AuthState>(initialState);
@@ -55,7 +54,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = useCallback<LoginFn>(loginCallback, []);
   const register = useCallback<RegisterFn>(registerCallback, []);
   const logout = useCallback<LogoutFn>(logoutCallback, []);
-  const chState = useCallback<ChangeState>(changeStateCallback,[]);
+  const chState = function changeStateCallback(newS: number){
+    setState({
+      ...state,
+      infected: newS,
+      isAuthenticated: true
+    });
+    addValueToStorage("infected", newS);
+  }
 
   useEffect(authenticationEffect, [pendingAuthentication]);
   useEffect(registerEffect, [pendingRegistration]);
@@ -67,15 +73,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-
-  function changeStateCallback(newS: number){
-    setState({
-      ...state,
-      infected: newS,
-      token: token
-    });
-    addValueToStorage("infected", newS);
-  }
 
   function loginCallback(username?: string, password?: string): void {
     console.log('login');
@@ -95,7 +92,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       username,
       password,
       email,
-      infected,
+      infected: infected!,
     });   
   }
   
@@ -111,7 +108,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       pendingAuthentication: false,
       pendingRegistration: false,
       token: '',
-      infected: 0
+      infected: 0,
     });   
   }
 
@@ -168,8 +165,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           ...state,
           isRegistering: true,
         });
-        const { username, password } = state;
-        const { token } = await registerApi(username, password);
+        const { username, password, email, infected } = state;
+        const { token } = await registerApi(username, password, email, infected);
         if (canceled) {
           return;
         }
@@ -258,3 +255,5 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }
 }
+
+

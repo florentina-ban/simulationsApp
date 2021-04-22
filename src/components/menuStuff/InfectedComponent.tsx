@@ -5,11 +5,12 @@ import { createAnimation} from '@ionic/core';
 import { MenuContext } from './MenuProvider';
 import { AuthContext } from '../login/AuthProvider';
 import { updateUserState } from '../../utils/ServerApi';
+import { addValueToStorage } from '../../utils/LocalStorageApi';
 const infState = ['All Good','Got Infected',"It's all behind"]
 
 const InfectedComponent: React.FC = () => {
   const {isInfectedOpened, updateInfectedState}= useContext(MenuContext);
-  const {token, infected, changeInfState} = useContext(AuthContext);
+  const {token, changeInfState} = useContext(AuthContext);
   const enterAnimation = (baseEl: any) => {
     const backdropAnimation = createAnimation()
       .addElement(baseEl.querySelector('ion-backdrop')!)
@@ -36,39 +37,35 @@ const leaveAnimation = (baseEl: any) => {
 const setHealthy = () =>{
     updateUserState(token, 0).then(res=> {
       if (res == 0){
-
+        changeInfState && changeInfState(0)
       }
       else{
-
+        console.log("Error in changins state")
       }
         
     })
-    changeInfState && changeInfState(0);
     updateInfectedState && updateInfectedState(false);
 }
 const setSick = () =>{
   updateUserState(token, 1).then(res=> {
     if (res == 0){
-
+      changeInfState && changeInfState(1)
     }
     else{
-      
+      console.log("Error in changins state")
     }
-      
   })
-    changeInfState && changeInfState(1);
     updateInfectedState && updateInfectedState(false);
 }
 const setImmune = () =>{
   updateUserState(token, 2).then(res=> {
     if (res == 0){
-
+      changeInfState && changeInfState(2)
     }
     else{
-      
+      console.log("Error in changins state")
     }
   })
-    changeInfState && changeInfState(2);
     updateInfectedState && updateInfectedState(false);
 }
 

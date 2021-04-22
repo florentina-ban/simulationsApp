@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router';
 import { IonCard, IonCardContent, IonCardTitle, IonContent, IonFabButton, IonHeader, IonIcon, IonInput, IonLoading, IonPage, IonSelect, IonSelectOption, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import { AuthContext } from './AuthProvider';
 import './login.css'
-import { logIn, personAdd } from 'ionicons/icons';
+import { contractOutline, logIn, personAdd } from 'ionicons/icons';
 
 interface LoginState {
   username?: string;
@@ -18,12 +18,14 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
   const [state, setState] = useState<LoginState>({});
   const { username, password, email, infected } = state;
   const [registerOn, setResigter] = useState(false);
+
   const handleLogin = () => {
     console.log('handleLogin...');
     login?.(username, password);
   };
+
   const handleRegister = () => {
-    console.log('handleRegister...');
+    console.log('handleRegister...' + email+ " "+infected);
     register?.(username, password, email, infected);
   };
   
@@ -39,7 +41,13 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
       </IonHeader>
       <IonContent>
         <IonCard id="loginCard">
+          {!registerOn &&
           <IonCardTitle id="cardTitle">Login</IonCardTitle>
+          }
+        {registerOn &&
+          <IonCardTitle id="cardTitle">Register</IonCardTitle>
+          }
+
           <IonCardContent id="cardContent">
             { !registerOn &&
             <div>
@@ -74,10 +82,13 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
                   ...state,
                   password: e.detail.value || ''
                 })} />
-              <IonInput placeholder="Email" value={email} onIonChange={e => setState({
+              <IonInput placeholder="Email" value={email} onIonChange={e =>{ 
+                console.log(e.detail.value);
+                setState({
                   ...state,
                   email: e.detail.value || ''
-                })}
+                });
+              } }
                 />
               <IonSelect className="addMarginClass" placeholder="infected?" value={infected} onIonChange={(e)=>{setState({...state, infected: e.detail.value})}}>
                 <IonSelectOption value={0}>All Good</IonSelectOption>
