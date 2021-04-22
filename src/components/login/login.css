@@ -16,8 +16,11 @@
 #errorText{
     color: red;
 }
-#loginDiv{
+.loginDiv{
     margin-top: 5%;
     display: flex;
     justify-content: space-around;
+}
+.addMarginClass{
+    margin-left: -3%;
 }

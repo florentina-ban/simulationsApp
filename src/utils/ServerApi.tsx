@@ -5,8 +5,8 @@ import { ResponseProps, withLogs } from './utils';
 import Region from '../components/regions/RegionProps';
 import { SimulationDayProps, SimulationProps } from '../components/simulations/SimulationComp';
 
-//export const baseUrl = '192.168.100.2:8083/staySafe';
-export const baseUrl = '34.122.201.127:3389/staySafe';
+export const baseUrl = '192.168.100.2:8083/staySafe';
+//export const baseUrl = '34.122.201.127:3389/staySafe';
 const addLocationsUrl = `http://${baseUrl}/addLocations`;
 const addregionUrl = `http://${baseUrl}/addRegion`;
 const coordsUrl = `http://${baseUrl}/coordsForUser`;
@@ -17,8 +17,6 @@ const simDaysUrl=`http://${baseUrl}/simDays`;
 const delSimUrl=`http://${baseUrl}/deleteSim`;
 const startSimUrl=`http://${baseUrl}/startSimulation`;
 const updateStateUrl=`http://${baseUrl}/updateState`;
-
-
 
 export const sendLocations: (list: CoordonatesProps[], token: string) => Promise<string> = (list: CoordonatesProps[], token:string) => {
   return updateLocalStorage(axios.post(addLocationsUrl, { coords: list }, addTokenConfig(token)), 'sendLocations');
@@ -68,7 +66,6 @@ export const updateUserState: (token: string, infState: number) => Promise<numbe
   console.log("in ServerApi")
   return withLogs(axios.post(updateStateUrl, { id: infState }, addTokenConfig(token)),'updateState');
 }
-
 
 export function updateLocalStorage<T>(promise: Promise<ResponseProps<T>>, fnName: string): Promise<T> {
   console.log(`${fnName} - started`);

@@ -1,12 +1,13 @@
 import { IonButton, IonButtons, IonHeader, IonIcon, IonMenuButton, IonTitle, IonToolbar } from "@ionic/react";
 import { checkmarkDoneOutline, sunnyOutline, thunderstormOutline } from "ionicons/icons";
 import React, { useContext, useState } from "react";
+import { updateUserState } from "../../utils/ServerApi";
 import { AuthContext } from "../login/AuthProvider";
 import { MenuContext } from "./MenuProvider";
 
 const ToolbarComponent: React.FC = () => {
     const { updateMenuState, updateInfectedState} = useContext(MenuContext)
-    const {infected} = useContext(AuthContext);
+    const {infected, token} = useContext(AuthContext);
 
     const openMenu = () => {
         console.log("button clicked")

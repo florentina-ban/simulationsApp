@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { AuthContext } from '../login/AuthProvider';
 
 type UpdateMenuState = (isOpened: boolean) => void;
 
@@ -25,6 +26,7 @@ interface MenuProviderProps {
 export const MenuProvider: React.FC<MenuProviderProps> = ({ children }) => {
   const [ state, setState ] = useState<MenuState>(initialState);
   const { isMenuOpened, updateMenuState, isInfectedOpened, updateInfectedState } = state;
+  const { token }= useContext(AuthContext);
   const updateMenu = useCallback(updateMenuStateActual,[])
   const updateInfected = useCallback(updateInfectedActual,[])
 

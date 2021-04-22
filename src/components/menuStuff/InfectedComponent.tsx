@@ -4,6 +4,7 @@ import '../../pages/Home.css';
 import { createAnimation} from '@ionic/core';
 import { MenuContext } from './MenuProvider';
 import { AuthContext } from '../login/AuthProvider';
+import { updateUserState } from '../../utils/ServerApi';
 const infState = ['All Good','Got Infected',"It's all behind"]
 
 const InfectedComponent: React.FC = () => {
@@ -33,14 +34,40 @@ const leaveAnimation = (baseEl: any) => {
   return enterAnimation(baseEl).direction('reverse');
 }
 const setHealthy = () =>{
+    updateUserState(token, 0).then(res=> {
+      if (res == 0){
+
+      }
+      else{
+
+      }
+        
+    })
     changeInfState && changeInfState(0);
     updateInfectedState && updateInfectedState(false);
 }
 const setSick = () =>{
+  updateUserState(token, 1).then(res=> {
+    if (res == 0){
+
+    }
+    else{
+      
+    }
+      
+  })
     changeInfState && changeInfState(1);
     updateInfectedState && updateInfectedState(false);
 }
 const setImmune = () =>{
+  updateUserState(token, 2).then(res=> {
+    if (res == 0){
+
+    }
+    else{
+      
+    }
+  })
     changeInfState && changeInfState(2);
     updateInfectedState && updateInfectedState(false);
 }

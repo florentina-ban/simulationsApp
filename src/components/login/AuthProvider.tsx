@@ -8,7 +8,7 @@ import { updateUserState } from '../../utils/ServerApi';
 
 type LoginFn = (username?: string, password?: string) => void;
 type LogoutFn = () => void;
-type RegisterFn = (username?: string, password?: string) => void;
+type RegisterFn = (username?: string, password?: string, email?: string, infected?: number) => void;
 type ChangeState = (infState: number) => void;
 
 
@@ -17,8 +17,6 @@ export interface AuthState {
   isAuthenticated: boolean;
   isRegistering: boolean;
   isRegistered: boolean;
-  changingState: boolean;
-  newState: number;
   registerError: Error | null;
   login?: LoginFn;
   register?: RegisterFn;
@@ -28,8 +26,9 @@ export interface AuthState {
   pendingRegistration?:boolean;
   username?: string;
   password?: string;
+  email?: string;
   token: string;
-  infected: number;
+  infected?: number;
 }
 
 const initialState: AuthState = {
@@ -42,8 +41,6 @@ const initialState: AuthState = {
   pendingRegistration: false,
   token: '',
   infected: 0,
-  changingState: false,
-  newState: 0
 };
 
 export const AuthContext = React.createContext<AuthState>(initialState);
@@ -54,7 +51,7 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [state, setState] = useState<AuthState>(initialState);
-  const { isAuthenticated, newState, changingState, authenticationError,isRegistered, isRegistering, registerError, pendingAuthentication,pendingRegistration, token, infected} = state;
+  const { isAuthenticated, authenticationError,isRegistered, isRegistering, registerError, pendingAuthentication,pendingRegistration, token, infected} = state;
   const login = useCallback<LoginFn>(loginCallback, []);
   const register = useCallback<RegisterFn>(registerCallback, []);
   const logout = useCallback<LogoutFn>(logoutCallback, []);
@@ -63,10 +60,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(authenticationEffect, [pendingAuthentication]);
   useEffect(registerEffect, [pendingRegistration]);
   useEffect(localStorageEffect, []);
-  useEffect(changeStateEffect, [changingState]);
 
-
-  const value = { isAuthenticated, newState, changingState, isRegistered, isRegistering, registerError, login, logout, register, changeInfState: chState, authenticationError, token, infected };
+  const value = { isAuthenticated, isRegistered, isRegistering, registerError, login, logout, register, changeInfState: chState, authenticationError, token, infected };
   return (
     <AuthContext.Provider value={value}>
       {children}
@@ -74,12 +69,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 
   function changeStateCallback(newS: number){
-    console.log('change state - oldState: '+changingState);
     setState({
       ...state,
-      changingState: true,
-      newState: newS
+      infected: newS,
+      token: token
     });
+    addValueToStorage("infected", newS);
   }
 
   function loginCallback(username?: string, password?: string): void {
@@ -92,13 +87,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     });
   }
 
-  function registerCallback(username?: string, password?: string): void {
+  function registerCallback(username?: string, password?: string, email?: string, infected?: number): void {
     console.log('register');
     setState({
       ...state,
       pendingRegistration: true,
       username,
-      password
+      password,
+      email,
+      infected,
     });   
   }
   
@@ -113,8 +110,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       registerError: null,
       pendingAuthentication: false,
       pendingRegistration: false,
-      changingState: false,
-      newState: 0,
       token: '',
       infected: 0
     });   
@@ -125,6 +120,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       return;
     
     getToken();
+    getInfected();
     async function getToken() {    
       getFromStorage('token').then(function (res) {
         if ( res.value && res.value.length>0){
@@ -139,7 +135,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
       });
     }
-   
+
+    async function getInfected() {
     getFromStorage('infected').then(function (res) {
       if ( res.value && res.value.length>0){
           const { myValue } = JSON.parse(res.value);
@@ -151,29 +148,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     });
   }
-
-  function changeStateEffect(){
-    const {newState, changingState, token}=state;
-    if (changingState)
-      chStateActual()
-
-    async function chStateActual() {
-      console.log("actual changing state")
-      const val = (await updateUserState(token, newState))
-      
-      if (val==0)
-        setState({...state,
-          changingState: false,
-          newState: 0,
-          infected: newState
-        })
-      else
-      setState({...state,
-        changingState: false,
-        newState: 0,
-      })
-    }
-  }
+}
 
   function registerEffect() {
     let canceled = false;
@@ -223,7 +198,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     }
   }
-
 
   function authenticationEffect() {
     let canceled = false;
@@ -283,4 +257,4 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
     }
   }
-};
+}
