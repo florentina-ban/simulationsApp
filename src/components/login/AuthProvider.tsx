@@ -115,37 +115,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   function localStorageEffect(){
     if (isAuthenticated)
       return;
-    
     getToken();
-    getInfected();
     async function getToken() {    
       getFromStorage('token').then(function (res) {
         if ( res.value && res.value.length>0){
             const { myValue } = JSON.parse(res.value);
-            const token  = myValue;
-            setState({
-              ...state,
-              token,
-              pendingRegistration: false,
-              isAuthenticated: true,
-          });
+            const token_get = myValue;
+            console.log("inside local storage effect - got token: "+token_get);
+            getFromStorage('infected').then(function (res) {
+              if ( res.value && res.value.length>0){
+                  const { myValue } = JSON.parse(res.value);
+                  const infected = +myValue;
+                  console.log("inside local storage effect - got infected: "+infected);
+                  setState({
+                    ...state,
+                    infected: infected,
+                    token: token_get,
+                    pendingAuthentication: false,
+                    isAuthenticated: true
+                });
         }
       });
     }
-
-    async function getInfected() {
-    getFromStorage('infected').then(function (res) {
-      if ( res.value && res.value.length>0){
-          const { myValue } = JSON.parse(res.value);
-          const inf = +myValue;
-          setState({
-            ...state,
-            infected: inf
-        });
-      }
-    });
-  }
+  });
 }
+  }
 
   function registerEffect() {
     let canceled = false;

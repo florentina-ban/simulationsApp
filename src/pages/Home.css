@@ -5,13 +5,13 @@
 
 #modalMenu{
     width: 50vw;
-    height: 60vh;
+    height: 65vh;
     margin-top: 10vh;
     z-index: 100;
 }
 #infModal{
     width: 50vw;
-    height: 30vh;
+    height: 35vh;
     margin-left: 50%;
     margin-top: 10vh;
     z-index: 100;

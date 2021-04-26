@@ -5,10 +5,11 @@ import { startSim } from "../../utils/ServerApi";
 import "./simulation.css";
 
 interface AddSimFunc{
-    openClose: (isOpen: boolean)=>void
+    openClose: (isOpen: boolean)=>void;
+    updateSimulations: () => void;
 }
 
-const AddSimulationComp: React.FC<AddSimFunc> = ({openClose}) => {  
+const AddSimulationComp: React.FC<AddSimFunc> = ({openClose, updateSimulations}) => {  
 
     const [startWithInf, setStartWithInf] = useState(0);
     const [noOfDays, setNoOfDays] = useState(0);
@@ -17,7 +18,11 @@ const AddSimulationComp: React.FC<AddSimFunc> = ({openClose}) => {
     const startSimulation = () => {
         if (startWithInf>0 && noOfDays>0){
             openClose(false);
-            startSim(token,noOfDays,startWithInf)
+            startSim(token,noOfDays,startWithInf).then(val=>{
+                if (val=="ok"){
+                    updateSimulations();
+                }
+            })
         }
     }
     

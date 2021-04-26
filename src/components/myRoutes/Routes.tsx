@@ -10,7 +10,8 @@ interface MyRouteProps {
   route: CoordonatesProps[]
   markPosition: boolean
   forSimulation: boolean
-  onMapClick?: (e: any) => void,
+  onMapClick?: (e: any) => void
+  currentDay: number
   // onMarkerClick?: (e: any) => void,
 }
 const mapStyles = {
@@ -38,6 +39,7 @@ export const MyRouteMap = compose<MyRouteProps, any>(
 
 )(props => {
   console.log("contactPointsSize: "+ props.route.length)
+  
   return(
     
   <GoogleMap

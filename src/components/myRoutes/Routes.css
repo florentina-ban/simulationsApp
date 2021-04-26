@@ -1,8 +1,8 @@
 #routesMapContainer{
-    width: 90vw;
-    height: 60vh;
-    margin-left: 5vw;
-    margin-top: 5vh;
+    width: 95vw;
+    height: 55vh;
+    margin-left: 4vw;
+    margin-top: 2vh;
   }
   #showRouteButtonContainer{
     display: flex;
