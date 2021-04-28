@@ -1,16 +1,26 @@
 #monitorContainerCard {
   width: 90vw;
-  height: 28vh;
+  height: 30vh;
   margin-left: 5vw;
 }
 #coordsList{
-  width: 90%;
+  width: 95%;
   height: 50%;
+  margin-left: 2%;
   overflow-y: auto;
+}
+#cardTitle{
+  margin-bottom: 0%;
+  /* border: 2px solid blue; */
+}
+#list{
+ /* border: 2px solid blue; */
+ margin-top: -8%;
 }
 .container a {
   text-decoration: none;
 }
+
 #mapContainer{
   width: 90vw;
   height: 55vh;
@@ -20,8 +30,13 @@
   display: inline;
 }
 #monitorList{
+  margin-top: 2%;
   display: flex;
   justify-content: space-between;
+}
+.emptyDiv{
+  display: inline-block;
+  width: 15%;
 }
 
 /* toolbar */

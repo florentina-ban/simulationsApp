@@ -7,9 +7,7 @@
     margin-top: 10% ;
     /* border: 2px solid red; */
 }
-.moreMargins{
-    margin-top: 16%;
-}
+
 #simDiv{
     width: 100%;
     display: flex;
@@ -84,15 +82,34 @@
 
 /* chart Modal */
 #chartModal{
-    height: 80% !important;
+    height: 78% !important;
     width: 90% !important;
     margin: auto 0;
     margin-left: 5%;
     overflow-y: auto;
     overflow-x: auto;
 }
+#chartCard{
+    padding-left: 1%;
+    padding-top: 5%;
+    padding-right: 1%;
+    padding-bottom: 5%;
+    height: 100% !important;
+}
+#lineChart{
+    padding-top: 5%;
+    padding-bottom: 5%;
+    height: 40% !important;
+}
+#closeChartModalButton{
+    float: right;
+    margin-top: 10%;
+}
+
 #pieDiv{
     margin: 0 auto;
-    width: 50%;
-    height: 30%;
+    width: 60%;
+    height: 40%;
+    overflow-y: auto;
+    
 }

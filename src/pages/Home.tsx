@@ -1,4 +1,4 @@
-import { IonPage } from '@ionic/react';
+import { IonButton, IonCard, IonContent, IonImg, IonPage } from '@ionic/react';
 import React, { useContext, useState } from 'react';
 import './Home.css';
 import { RouteComponentProps, useHistory } from 'react-router';
@@ -7,14 +7,28 @@ import ToolbarComponent from '../components/menuStuff/ToolbarComponent';
 import InfectedComponent from '../components/menuStuff/InfectedComponent';
 
 const Home: React.FC<RouteComponentProps> = (props) => {
-  //const { isMenuOpened, updateMenuState} = useContext(MenuContext)
+  const history = useHistory();
+  const goToMonitor = () => {
+    history.push("/monitor")
+  }
 
-console.log("render home")
+  const goToRoutes = () => {
+    history.push( { pathname: "/routes"  })
+  }
+  const goToSimulations = () => {
+    history.push({pathname: "/simulations"})
+  }
+
   return (
     <IonPage >
       <ToolbarComponent></ToolbarComponent>
       <MenuComponent/> 
       <InfectedComponent/>
+      <IonContent>
+        <IonCard id="locationCard" onClick={goToMonitor}></IonCard>
+        <IonCard id="routeCard" onClick={goToRoutes}></IonCard>
+        <IonCard id="simCard" onClick={goToSimulations}></IonCard>
+      </IonContent>
     </IonPage>
   );
 };

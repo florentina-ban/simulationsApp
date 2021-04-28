@@ -5,8 +5,6 @@ import { createAnimation} from '@ionic/core';
 import { MenuContext } from './MenuProvider';
 import { AuthContext } from '../login/AuthProvider';
 import { updateUserState } from '../../utils/ServerApi';
-import { addValueToStorage } from '../../utils/LocalStorageApi';
-const infState = ['All Good','Got Infected',"It's all behind"]
 
 const InfectedComponent: React.FC = () => {
   const {isInfectedOpened, updateInfectedState}= useContext(MenuContext);

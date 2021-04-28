@@ -1,10 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React from 'react';
 import { mapsApiKey } from './MyMapKey'
-//import { GoogleMap, useLoadScript, InfoWindow, Marker } from '@react-google-maps/api';
 import { Circle, GoogleMap, Marker, withGoogleMap, withScriptjs } from "react-google-maps"
 import { Libraries } from '@react-google-maps/api/dist/utils/make-load-script-url';
-import { compose, lifecycle, withProps } from 'recompose';
-import { SimpleCoordProps } from '../interfaces/SimpleCoordProps';
+import { compose, withProps } from 'recompose';
 import { CoordonatesProps } from '../interfaces/CoordonatesProps';
 interface MyRouteProps {
   route: CoordonatesProps[]
@@ -39,7 +37,6 @@ export const MyRouteMap = compose<MyRouteProps, any>(
 
 )(props => {
   console.log("contactPointsSize: "+ props.route.length)
-  
   return(
     
   <GoogleMap
@@ -56,7 +53,7 @@ export const MyRouteMap = compose<MyRouteProps, any>(
         props.route &&  props.route.length>0 && props.forSimulation &&
         props.route.map( ({latitude, longitude, noEncouters}) => { 
           const a: google.maps.LatLng = new google.maps.LatLng({lat: latitude, lng: longitude})
-          return <Circle center={a} defaultRadius={15*noEncouters!} defaultOptions={ {fillColor:"red", strokeColor: "red"}} /> } ) }
+          return <Circle center={a} defaultRadius={17*noEncouters!} defaultOptions={ {fillColor:"red", strokeColor: "red"}} /> } ) }
     
   </GoogleMap> 
 )})

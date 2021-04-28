@@ -1,4 +1,4 @@
-import { IonButton, IonCard, IonCardContent, IonCardTitle, IonContent, IonFabButton, IonIcon, IonLabel, IonModal, IonNote, IonPage, IonSelect, IonSelectOption, IonText, IonTitle } from "@ionic/react";
+import { IonButton, IonCard, IonCardContent, IonCardTitle, IonContent, IonFabButton, IonIcon, IonModal, IonNote, IonPage, IonSelect, IonSelectOption, IonText, IonTitle } from "@ionic/react";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../login/AuthProvider";
 import InfectedComponent from "../menuStuff/InfectedComponent";
@@ -7,11 +7,11 @@ import ToolbarComponent from "../menuStuff/ToolbarComponent";
 import { MyRouteMap } from "../myRoutes/Routes";
 import { deleteSim, getAllSimulations, getSimulationDays } from "../../utils/ServerApi";
 import AddSimulationComp from "./AddSimulationComponent";
-import { Line, Bar, Pie , Doughnut} from 'react-chartjs-2';
-import { Chart } from 'chart.js';
+import { Line, Pie } from 'react-chartjs-2';
 
 import "./simulation.css";
 import { arrowBack, arrowForward, barChartOutline } from "ionicons/icons";
+import AlertComponent from "../menuStuff/AlertComponent";
 
 export interface SimulationProps{
     id: number,
@@ -49,6 +49,8 @@ const SimulationComp: React.FC = () => {
     const [currentDay, setCurrentDay]=useState(0);
     const [isModalOpened, setIsModalOpened]=useState(false);
     const [showCharts, setShowCharts]= useState(false)
+    const [message, setMessage] = useState("");
+    const [someError, setSomeError] = useState(false);
     
     const barData={
         labels: simulationDays.map(sim=>sim.dayNo),
@@ -69,65 +71,96 @@ const SimulationComp: React.FC = () => {
         },
         ],       
     }
+
     const reducer = (acc: number, val: number) => acc + val;
+    // simulationDays.forEach(sim=> console.log(sim.dayNo + " "+sim.noImuneUsers))
+    console.log("infec: "+selectedSim.noInfUsers);
+    console.log("no of users: "+selectedSim.noUsers);
+    console.log( simulationDays.map(simD=>simD.noImuneUsers).reduce(reducer,0) + "-----");
     const pieData={ 
-        labels: ['Healthy','Infected','Immune'],
+        labels: ['Infected','Healthy','Immune'],
         datasets: [
-            {data: [selectedSim.noUsers-selectedSim.noInfUsers, selectedSim.noInfUsers, simulationDays.map(simD=>simD.noImuneUsers).reduce(reducer,0)],
-            backgroundColor: ['#05e30c','#f08d13','#0990e3'],
-            borderColor: ['#046107','#f01313','#04127d'],
+            {data: [selectedSim.noInfUsers, selectedSim.noUsers-selectedSim.noInfUsers,  simulationDays.map(simD=>simD.noImuneUsers).reduce(reducer,0)],
+            backgroundColor: ['#f08d13','#05e30c','#0990e3'],
+            borderColor: ['#f01313','#046107','#04127d'],
             borderWidth: 2,
             hoverBackgroundColor: '#f2f531',
-            width: '100px'
         }],
     }
+
 
     const getAllSim = () =>{
         console.log("token: "+token)
         getAllSimulations(token).then(sims =>{
-            console.log(sims[0].regionName.toString())
-            setAllSim(sims)
-            setStateUpdated(!stateUpdated)     
+            console.log("sims: " +sims)
+            if (sims){
+                setMessage("Got your simulations")
+                setAllSim(sims)
+                setSomeError(false)
+            }
+            else {
+                setStateUpdated(!stateUpdated) 
+                setMessage("Get Simulations failed")
+                setSomeError(true)
+            }   
         })
     }
 
     useEffect(getAllSim, [])
-    useEffect(()=>{console.log(allSimulations)},[allSimulations])
-    useEffect(()=>{console.log(selectedSim.id+"_____")},[selectedSim])
-
 
     const viewSimulation = () => {
         getSimulationDays(token, selectedSim.id).then(days=>{
-            console.log("----------"+days.length + " "+selectedSim.noInfUsers)
+            if (days){
             setSimulationDays(days.sort((a,b) => (a.dayNo - b.dayNo) ))
             setCurrentDay(0)
             setStateUpdated(!stateUpdated)
+            setSomeError(false);
+            }
+            else{
+                setSomeError(true);
+                setMessage("Can not view simulation")
+            }
         })
     }
 
     const goForward = () => {
-        if (selectedSim.id>0 && currentDay+1<simulationDays.length)
+        if (selectedSim.id>0 && currentDay+1<simulationDays.length){
+            console.log(JSON.stringify(simulationDays[currentDay+1]))
             setCurrentDay(currentDay+1)
+        }
     }
 
     const goBackward = () => {
-        if (selectedSim.id>0 && currentDay>0)
+        if (selectedSim.id>0 && currentDay>0){
+            console.log(JSON.stringify(simulationDays[currentDay-1]))
             setCurrentDay(currentDay-1)
+        }
     }
 
     const delSim = () => {
         if (selectedSim.id>0)
             deleteSim(token, selectedSim.id).then(sims =>{
-                    console.log(sims[0].regionName.toString())
+                if (sims){
                     setAllSim(sims)
                     setSelectedSim(emptySim)
-                    setCurrentDay(0);
+                    setCurrentDay(0)
+                    setMessage("Simulation deleted")
+                    setSomeError(false)
                     setStateUpdated(!stateUpdated)
+                }
+                else{
+                    setMessage("Cannot delete simulation")
+                    setSomeError(true)
+                }
             })
     }
 
      const openCloseAddModal = (isOpened: boolean) => {
         setIsModalOpened(isOpened);
+    }
+
+    const updateMessage = (mes:string) =>{
+        setMessage(mes)
     }
     
 
@@ -135,10 +168,11 @@ const SimulationComp: React.FC = () => {
         <IonPage>
         <ToolbarComponent/>
         <MenuComponent/>
+        <AlertComponent message={message} errorMes={someError} updateMessage={updateMessage}/> 
         <InfectedComponent/>
         <IonContent>
         <IonCard id="simcard">
-            <IonSelect class="simulationSelector" placeholder={"Choose Simulation"} onIonChange={e => setSelectedSim(e.detail.value)}>
+            <IonSelect class="simulationSelector" placeholder={"Choose Simulation"} onIonChange={e => {e.detail.value && setSelectedSim(e.detail.value);}}>
                 {allSimulations?.map(sim=>{
                     return <IonSelectOption key={sim.id} value={sim}> 
                                {sim.regionName} - {sim.startInf}
@@ -151,31 +185,33 @@ const SimulationComp: React.FC = () => {
             <IonButton color="warning" onClick={()=>setIsModalOpened(true)}>New</IonButton>
             </div>
         </IonCard>
-        <div id="dayButtons">
-            <IonNote>Days</IonNote>
-            <IonFabButton color="warning" size="small" onClick={goBackward}><IonIcon icon={arrowBack}></IonIcon></IonFabButton>
-            <div className="textBox">
-                <IonText><em><strong>{currentDay+1}</strong></em></IonText>
+        { simulationDays.length>0 &&
+            <div id="dayButtons">
+                <IonNote>Days</IonNote>
+                <IonFabButton color="warning" size="small" onClick={goBackward}><IonIcon icon={arrowBack}></IonIcon></IonFabButton>
+                <div className="textBox">
+                    <IonText><em><strong>{currentDay+1}</strong></em></IonText>
+                </div>
+                <IonFabButton color="warning" size="small" onClick={goForward}><IonIcon icon={arrowForward}></IonIcon></IonFabButton>
             </div>
-            <IonFabButton color="warning" size="small" onClick={goForward}><IonIcon icon={arrowForward}></IonIcon></IonFabButton>
-            </div>
-           
-            { simulationDays.length>0 && 
-            <div id="infectedDiv">
-            <IonNote>Infected</IonNote>
-            <div className="textBox moreMargins">
-            <IonText><em><strong>{
-                simulationDays[currentDay].infNo}</strong></em></IonText>
-            </div>
-            <IonNote>Charts</IonNote>
-            <IonFabButton size="small" color="warning" onClick={()=>{setShowCharts(true)}}><IonIcon icon={barChartOutline}></IonIcon></IonFabButton>
-            </div>
-            }
-        { simulationDays.length>0 && 
-        <div id="mapDiv">
-        <MyRouteMap forSimulation={true} currentDay={currentDay} route={simulationDays[currentDay].contactPoints.map(cp=> {return {latitude: cp.lat, longitude: cp.lng, timestamp: 0, noEncouters:cp.noEncouters}; })} markPosition={true} />
-        </div>
         }
+        { simulationDays.length>0 &&
+            <div id="infectedDiv">
+                <IonNote>Infected</IonNote>
+                <div className="textBox">
+                <IonText><em><strong>{
+                    simulationDays[currentDay].infNo}</strong></em></IonText>
+                </div>
+                <IonFabButton size="small" color="warning" onClick={()=>{setShowCharts(true)}}><IonIcon icon={barChartOutline}></IonIcon></IonFabButton>
+            </div>
+        }
+           { simulationDays.length>0 &&
+            <div id="mapDiv">
+                <MyRouteMap forSimulation={true} currentDay={currentDay} route={simulationDays[currentDay].contactPoints.map(cp=> {return {latitude: cp.lat, longitude: cp.lng, timestamp: 0, noEncouters:cp.noEncouters}; })} markPosition={true} />
+               
+            </div>
+        }
+       
         {isModalOpened && 
              <IonModal isOpen={isModalOpened} id="simModal"> 
                <IonCard id="modalContainer">
@@ -188,11 +224,14 @@ const SimulationComp: React.FC = () => {
            }
            { showCharts &&
            <IonModal isOpen={showCharts} id="chartModal">
-            <Line data={barData} type="line"></Line>
-            <div id="pieDiv">
-            <Pie data={pieData} type="pie"></Pie>
-            </div>
-            <IonButton color="warning" onClick={() => setShowCharts(false)}>Close</IonButton>
+            <IonCard id="chartCard">
+                <IonCardTitle>{selectedSim.regionName+" - Simulation"}</IonCardTitle>
+                <Line data={barData} type="line" id="lineChart"></Line>
+                <div id="pieDiv">
+                    <Pie data={pieData} type="pie"></Pie>
+                </div>
+                <IonButton color="warning" id="closeChartModalButton" onClick={() => setShowCharts(false)}>Close</IonButton>
+            </IonCard>
             </IonModal>
            }
             </IonContent>

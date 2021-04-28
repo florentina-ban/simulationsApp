@@ -16,3 +16,72 @@
     margin-top: 10vh;
     z-index: 100;
 }
+#alertModal{
+    width: 60% !important;
+    height: 7% !important;
+    border-radius:  50px 50px;
+    position: absolute;
+    top: 75%;
+    left: 40%;
+}
+ #alertDivOk{
+    z-index: 200;
+    margin: auto 0;
+    padding-top: 6%;
+    text-align: center;
+    height: 100%;
+    border-radius:  50px 50px;
+    background-color: #00630d;
+    color: whitesmoke !important;
+} 
+#alertDivError{
+    margin: auto 0;
+    text-align: center;
+    padding-top: 6%;
+    height: 100%;
+    border-radius:  50px 50px;
+    background-color: #a80303;
+    color: whitesmoke !important;
+}
+.alertText{
+    float: left;
+    margin-left: 10%;
+}
+.alertIcon{
+    position: absolute;
+    float: right;
+    top: 12%
+}
+/* home content */
+#locationCard{
+    width: 60%;
+    height: 30%;
+    --background: url('../resources/location.jpg');
+    background-repeat: no-repeat;
+}
+#locationCard:hover{
+    animation-timing-function: ease;
+    transform-origin: left;
+    animation-duration: 3s;
+    animation-timing-function: linear;
+    animation-play-state: running;
+    transform: scaleX(1.2);    
+}
+
+#routeCard{
+    float: right;
+    width: 60%;
+    height: 30%;
+    --background: url('../resources/route.jpg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position-x: 60%;
+}
+#simCard{
+    width: 60%;
+    height: 30%;
+    --background: url('../resources/sim.jpg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position-x: 60%;
+}

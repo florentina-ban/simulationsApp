@@ -34,11 +34,11 @@ return(
                     <IonText>Cluj-Napoca</IonText>
                 </IonItem>
                 <IonItem id="noInfItem" className="simItem">
-                    <IonLabel className="labelChild">Start infected no.</IonLabel>
+                    <IonLabel className="labelChild">Infected.</IonLabel>
                     <IonInput slot="end" className="inputNo" typeof="number" value={startWithInf}  onIonChange={(e)=> setStartWithInf(+e.detail.value!)}></IonInput>
                 </IonItem>
                 <IonItem id="simDaysItem"className="simItem">
-                    <IonLabel className="labelChild">Simulation days</IonLabel>
+                    <IonLabel className="labelChild">Days</IonLabel>
                     <IonInput slot="end" className="inputNo" value={noOfDays} onIonChange={(e)=> setNoOfDays(+e.detail.value!)}></IonInput>
                 </IonItem>
                 <div id="modalButtons"> 

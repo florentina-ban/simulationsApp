@@ -73,7 +73,7 @@ const leaveAnimation = (baseEl: any) => {
   return (
     <IonModal isOpen={isMenuOpened} id="modalMenu" enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
       <IonList>
-        <IonItem key="ShowLocationMenuItem" onClick={goToMonitor}>My state</IonItem>
+        <IonItem key="ShowLocationMenuItem" onClick={goToMonitor}>Current location</IonItem>
         <IonItem key="ShowRoutesMenuItem" onClick={goToRoutes}>My routes</IonItem>
         <IonItem key="AddRegionMenuItem" onClick={addRegion}>Add region</IonItem>
         <IonItem key="SimulationMenuItem" onClick={goToSimulations}>Simulations</IonItem>

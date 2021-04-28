@@ -1,4 +1,4 @@
-import { IonButton, IonButtons, IonCard, IonCardContent, IonContent, IonHeader, IonIcon, IonItem, IonList, IonMenuButton, IonNote, IonPage, IonText, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonCard, IonCardContent, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem, IonList, IonMenuButton, IonNote, IonPage, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { CoordonatesProps } from '../interfaces/CoordonatesProps';
 import { addListToStorage, clearCoords, getListFromStorage } from '../../utils/LocalStorageApi';
@@ -12,6 +12,7 @@ import { MenuContext } from '../menuStuff/MenuProvider';
 import { sendLocations } from '../../utils/ServerApi';
 import { AuthContext } from '../login/AuthProvider';
 import InfectedComponent from '../menuStuff/InfectedComponent';
+import AlertComponent from '../menuStuff/AlertComponent';
 
 
 interface ContainerProps { }
@@ -136,7 +137,7 @@ const showMapFunc = () => {
   }
 }
 
-useEffect(monitorFunction,[]);
+//useEffect(monitorFunction,[]);
 
   return (
     <IonPage>
@@ -145,15 +146,15 @@ useEffect(monitorFunction,[]);
       <InfectedComponent/>
       <IonContent>
         <IonCard id="monitorContainerCard">
-          <IonTitle>You are here</IonTitle>
+          <IonCardTitle id="cardTitle">You are here</IonCardTitle>
           <IonCardContent>
-              <IonList>
-                <IonItem id="position">
-                  <IonNote>Latitude: </IonNote>
-                  <IonText>{latitude}</IonText>
-               
+              <IonList id="list">
+                <IonItem id="positionItem">
+                  <IonNote >Latitude: </IonNote>
+                  <IonText >{latitude.toFixed(3)}</IonText>
+                  <div className="emptyDiv"></div><div className="emptyDiv"></div>
                   <IonNote>Longitute: </IonNote>
-                  <IonText>{longitude}</IonText>
+                  <IonText>{longitude.toFixed(3)}</IonText>
                 </IonItem>
                 <div id="monitorList">
                   <IonButton onClick={showListFunc} color="warning">Show list</IonButton>
@@ -164,16 +165,21 @@ useEffect(monitorFunction,[]);
         </IonCard>
         {showCoordList &&
           <IonList id="coordsList">
-            {listSoFar.map( (coord) => <IonItem key={coord.timestamp.toString()}>
-                <IonNote>lat: </IonNote><IonText>{coord.latitude}</IonText>
-                <IonNote>lng: </IonNote><IonText>{coord.longitude}</IonText>
+            {listSoFar.map( (coord) => 
+            <IonCard>
+            <IonItem key={coord.timestamp.toString()}>
+                <IonNote>lat: </IonNote><IonText>{coord.latitude.toFixed(3)}</IonText>
+                <div className="emptyDiv"></div>
+                <IonNote>lng: </IonNote> <IonText> 23.652 {/* {coord.longitude.toFixed(3)} */}</IonText>
+                <div className="emptyDiv"></div>
                 <IonNote>time: </IonNote><IonText>{coord.timestamp}</IonText>
-            </IonItem>)}
+            </IonItem>
+            </IonCard>)}
           </IonList>
         }
         {showMap &&
           <div id="mapContainer">
-            <MyMap lat={latitude} lng={longitude} markPosition={true}/>
+            {/* <MyMap lat={latitude} lng={longitude} markPosition={true}/> */}
           </div>
         }
         </IonContent>
