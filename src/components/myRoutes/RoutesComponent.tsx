@@ -71,7 +71,7 @@ const RoutesComponet: React.FC = () => {
                 </IonCard>
                 {showRoute &&
                 <div id="routesMapContainer">
-                    {/* <MyRouteMap route={route} markPosition={true} forSimulation={false}/> */}
+                    <MyRouteMap route={route} markPosition={true} forSimulation={false}/>
                 </div>
                 }
                 <MenuComponent/>

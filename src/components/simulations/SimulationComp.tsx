@@ -1,4 +1,4 @@
-import { IonButton, IonCard, IonCardContent, IonCardTitle, IonContent, IonFabButton, IonIcon, IonModal, IonNote, IonPage, IonSelect, IonSelectOption, IonText, IonTitle } from "@ionic/react";
+import { IonButton, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonContent, IonFabButton, IonIcon, IonModal, IonNote, IonPage, IonSelect, IonSelectOption, IonText, IonTitle } from "@ionic/react";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../login/AuthProvider";
 import InfectedComponent from "../menuStuff/InfectedComponent";
@@ -37,14 +37,21 @@ export interface SimulationDayProps{
     noImuneUsers: number
 }
 
+export interface SimulationFull{
+    days: SimulationDayProps[]
+    options: string
+  }
+
 const SimulationComp: React.FC = () => {  
     const emptyList: SimulationProps[] = [];
     const emptyDayList: SimulationDayProps[] = [];
     const emptySim: SimulationProps = {id: 0, startInf:0, regionName: "", noDays: 0, noInfUsers: 0, noUsers:0}
+    const emptySimFull: SimulationFull[] = []
     const {token} = useContext(AuthContext)
     const [allSimulations, setAllSim] = useState(emptyList)
     const [selectedSim, setSelectedSim] = useState(emptySim)
     const [simulationDays, setSimulationDays] = useState(emptyDayList)
+    const [simulationsFull, setSimulationFull] = useState(emptySimFull)
     const [stateUpdated, setStateUpdated] = useState(false)
     const [currentDay, setCurrentDay]=useState(0);
     const [isModalOpened, setIsModalOpened]=useState(false);
@@ -52,25 +59,28 @@ const SimulationComp: React.FC = () => {
     const [message, setMessage] = useState("");
     const [someError, setSomeError] = useState(false);
     
-    const barData={
-        labels: simulationDays.map(sim=>sim.dayNo),
+    const barData = simulationsFull.map(oneSimFull=>{
+    return {
+        label: oneSimFull.options,
+        labels: oneSimFull.days.map(sim=>sim.dayNo),
         datasets: [
             {label: "Infected",
-            data: simulationDays.map(sim=>sim.infNo),
+            data: oneSimFull.days.map(sim=>sim.infNo),
             backgroundColor: '#f08d13',
             borderColor: '#f01313',
             borderWidth: 2,
             hoverBackgroundColor: '#f2f531'
         },
         {label: "Immune",
-            data: simulationDays.map(sim=>sim.noImuneUsers),
+            data: oneSimFull.days.map(sim=>sim.noImuneUsers),
             backgroundColor: '#0990e3',
             borderColor: '#04127d',
             borderWidth: 2,
             hoverBackgroundColor: '#07e3df'
         },
         ],       
-    }
+    }})
+    console.log(JSON.stringify(barData))
 
     const reducer = (acc: number, val: number) => acc + val;
     // simulationDays.forEach(sim=> console.log(sim.dayNo + " "+sim.noImuneUsers))
@@ -89,7 +99,18 @@ const SimulationComp: React.FC = () => {
     }
 
 
-    const getAllSim = () =>{
+    const getAllSim = (value?: number) =>{
+        if (value){
+            if (value = 0){
+                setMessage("Simulation started")
+                setSomeError(false)
+            }
+            else {
+                setMessage("Start simulation failed")
+                setSomeError(true)
+                return
+            }
+        }
         console.log("token: "+token)
         getAllSimulations(token).then(sims =>{
             console.log("sims: " +sims)
@@ -109,12 +130,14 @@ const SimulationComp: React.FC = () => {
     useEffect(getAllSim, [])
 
     const viewSimulation = () => {
-        getSimulationDays(token, selectedSim.id).then(days=>{
-            if (days){
-            setSimulationDays(days.sort((a,b) => (a.dayNo - b.dayNo) ))
+        getSimulationDays(token, selectedSim.id).then(sim=>{
+            if (sim){
+            setSimulationFull(sim)
+            setSimulationDays(sim[0].days)
             setCurrentDay(0)
             setStateUpdated(!stateUpdated)
             setSomeError(false);
+            setMessage("Got simulation")
             }
             else{
                 setSomeError(true);
@@ -186,29 +209,43 @@ const SimulationComp: React.FC = () => {
             </div>
         </IonCard>
         { simulationDays.length>0 &&
-            <div id="dayButtons">
-                <IonNote>Days</IonNote>
-                <IonFabButton color="warning" size="small" onClick={goBackward}><IonIcon icon={arrowBack}></IonIcon></IonFabButton>
-                <div className="textBox">
-                    <IonText><em><strong>{currentDay+1}</strong></em></IonText>
+            <div className="inlineDiv">
+            <div className="inlineDiv flexDiv">
+                <div className="sized">
+                    <IonNote className="block leftMargin">Days</IonNote>
                 </div>
-                <IonFabButton color="warning" size="small" onClick={goForward}><IonIcon icon={arrowForward}></IonIcon></IonFabButton>
+                <div className="dayButtons">
+                    <IonFabButton color="warning" size="small" onClick={goBackward}><IonIcon icon={arrowBack}></IonIcon></IonFabButton>
+                        <div className="textBoxSmallMargin">
+                            <IonText><em><strong>{currentDay+1}</strong></em></IonText>
+                        </div>
+                    <IonFabButton color="warning" size="small" onClick={goForward}><IonIcon icon={arrowForward}></IonIcon></IonFabButton>
+                </div>
             </div>
-        }
-        { simulationDays.length>0 &&
+        {/* }
+        { simulationDays.length>0 && */}
             <div id="infectedDiv">
-                <IonNote>Infected</IonNote>
-                <div className="textBox">
-                <IonText><em><strong>{
-                    simulationDays[currentDay].infNo}</strong></em></IonText>
+                <div>
+                    <IonNote className="block">Infected</IonNote>
+                    <div className="textBox">
+                    <IonText className="centerText"><em><strong>{
+                        simulationDays[currentDay].infNo}</strong></em></IonText>
+                    </div>
                 </div>
-                <IonFabButton size="small" color="warning" onClick={()=>{setShowCharts(true)}}><IonIcon icon={barChartOutline}></IonIcon></IonFabButton>
+                <div className="flexDiv">
+                    <IonNote className="block">Inf. Rate</IonNote>
+                    <IonText className="block textBox"><em><strong>{((simulationDays[currentDay].infNo/selectedSim.noUsers)*100).toFixed(2)}</strong></em></IonText>
+                </div>
+                <IonFabButton size="small" color="warning" onClick={()=>{
+                    console.log("insideSetChart")
+                    setShowCharts(true)
+                    }}><IonIcon icon={barChartOutline}></IonIcon></IonFabButton>
+            </div>
             </div>
         }
            { simulationDays.length>0 &&
             <div id="mapDiv">
                 <MyRouteMap forSimulation={true} currentDay={currentDay} route={simulationDays[currentDay].contactPoints.map(cp=> {return {latitude: cp.lat, longitude: cp.lng, timestamp: 0, noEncouters:cp.noEncouters}; })} markPosition={true} />
-               
             </div>
         }
        
@@ -225,8 +262,13 @@ const SimulationComp: React.FC = () => {
            { showCharts &&
            <IonModal isOpen={showCharts} id="chartModal">
             <IonCard id="chartCard">
-                <IonCardTitle>{selectedSim.regionName+" - Simulation"}</IonCardTitle>
-                <Line data={barData} type="line" id="lineChart"></Line>
+            <IonCardTitle>{selectedSim.regionName+" - Simulation"}</IonCardTitle>
+                {barData.map(data=>
+                <span>
+                <IonCardSubtitle>{data.label}</IonCardSubtitle>
+                <Line data={data} type="line" id="lineChart"></Line>
+                </span>
+                )}
                 <div id="pieDiv">
                     <Pie data={pieData} type="pie"></Pie>
                 </div>

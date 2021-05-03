@@ -1,10 +1,9 @@
-import { CreateAnimation, IonItem, IonList,IonModal, IonTitle} from '@ionic/react';
+import { IonItem, IonList,IonModal} from '@ionic/react';
 import React, { useContext, useState } from 'react';
-import { menuController } from '@ionic/core';
 import '../../pages/Home.css';
 import { useHistory } from 'react-router';
 import { MenuContext } from './MenuProvider';
-import { createAnimation, Animation } from '@ionic/core';
+import { createAnimation } from '@ionic/core';
 import { AuthContext } from '../login/AuthProvider';
 
 const MenuComponent: React.FC = () => {
@@ -42,6 +41,11 @@ const MenuComponent: React.FC = () => {
       logout();
   }
 
+  const goHome =() => {
+    updateMenuState && updateMenuState(false);
+    history.push({pathname: "/home"})
+  }
+
   const enterAnimation = (baseEl: any) => {
     const backdropAnimation = createAnimation()
       .addElement(baseEl.querySelector('ion-backdrop')!)
@@ -73,9 +77,10 @@ const leaveAnimation = (baseEl: any) => {
   return (
     <IonModal isOpen={isMenuOpened} id="modalMenu" enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
       <IonList>
+        <IonItem key="ShowLocationMenuItem" onClick={goHome}>Home</IonItem>
         <IonItem key="ShowLocationMenuItem" onClick={goToMonitor}>Current location</IonItem>
         <IonItem key="ShowRoutesMenuItem" onClick={goToRoutes}>My routes</IonItem>
-        <IonItem key="AddRegionMenuItem" onClick={addRegion}>Add region</IonItem>
+        {/* <IonItem key="AddRegionMenuItem" onClick={addRegion}>Add region</IonItem> */}
         <IonItem key="SimulationMenuItem" onClick={goToSimulations}>Simulations</IonItem>
         <IonItem key="LogoutItem" onClick={logOut}>Logout</IonItem>
         <IonItem key="CloseMenuItem" onClick={closeMenu}>Close menu</IonItem>

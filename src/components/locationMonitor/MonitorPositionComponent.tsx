@@ -166,7 +166,7 @@ const showMapFunc = () => {
         {showCoordList &&
           <IonList id="coordsList">
             {listSoFar.map( (coord) => 
-            <IonCard>
+            <IonCard key={coord.timestamp.toString()}>
             <IonItem key={coord.timestamp.toString()}>
                 <IonNote>lat: </IonNote><IonText>{coord.latitude.toFixed(3)}</IonText>
                 <div className="emptyDiv"></div>

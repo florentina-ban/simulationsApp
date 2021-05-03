@@ -1,4 +1,4 @@
-import { CreateAnimation, createAnimation, IonIcon, IonModal, IonNote, IonText } from "@ionic/react"
+import { IonIcon, IonModal, IonText } from "@ionic/react"
 import { checkmarkCircleOutline, closeCircleOutline } from "ionicons/icons";
 import React, { useEffect} from "react";
 import "../../pages/Home.css"

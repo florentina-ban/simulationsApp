@@ -21,8 +21,8 @@
     height: 7% !important;
     border-radius:  50px 50px;
     position: absolute;
-    top: 75%;
-    left: 40%;
+    top: 85%;
+    left: 35%;
 }
  #alertDivOk{
     z-index: 200;
