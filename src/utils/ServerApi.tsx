@@ -3,13 +3,13 @@ import { CoordonatesProps } from '../components/interfaces/CoordonatesProps';
 import { clearCoords } from './LocalStorageApi';
 import { ResponseProps, withLogs } from './utils';
 import Region from '../components/regions/RegionProps';
-import { SimulationDayProps, SimulationFull, SimulationProps } from '../components/simulations/SimulationComp';
+import {SimulationFull, SimulationProps } from '../components/simulations/SimulationComp';
 
 export const baseUrl = '192.168.100.2:8083/staySafe';
-//export const baseUrl = '34.123.134.209:3389/staySafe';
+//export const baseUrl = '34.122.61.83:3389/staySafe';
 const addLocationsUrl = `http://${baseUrl}/addLocations`;
 const addregionUrl = `http://${baseUrl}/addRegion`;
-const coordsUrl = `http://${baseUrl}/coordsForUser`;
+const coordsUrl = `http://${baseUrl}/coordsForUser1`;
 const initPointsUrl = `http://${baseUrl}/allInitCoords`;
 const destinationsUrl =`http://${baseUrl}/allDestinations`;
 const allSimUrl=`http://${baseUrl}/simulations`;
@@ -37,7 +37,10 @@ export const getRoutesForUser: (token: string) => Promise<CoordonatesProps[]> = 
   console.log("inside send function- token: "+token)
   return withLogs(axios.post(coordsUrl,{},addTokenConfig(token)),'getRoute');
 }
-
+export const getRoutesForUser1: (token: string, start: number, end: number) => Promise<CoordonatesProps[]> = (token: string, start: number, end: number) => {
+  console.log("inside send function- token: "+token)
+  return withLogs(axios.post(coordsUrl,{start: start, end: end},addTokenConfig(token)),'getRoute');
+}
 export const getAllInitPoints: (token: string, idUser: number) => Promise<CoordonatesProps[]> = (token: string, idUser: number) => {
   return withLogs(axios.get(initPointsUrl,addTokenConfig(token)),'getInitPoints');
 }
@@ -59,8 +62,9 @@ export const deleteSim: (token: string, simId:number) => Promise<SimulationProps
   return withLogs(axios.post(delSimUrl,{id: simId}, addTokenConfig(token)),'deleteSimulation');
 }
 
-export const startSim: (token: string, simDays: number, infNo: number, simType: number[]) => Promise<string> = (token: string, simDays: number, infNo: number, simType: number[]) => {
-  return withLogs(axios.post(startSimUrl,{regionId: 14, infOnStart:infNo, dayNo: simDays, simType: simType}, addTokenConfig(token)),'startSimulation');
+export const startSim: (token: string, simDays: number, infNo: number, simType: string[]) => Promise<number> = (token: string, simDays: number, infNo: number, simType: string[]) => {
+  console.log("----------"+JSON.stringify(simType))
+  return withLogs(axios.post(startSimUrl,{regionId: 14, infOnStart:infNo, dayNo: simDays, contactTypes: simType}, addTokenConfig(token)),'startSimulation');
 }
 
 export const updateUserState: (token: string, infState: number) => Promise<number> = (token: string, infState: number) => {

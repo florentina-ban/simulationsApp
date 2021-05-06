@@ -5,9 +5,13 @@ import { RouteComponentProps, useHistory } from 'react-router';
 import MenuComponent from '../components/menuStuff/MenuComponent';
 import ToolbarComponent from '../components/menuStuff/ToolbarComponent';
 import InfectedComponent from '../components/menuStuff/InfectedComponent';
+import { BackgroundMode } from '@ionic-native/background-mode'
 
 const Home: React.FC<RouteComponentProps> = (props) => {
   const history = useHistory();
+
+  // BackgroundMode.enable();
+
   const goToMonitor = () => {
     history.push("/monitor")
   }
@@ -25,7 +29,7 @@ const Home: React.FC<RouteComponentProps> = (props) => {
       <MenuComponent/> 
       <InfectedComponent/>
       <IonContent>
-        <IonCard id="locationCard" onClick={goToMonitor}></IonCard>
+        <IonCard class="locationCard" onClick={goToMonitor}></IonCard>
         <IonCard id="routeCard" onClick={goToRoutes}></IonCard>
         <IonCard id="simCard" onClick={goToSimulations}></IonCard>
       </IonContent>

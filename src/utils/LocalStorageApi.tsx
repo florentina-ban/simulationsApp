@@ -2,15 +2,24 @@ import { Plugins } from '@capacitor/core';
 import { CoordonatesProps } from '../components/interfaces/CoordonatesProps';
 const { Storage } = Plugins;
 
-
 interface FromStorage{
   myValue: CoordonatesProps[]
 }
 
 export async function addListToStorage (key: string, coordToStore: any) {
   getListFromStorage(key).then( fromStorageObj => {
+    console.log("inside add to storage")
+    if (key=='coordList' && fromStorageObj.myValue.length>0){
+      const lastPoint = fromStorageObj.myValue[fromStorageObj.myValue.length-1]
+      console.log("lastpoint: "+JSON.stringify(lastPoint))
+      console.log("newPoint: "+JSON.stringify(coordToStore))
+
+      if (lastPoint.timestamp != coordToStore.timestamp)
+        fromStorageObj.myValue.splice(fromStorageObj.myValue.length, 0, coordToStore)
+    }
+    else {
       fromStorageObj.myValue.splice(fromStorageObj.myValue.length, 0, coordToStore)
-      console.log("after push: "+JSON.stringify(fromStorageObj))
+    }
       Storage.set({
         key: key,
         value: JSON.stringify(
@@ -18,6 +27,32 @@ export async function addListToStorage (key: string, coordToStore: any) {
       )
     })
   })
+
+  // getListFromStorage(key).then( fromStorageObj => {
+  //   if (key=='coordList' && fromStorageObj.myValue.length>0){
+  //     console.log("-----------------------------------")
+  //     const lastPoint = fromStorageObj.myValue[-1];
+  //     console.log("last point from storage "+ JSON.stringify(lastPoint))
+  //     console.log("new point to store "+ JSON.stringify(coordToStore))
+  //     if (lastPoint.timestamp != coordToStore.timestamp){
+  //       console.log("----------------------------------->")
+  //       fromStorageObj.myValue.splice(fromStorageObj.myValue.length, 0, coordToStore)
+  //       console.log("after push: "+JSON.stringify(fromStorageObj))
+  //       Storage.set({
+  //         key: key,
+  //         value: JSON.stringify(
+  //         { myValue: fromStorageObj.myValue }
+  //     )
+  //   })
+  //   } }
+  //   else 
+  //   Storage.set({
+  //     key: key,
+  //     value: JSON.stringify(
+  //     { myValue: fromStorageObj.myValue }
+  // )
+  // })
+//})
 }
 
 export async function addValueToStorage (key: string, val: any) {

@@ -53,19 +53,17 @@
     top: 12%
 }
 /* home content */
-#locationCard{
+.locationCard{
+    display: inline block;
     width: 60%;
     height: 30%;
     --background: url('../resources/location.jpg');
     background-repeat: no-repeat;
+    /* transition: transform .2s; */
 }
-#locationCard:hover{
-    animation-timing-function: ease;
-    transform-origin: left;
-    animation-duration: 3s;
-    animation-timing-function: linear;
-    animation-play-state: running;
-    transform: scaleX(1.2);    
+
+.locationCard:active{
+    /* transform: scale(1.5) !important;   */
 }
 
 #routeCard{

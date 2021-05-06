@@ -34,13 +34,14 @@ export interface SimulationDayProps{
     dayNo: number,
     infNo: number,
     contactPoints: ContactPointProps[],
-    noImuneUsers: number
+    noImuneUsers: number,
+    noNewInfected: number,
 }
 
 export interface SimulationFull{
     days: SimulationDayProps[]
     options: string
-  }
+}
 
 const SimulationComp: React.FC = () => {  
     const emptyList: SimulationProps[] = [];
@@ -59,38 +60,62 @@ const SimulationComp: React.FC = () => {
     const [message, setMessage] = useState("");
     const [someError, setSomeError] = useState(false);
     
+    const getClosedInstitusions = (options: string) => {
+        const closed = options.split("")
+        var myString: string = "";
+        myString = closed.indexOf("1")<0 ? myString+"Schools " : myString
+        myString = closed.indexOf("2")<0 ? myString+"Universities ": myString
+        myString = closed.indexOf("3")<0 ? myString+"Shops ": myString
+        myString = closed.indexOf("4")<0 ? myString+"Restaurants ": myString
+        
+        myString = myString.length==0 ? "Everything opened" : "Closed places: "+myString
+        return myString;
+    }
+    const maxYAxis: number = Math.ceil((Math.max(...simulationDays.map(simD=>simD.infNo)))/100)*100
+    console.log("maxY: "+maxYAxis);
+    const lineOptions = {
+        responsive: true,
+        scales: {
+            y: {
+                suggestedMax: maxYAxis,
+                max: maxYAxis
+            }
+        }
+    }
     const barData = simulationsFull.map(oneSimFull=>{
     return {
-        label: oneSimFull.options,
-        labels: oneSimFull.days.map(sim=>sim.dayNo),
+        label2: getClosedInstitusions(oneSimFull.options),
+        labels: oneSimFull.days.map(d=> d.dayNo),
         datasets: [
             {label: "Infected",
             data: oneSimFull.days.map(sim=>sim.infNo),
             backgroundColor: '#f08d13',
             borderColor: '#f01313',
-            borderWidth: 2,
-            hoverBackgroundColor: '#f2f531'
+            borderWidth: 1,
+            pointBorderWidth: 1,
+            pointRadius: 1,
+            hoverBackgroundColor: '#f2f531',
         },
         {label: "Immune",
             data: oneSimFull.days.map(sim=>sim.noImuneUsers),
             backgroundColor: '#0990e3',
             borderColor: '#04127d',
-            borderWidth: 2,
-            hoverBackgroundColor: '#07e3df'
-        },
-        ],       
+            borderWidth: 1,
+            pointRadius: 1,
+            hoverBackgroundColor: '#07e3df',
+            hoverBorderColor: '#0990e3',
+        }], 
+        
     }})
-    console.log(JSON.stringify(barData))
-
     const reducer = (acc: number, val: number) => acc + val;
-    // simulationDays.forEach(sim=> console.log(sim.dayNo + " "+sim.noImuneUsers))
-    console.log("infec: "+selectedSim.noInfUsers);
-    console.log("no of users: "+selectedSim.noUsers);
-    console.log( simulationDays.map(simD=>simD.noImuneUsers).reduce(reducer,0) + "-----");
+    const infections = simulationDays.map(simD=>simD.noNewInfected).reduce(reducer,0)
+    const immunes = simulationDays.map(simD=>simD.noImuneUsers).reduce(reducer,0)
+    const healthies = selectedSim.noUsers - infections - immunes
+    
     const pieData={ 
         labels: ['Infected','Healthy','Immune'],
         datasets: [
-            {data: [selectedSim.noInfUsers, selectedSim.noUsers-selectedSim.noInfUsers,  simulationDays.map(simD=>simD.noImuneUsers).reduce(reducer,0)],
+            {data: [infections, healthies, immunes],
             backgroundColor: ['#f08d13','#05e30c','#0990e3'],
             borderColor: ['#f01313','#046107','#04127d'],
             borderWidth: 2,
@@ -115,7 +140,7 @@ const SimulationComp: React.FC = () => {
         getAllSimulations(token).then(sims =>{
             console.log("sims: " +sims)
             if (sims){
-                setMessage("Got your simulations")
+                setMessage("Got simulations")
                 setAllSim(sims)
                 setSomeError(false)
             }
@@ -127,6 +152,11 @@ const SimulationComp: React.FC = () => {
         })
     }
 
+    const updateAlertComponent = (message: string, isError: boolean) => {
+        setSomeError(isError)
+        setMessage(message)
+    }
+
     useEffect(getAllSim, [])
 
     const viewSimulation = () => {
@@ -136,12 +166,10 @@ const SimulationComp: React.FC = () => {
             setSimulationDays(sim[0].days)
             setCurrentDay(0)
             setStateUpdated(!stateUpdated)
-            setSomeError(false);
-            setMessage("Got simulation")
+            updateAlertComponent("Got simulation", false)
             }
             else{
-                setSomeError(true);
-                setMessage("Can not view simulation")
+                updateAlertComponent("Get simulation failed", true)
             }
         })
     }
@@ -151,6 +179,8 @@ const SimulationComp: React.FC = () => {
             console.log(JSON.stringify(simulationDays[currentDay+1]))
             setCurrentDay(currentDay+1)
         }
+        else 
+            updateAlertComponent("No more days", true)
     }
 
     const goBackward = () => {
@@ -158,6 +188,8 @@ const SimulationComp: React.FC = () => {
             console.log(JSON.stringify(simulationDays[currentDay-1]))
             setCurrentDay(currentDay-1)
         }
+        else
+            updateAlertComponent("First day", true)
     }
 
     const delSim = () => {
@@ -167,13 +199,11 @@ const SimulationComp: React.FC = () => {
                     setAllSim(sims)
                     setSelectedSim(emptySim)
                     setCurrentDay(0)
-                    setMessage("Simulation deleted")
-                    setSomeError(false)
-                    setStateUpdated(!stateUpdated)
+                    updateAlertComponent("Simulation deleted", false)
+                    // setStateUpdated(!stateUpdated)
                 }
                 else{
-                    setMessage("Cannot delete simulation")
-                    setSomeError(true)
+                    updateAlertComponent("Cannot delete simulation", true)
                 }
             })
     }
@@ -185,8 +215,9 @@ const SimulationComp: React.FC = () => {
     const updateMessage = (mes:string) =>{
         setMessage(mes)
     }
+    const infRate = (simulationDays[currentDay]) ? ((simulationDays[currentDay].infNo/selectedSim.noUsers)*100) : Infinity 
+    const infRateReal = isFinite(infRate) ? infRate.toFixed(2) : "--";
     
-
     return(
         <IonPage>
         <ToolbarComponent/>
@@ -222,8 +253,7 @@ const SimulationComp: React.FC = () => {
                     <IonFabButton color="warning" size="small" onClick={goForward}><IonIcon icon={arrowForward}></IonIcon></IonFabButton>
                 </div>
             </div>
-        {/* }
-        { simulationDays.length>0 && */}
+        
             <div id="infectedDiv">
                 <div>
                     <IonNote className="block">Infected</IonNote>
@@ -234,7 +264,7 @@ const SimulationComp: React.FC = () => {
                 </div>
                 <div className="flexDiv">
                     <IonNote className="block">Inf. Rate</IonNote>
-                    <IonText className="block textBox"><em><strong>{((simulationDays[currentDay].infNo/selectedSim.noUsers)*100).toFixed(2)}</strong></em></IonText>
+                    <IonText className="block textBox centerText"><em><strong>{infRateReal}</strong></em></IonText>
                 </div>
                 <IonFabButton size="small" color="warning" onClick={()=>{
                     console.log("insideSetChart")
@@ -254,7 +284,7 @@ const SimulationComp: React.FC = () => {
                <IonCard id="modalContainer">
                 <IonCardTitle id="modalTitle">Create new simulation</IonCardTitle>
                 <IonCardContent>
-                <AddSimulationComp openClose={openCloseAddModal} updateSimulations={getAllSim}/>
+                <AddSimulationComp openClose={openCloseAddModal} updateSimulations={getAllSim} updateAlertComp={updateAlertComponent}/>
                 </IonCardContent>
                 </IonCard>
              </IonModal>  
@@ -262,16 +292,19 @@ const SimulationComp: React.FC = () => {
            { showCharts &&
            <IonModal isOpen={showCharts} id="chartModal">
             <IonCard id="chartCard">
-            <IonCardTitle>{selectedSim.regionName+" - Simulation"}</IonCardTitle>
-                {barData.map(data=>
-                <span>
-                <IonCardSubtitle>{data.label}</IonCardSubtitle>
-                <Line data={data} type="line" id="lineChart"></Line>
-                </span>
-                )}
-                <div id="pieDiv">
-                    <Pie data={pieData} type="pie"></Pie>
+            <IonCardTitle className="cardTitle">{selectedSim.regionName+" - Simulation"}</IonCardTitle>
+                {barData.map(barData=>
+                <div>
+                <IonCardSubtitle className="subtitle">{barData.label2}</IonCardSubtitle>
+                <Line data={barData} type="line" options={lineOptions} className="lineChart"></Line>
                 </div>
+                )}
+                {/* <div id="pieDivContainer"> */}
+                    <IonCardSubtitle className="subtitle">Worst case scenario</IonCardSubtitle>
+                    <div id='pieDiv'>
+                    <Pie data={pieData} type="pie"></Pie>
+                    </div>
+                {/* </div> */}
                 <IonButton color="warning" id="closeChartModalButton" onClick={() => setShowCharts(false)}>Close</IonButton>
             </IonCard>
             </IonModal>

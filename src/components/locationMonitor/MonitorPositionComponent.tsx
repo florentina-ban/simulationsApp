@@ -13,6 +13,7 @@ import { sendLocations } from '../../utils/ServerApi';
 import { AuthContext } from '../login/AuthProvider';
 import InfectedComponent from '../menuStuff/InfectedComponent';
 import AlertComponent from '../menuStuff/AlertComponent';
+import { stringify } from 'node:querystring';
 
 
 interface ContainerProps { }
@@ -28,9 +29,11 @@ const MonitorComponent: React.FC<ContainerProps> = () => {
   const [listSoFar, setListSoFar] = useState<CoordonatesProps[]>([])
 
   const { isMenuOpened, updateMenuState} = useContext(MenuContext)
-  const {updateCurrentLocation}= useContext(CurrentLocationContext)
+  const {updateCurrentLocation} = useContext(CurrentLocationContext)
   const { token } = useContext(AuthContext)
 
+  const [message, setMessage] = useState("")
+  const [isError, setIsError] = useState(false)
   
 const monitorFunctionBack = () => {
   BackgroundGeolocation.configure({
@@ -56,6 +59,7 @@ const monitorFunctionBack = () => {
       })
     }
     getListFromStorage('coordList').then(list => {
+      console.log(JSON.stringify(list.myValue))
       const size = list.myValue.length;
         console.log("diferent from before or empty list" )
         addListToStorage('coordList',
@@ -84,8 +88,18 @@ const monitorFunction = () => {
             altiude: value.coords.altitude? value.coords.altitude : 0,
             timestamp: Math.ceil(value.timestamp/1000)
           })
+          console.log("after add to storage: before size: "+size)
          if (size>1){
-           sendLocations(list.myValue, token).then(()=>{clearCoords()})
+           sendLocations(list.myValue, token).then(()=>{
+             console.log("CLEAR COORDS")
+             clearCoords()
+             setMessage("Points up to date")
+             setIsError(false)
+            },
+             ()=>{
+               setMessage("Point update failed")
+                setIsError(true)
+              })
          } 
       })
       setlatitude(value.coords.latitude)
@@ -93,8 +107,6 @@ const monitorFunction = () => {
       setAltitude(value.coords.altitude || 0)
       setTimeStamp(Math.ceil(value.timestamp/1000))
       setAccuracy(value.coords.accuracy)
-
-      console.log("timestamp: "+Math.ceil(value.timestamp/1000))
 
       if (updateCurrentLocation){
         console.log("inside update")
@@ -116,7 +128,6 @@ const showListFunc = () => {
     setShowMap(false);
   }
   if (!showCoordList){
-    console.log("!showList")
     getListFromStorage('coordList').then(list => {
       setListSoFar(list.myValue)
       setShowCoordList(true)
@@ -137,13 +148,17 @@ const showMapFunc = () => {
   }
 }
 
-//useEffect(monitorFunction,[]);
+useEffect(monitorFunction,[]);
+const updateMessage = (mes: string) => {
+  setMessage(mes)
+}
 
   return (
     <IonPage>
       <ToolbarComponent/>
       <MenuComponent/>
       <InfectedComponent/>
+      <AlertComponent message={message} errorMes={isError} updateMessage={updateMessage}/>
       <IonContent>
         <IonCard id="monitorContainerCard">
           <IonCardTitle id="cardTitle">You are here</IonCardTitle>
@@ -179,7 +194,7 @@ const showMapFunc = () => {
         }
         {showMap &&
           <div id="mapContainer">
-            {/* <MyMap lat={latitude} lng={longitude} markPosition={true}/> */}
+            <MyMap lat={latitude} lng={longitude} markPosition={true}/>
           </div>
         }
         </IonContent>
