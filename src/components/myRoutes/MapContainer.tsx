@@ -1,9 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
 import { mapsApiKey } from './MyMapKey'
-//import { GoogleMap, useLoadScript, InfoWindow, Marker } from '@react-google-maps/api';
 import { GoogleMap, Marker, withGoogleMap, withScriptjs } from "react-google-maps"
 import { Libraries } from '@react-google-maps/api/dist/utils/make-load-script-url';
-import { CurrentLocationContext } from '../locationMonitor/currentLocationProvider';
 import { compose, withProps } from 'recompose';
 interface MyMapProps {
   lat: number;
@@ -49,23 +46,3 @@ export const MyMap = compose<MyMapProps, any>(
       }
   </GoogleMap> 
 )})
-
-const MapContainer: React.FC<MyMapProps> = ({lat, lng}) => {  
-  const {haveCurrentLocation, currentLocationError, currentLocation} = useContext(CurrentLocationContext);
- 
-  const [latitude, setLat ] = useState(lat);
-  const [longitude, setLng ]= useState(lng);
- console.log("lat: "+lat+" lng: "+lng)
-  if (currentLocation){
-  console.log(JSON.stringify(currentLocation)+"__________");
-  }
-  else {
-    console.log("no current Location")
-  }
-
-  return(
-    <MyMap lat={lat} lng={lng} />
-  )
-}
-
-export default MapContainer;

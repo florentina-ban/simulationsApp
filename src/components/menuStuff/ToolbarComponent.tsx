@@ -1,12 +1,14 @@
 import { IonButton, IonButtons, IonHeader, IonIcon, IonMenuButton, IonTitle, IonToolbar } from "@ionic/react";
 import { checkmarkDoneOutline, sunnyOutline, thunderstormOutline } from "ionicons/icons";
 import React, { useContext, useState } from "react";
-import { updateUserState } from "../../utils/ServerApi";
+import { useHistory } from "react-router";
 import { AuthContext } from "../login/AuthProvider";
 import { MenuContext } from "./MenuProvider";
 
 const ToolbarComponent: React.FC = () => {
     const { updateMenuState, updateInfectedState} = useContext(MenuContext)
+    const history = useHistory();
+    const { logout } = useContext(AuthContext);
     const {infected, token} = useContext(AuthContext);
 
     const openMenu = () => {
@@ -15,27 +17,25 @@ const ToolbarComponent: React.FC = () => {
             updateMenuState(true); 
     } 
 
-    const setInfected = () => {
-      if (updateInfectedState){
-        console.log("infected?")
-        updateInfectedState(true);
+    const logOut = () => {
+        localStorage.clear();
+        if (logout)
+          logout();
       }
-    }
 
     return (
         <IonHeader>
-        <IonToolbar color="success">
+        <div>
           <IonButtons>
-            <IonMenuButton  auto-hide="false" onClick={openMenu}></IonMenuButton>
-            <IonTitle>Stay Safe App</IonTitle>
-            <IonMenuButton  auto-hide="false" onClick={setInfected}>
-               {infected==0 && <IonIcon icon={sunnyOutline}></IonIcon>}
-               {infected==1 && <IonIcon icon={thunderstormOutline}></IonIcon>}
-               {infected==2 && <IonIcon icon={checkmarkDoneOutline}></IonIcon>}
-            </IonMenuButton>
+            <IonTitle>Simulation App</IonTitle>
+            <div className="menuButton" onClick={()=> history.push({pathname: "/create"})}>Create</div>
+            <div className="menuButton" onClick={()=> history.push({pathname: "/view"})}>View</div>
+            <div className="menuButton" onClick={()=> history.push({pathname: "/compare"})}>Compare</div>
+            <div className="menuButton" onClick={()=> history.push({pathname: "/help"})}>Help</div>
+            <div className="menuButton" onClick={logOut}>LogOut</div>
           </IonButtons>
         
-        </IonToolbar>
+        </div>
         </IonHeader>
     )
 }

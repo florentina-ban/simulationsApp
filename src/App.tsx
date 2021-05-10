@@ -21,17 +21,17 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import MonitorComponent from './components/locationMonitor/MonitorPositionComponent';
 import React from 'react';
 import { MenuProvider } from './components/menuStuff/MenuProvider';
 import Login from './components/login/Login';
 import { AuthProvider } from './components/login/AuthProvider';
 import RoutesComponet from './components/myRoutes/RoutesComponent';
-import { CurrentLocationProvider } from './components/locationMonitor/currentLocationProvider';
 import { PrivateRoute } from './components/login/PrivateRoute';
 import RegionComponent from './components/regions/RegionComponent';
 import SimulationComp from './components/simulations/SimulationComp';
 import { SimulationProvider } from './components/simulations/SimulationProvider';
+import BoxComponent from './components/map';
+import AddSimulationComp from './components/simulations/AddSimulationComponent';
 
 const App: React.FC = () => (
   <IonApp>
@@ -40,16 +40,14 @@ const App: React.FC = () => (
         <AuthProvider>   
           <Route exact path="/login" component={Login}></Route>
           <MenuProvider>
-            <CurrentLocationProvider>
-              <Route exact path="/" render={() => <Redirect to="/home" />} />
-              <PrivateRoute exact path="/home" component={Home} />
+              <Route exact path="/" render={() => <Redirect to="/create" />} />
+              <PrivateRoute exact path="/create" component={AddSimulationComp} />
               <PrivateRoute exact path="/routes" component={RoutesComponet} />
-              <PrivateRoute exact path="/monitor" component={MonitorComponent}/>
-              <PrivateRoute exact path="/region" component={RegionComponent}/>
+              <PrivateRoute exact path="/view" component={SimulationComp}/>
+              <PrivateRoute exact path="/box" component={BoxComponent}/>
               <SimulationProvider>
                 <PrivateRoute exact path="/simulations" component={SimulationComp}/>
               </SimulationProvider>
-            </CurrentLocationProvider>
           </MenuProvider>
         </AuthProvider>
       </IonRouterOutlet>

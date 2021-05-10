@@ -9,12 +9,7 @@ import { AuthContext } from '../login/AuthProvider';
 const MenuComponent: React.FC = () => {
   const { isMenuOpened, updateMenuState} = useContext(MenuContext);
   const { logout } = useContext(AuthContext);
-    const history = useHistory();
-
-  const goToMonitor = () => {
-    updateMenuState && updateMenuState(false)
-    history.push("/monitor")
-  }
+  const history = useHistory();
 
   const goToRoutes = () => {
     updateMenuState && updateMenuState(false)
@@ -44,6 +39,11 @@ const MenuComponent: React.FC = () => {
   const goHome =() => {
     updateMenuState && updateMenuState(false);
     history.push({pathname: "/home"})
+  }
+
+  const goToMap = () =>  {
+    updateMenuState && updateMenuState(false)
+    history.push({pathname: "/box"})
   }
 
   const enterAnimation = (baseEl: any) => {
@@ -78,9 +78,8 @@ const leaveAnimation = (baseEl: any) => {
     <IonModal isOpen={isMenuOpened} id="modalMenu" enterAnimation={enterAnimation} leaveAnimation={leaveAnimation}>
       <IonList>
         <IonItem key="ShowHomeComponent" onClick={goHome}>Home</IonItem>
-        <IonItem key="ShowLocationMenuItem" onClick={goToMonitor}>Current location</IonItem>
         <IonItem key="ShowRoutesMenuItem" onClick={goToRoutes}>My routes</IonItem>
-        {/* <IonItem key="AddRegionMenuItem" onClick={addRegion}>Add region</IonItem> */}
+        <IonItem key="mapBoxMenuItem" onClick={goToMap}>box</IonItem>
         <IonItem key="SimulationMenuItem" onClick={goToSimulations}>Simulations</IonItem>
         <IonItem key="LogoutItem" onClick={logOut}>Logout</IonItem>
         <IonItem key="CloseMenuItem" onClick={closeMenu}>Close menu</IonItem>

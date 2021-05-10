@@ -2,15 +2,39 @@
     min-width: 100% !important;
     width: 100% !important;
     background-color: honeydew;
+    margin-top: 10px;
 }
 .topMargin{
-    margin-top: 10%;
+    margin-top: 12%;
 }
 .smallTopMargin{
     margin-top: 2%;
 }
 .leftMargin{
     margin-left: 50%;
+}
+
+.swapCard{
+    min-width: 45% !important;
+    width: 40% !important;
+    height: 220px !important;
+    border: 2px solid gray;
+    display: inline-block;
+    width: 120%;
+    height: 100%;
+    overflow-y: auto;
+}
+.r{
+    cursor: url('../../resources/cursorR.png'), grab !important;
+}
+.l{
+    cursor: url('../../resources/cursorL.png'), grab !important;
+}
+.swapElement:hover{
+    background-color: #b7f28f;
+}
+.block{
+    display: block;
 }
 .textBox{
     display: block;
@@ -22,11 +46,15 @@
     margin-top: 13% ;
     /* border: 2px solid red; */
 }
+.inl{
+    display: inline-block;
+}
+.smallItem{
+    --max-height: 15px;
+}
 .inlineDiv{
-    display: inline;
-    width: fit-content;
-    height: fit-content;
-    /* border: 2px solid red; */
+    display: inline-block;
+  
 }
 .convertLabel{
     margin-left: 5%;
@@ -45,40 +73,33 @@
     align-items: flex-start;
 }
 #simDiv{
-    width: 100%;
+    width: 28vw;
+    margin-top: 10px;
     display: flex;
     justify-content: space-around; 
-    margin-top: 3%;
 }
-.dayButtons{
-    width:100%;
-    display: inline-flex;
-    flex-direction: row;
-    justify-content: space-around;
-    margin-top: -5%;
-    margin-left: 8%;
-}
+
 .centerText{
     text-align: center;
     padding-left: 25%;
 }
-#infectedDiv{
-    float: right;
-    margin-right: 2%;
-    width: 55%;
-    display: inline-flex;
-    justify-content: space-around;
-    margin-top: 2%;
-    /* border: 2px solid red;  */
+
+.buttonsDiv{
+    position: absolute;
+    top: 10%;
+    z-index: 200;
 }
+
 
 #simcard{
     background-color: lavender;
-    height: 20%;
+    height: 15%;
 }
-#mapDiv{
-    height: 65%;
-    margin: 3%;
+
+/* add sim */
+#createSimCard{
+    width: 50vw;
+    height: 80vh;
 }
 
 /* modal */
@@ -95,16 +116,50 @@
     margin-left: 5%;
 }
 .flexDivRow{
-     /* border: 2px solid red;   */
+     width: 100%;
+     height: 100%;
      margin-top: 5%;
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-around;
 }
-.flexDivRowCustom{
-    /* border: 2px solid red;  */
+.alignItems{
     display: flex;
-    justify-content: space-between;
+    width: 30%;
+    justify-content: start;
+    border: 2px solid red;
+}
+.openSpan{
+    border: 1px solid grey;
+    font-size: small;
+    margin-bottom: 1%;
+    margin-right: 2px;
+    padding-right: 2px;
+    padding-left: 2px;
+    background-color: #b7f28f;
+}
+.centerButton{
+    vertical-align: middle;
+}
+.border{
+    border: 2px solid red; 
+}
+.flexDivRowCustom1{
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 5px;
+}
+.flexDivRowCustom2{
+    width: 80%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: center;
+}
+.fullWidth{
+    width: 100%;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .simItem{
@@ -133,6 +188,7 @@
     display: flex;
     flex-direction: column;
 }
+
 .sized2{
     width: 100%;
     border: 2px solid blue;
@@ -143,35 +199,23 @@
 }
 
 /* chart Modal */
-#chartModal{
-    height: 78% !important;
-    width: 90% !important;
-    margin: auto 0;
-    margin-left: 5%;
-    overflow-y: auto;
-    overflow-x: auto;
-}
 #chartCard{
-    padding-left: 1%;
-    padding-top: 5%;
-    padding-right: 1%;
-    padding-bottom: 5%;
-    height: 100% !important;
+    position: absolute;
+    width: 45vw !important;
+    height: 45vh;
+    top: 39vh;
     overflow-y: auto;
-    overflow-x: auto;
 }
 .subtitle{
     margin-left: 2%;
-
 }
 .cardTitle{
     margin-bottom: 4%;
     margin-left: 2%;
 }
 .lineChart{
-    padding-top: 5%;
     padding-bottom: 5%;
-    height: 40% !important;
+    height: 20% !important;
 }
 #closeChartModalButton{
     float: right;
@@ -181,7 +225,6 @@
 #pieDivContainer{
     margin: 0 auto;
     width: 100%;
-    /* height: 40%; */
     overflow-y: auto;
     border: 2px sienna solid;
     text-align: left;

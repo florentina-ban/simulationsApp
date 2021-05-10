@@ -29,6 +29,7 @@
     "cordova-plugin-background-mode": "^0.7.3",
     "google-maps-react": "^2.0.6",
     "ionicons": "^5.4.0",
+    "mapbox-gl": "^2.2.0",
     "plugins": "^0.4.2",
     "react": "^17.0.1",
     "react-chartjs-2": "^3.0.3",

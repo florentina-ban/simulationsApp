@@ -1,15 +1,15 @@
-import { IonButton, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonContent, IonFabButton, IonIcon, IonModal, IonNote, IonPage, IonSelect, IonSelectOption, IonText, IonTitle } from "@ionic/react";
+import { IonButton, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonContent, IonFabButton, IonIcon, IonInput, IonItem, IonList, IonModal, IonNote, IonPage, IonSelect, IonSelectOption, IonText, IonTitle } from "@ionic/react";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../login/AuthProvider";
-import InfectedComponent from "../menuStuff/InfectedComponent";
 import MenuComponent from "../menuStuff/MenuComponent";
 import ToolbarComponent from "../menuStuff/ToolbarComponent";
 import { MyRouteMap } from "../myRoutes/Routes";
 import { deleteSim, getAllSimulations, getSimulationDays } from "../../utils/ServerApi";
-import AddSimulationComp from "./AddSimulationComponent";
 import { Line, Pie } from 'react-chartjs-2';
 
 import "./simulation.css";
+import "./sim.css"
+import "./mapCmpCss.css";
 import { arrowBack, arrowForward, barChartOutline } from "ionicons/icons";
 import AlertComponent from "../menuStuff/AlertComponent";
 
@@ -47,30 +47,30 @@ const SimulationComp: React.FC = () => {
     const emptyList: SimulationProps[] = [];
     const emptyDayList: SimulationDayProps[] = [];
     const emptySim: SimulationProps = {id: 0, startInf:0, regionName: "", noDays: 0, noInfUsers: 0, noUsers:0}
-    const emptySimFull: SimulationFull[] = []
     const {token} = useContext(AuthContext)
     const [allSimulations, setAllSim] = useState(emptyList)
     const [selectedSim, setSelectedSim] = useState(emptySim)
     const [simulationDays, setSimulationDays] = useState(emptyDayList)
-    const [simulationsFull, setSimulationFull] = useState(emptySimFull)
     const [stateUpdated, setStateUpdated] = useState(false)
     const [currentDay, setCurrentDay]=useState(0);
     const [isModalOpened, setIsModalOpened]=useState(false);
     const [showCharts, setShowCharts]= useState(false)
     const [message, setMessage] = useState("");
     const [someError, setSomeError] = useState(false);
+
     
-    const getClosedInstitusions = (options: string) => {
-        const closed = options.split("")
-        var myString: string = "";
-        myString = closed.indexOf("1")<0 ? myString+"Schools " : myString
-        myString = closed.indexOf("2")<0 ? myString+"Universities ": myString
-        myString = closed.indexOf("3")<0 ? myString+"Shops ": myString
-        myString = closed.indexOf("4")<0 ? myString+"Restaurants ": myString
+    // const getClosedInstitusions = (options: string) => {
+    //     const closed = options.split("")
+    //     var myString: string = "";
+    //     myString = closed.indexOf("1")<0 ? myString+"Schools " : myString
+    //     myString = closed.indexOf("2")<0 ? myString+"Universities ": myString
+    //     myString = closed.indexOf("3")<0 ? myString+"Shops ": myString
+    //     myString = closed.indexOf("4")<0 ? myString+"Restaurants ": myString
         
-        myString = myString.length==0 ? "Everything opened" : "Closed places: "+myString
-        return myString;
-    }
+    //     myString = myString.length==0 ? "Everything opened" : "Closed places: "+myString
+    //     return myString;
+    // }
+
     const maxYAxis: number = Math.ceil((Math.max(...simulationDays.map(simD=>simD.infNo)))/100)*100
     console.log("maxY: "+maxYAxis);
     const lineOptions = {
@@ -80,33 +80,39 @@ const SimulationComp: React.FC = () => {
                 suggestedMax: maxYAxis,
                 max: maxYAxis
             }
-        }
-    }
-    const barData = simulationsFull.map(oneSimFull=>{
-    return {
-        label2: getClosedInstitusions(oneSimFull.options),
-        labels: oneSimFull.days.map(d=> d.dayNo),
-        datasets: [
-            {label: "Infected",
-            data: oneSimFull.days.map(sim=>sim.infNo),
-            backgroundColor: '#f08d13',
-            borderColor: '#f01313',
-            borderWidth: 1,
-            pointBorderWidth: 1,
-            pointRadius: 1,
-            hoverBackgroundColor: '#f2f531',
         },
-        {label: "Immune",
-            data: oneSimFull.days.map(sim=>sim.noImuneUsers),
-            backgroundColor: '#0990e3',
-            borderColor: '#04127d',
-            borderWidth: 1,
-            pointRadius: 1,
-            hoverBackgroundColor: '#07e3df',
-            hoverBorderColor: '#0990e3',
-        }], 
-        
-    }})
+        lineAtIndex: 6,
+            legend: {
+              display: false
+            }
+    }
+
+    const getBarData = () => {
+        return {
+            labels: simulationDays.map(d=> d.dayNo),
+            datasets: [
+                {label: "Infected",
+                data: simulationDays.map(sim=>sim.infNo),
+                backgroundColor: '#f08d13',
+                borderColor: '#f01313',
+                borderWidth: 1,
+                pointBorderWidth: 1,
+                pointRadius: 1,
+                hoverBackgroundColor: '#f2f531',
+            },
+            {label: "Immune",
+                data: simulationDays.map(sim=>sim.noImuneUsers),
+                backgroundColor: '#0990e3',
+                borderColor: '#04127d',
+                borderWidth: 1,
+                pointRadius: 1,
+                hoverBackgroundColor: '#07e3df',
+                hoverBorderColor: '#0990e3',
+            },
+        ], 
+        }}
+    const barData = getBarData();
+    
     const reducer = (acc: number, val: number) => acc + val;
     const infections = simulationDays.map(simD=>simD.noNewInfected).reduce(reducer,0)
     const immunes = simulationDays.map(simD=>simD.noImuneUsers).reduce(reducer,0)
@@ -162,8 +168,7 @@ const SimulationComp: React.FC = () => {
     const viewSimulation = () => {
         getSimulationDays(token, selectedSim.id).then(sim=>{
             if (sim){
-            setSimulationFull(sim)
-            setSimulationDays(sim[0].days)
+            setSimulationDays(sim)
             setCurrentDay(0)
             setStateUpdated(!stateUpdated)
             updateAlertComponent("Got simulation", false)
@@ -200,7 +205,6 @@ const SimulationComp: React.FC = () => {
                     setSelectedSim(emptySim)
                     setCurrentDay(0)
                     updateAlertComponent("Simulation deleted", false)
-                    // setStateUpdated(!stateUpdated)
                 }
                 else{
                     updateAlertComponent("Cannot delete simulation", true)
@@ -223,93 +227,62 @@ const SimulationComp: React.FC = () => {
         <ToolbarComponent/>
         <MenuComponent/>
         <AlertComponent message={message} errorMes={someError} updateMessage={updateMessage}/> 
-        <InfectedComponent/>
         <IonContent>
-        <IonCard id="simcard">
-            <IonSelect class="simulationSelector" placeholder={"Choose Simulation"} onIonChange={e => {e.detail.value && setSelectedSim(e.detail.value);}}>
-                {allSimulations?.map(sim=>{
-                    return <IonSelectOption key={sim.id} value={sim}> 
-                               {sim.regionName} - {sim.startInf}
-                        </IonSelectOption>
-                })}
-            </IonSelect>
-            <div id="simDiv">
-            <IonButton color="warning" onClick={viewSimulation}>View</IonButton>
-            <IonButton color="warning" onClick={delSim}>Delete</IonButton>
-            <IonButton color="warning" onClick={()=>setIsModalOpened(true)}>New</IonButton>
-            </div>
-        </IonCard>
-        { simulationDays.length>0 &&
-            <div className="inlineDiv">
-            <div className="inlineDiv flexDiv">
-                <div className="sized">
-                    <IonNote className="block leftMargin">Days</IonNote>
+        <IonCard id="simMenu">
+            <IonCardTitle>Choose simulation</IonCardTitle>
+                <IonSelect class="simulationSelector" placeholder={"Choose Simulation"} onIonChange={e => {e.detail.value && setSelectedSim(e.detail.value);}}>
+                    {allSimulations?.map(sim=>{
+                        return <IonSelectOption key={sim.id} value={sim}> 
+                                {sim.regionName} - {sim.startInf}
+                            </IonSelectOption>
+                    })}
+                </IonSelect>
+                <div id="simDiv">
+                    <IonButton color="warning" onClick={viewSimulation}>View</IonButton>
+                    <IonButton color="warning" onClick={delSim}>Delete</IonButton>
                 </div>
-                <div className="dayButtons">
-                    <IonFabButton color="warning" size="small" onClick={goBackward}><IonIcon icon={arrowBack}></IonIcon></IonFabButton>
-                        <div className="textBoxSmallMargin">
-                            <IonText><em><strong>{currentDay+1}</strong></em></IonText>
-                        </div>
-                    <IonFabButton color="warning" size="small" onClick={goForward}><IonIcon icon={arrowForward}></IonIcon></IonFabButton>
-                </div>
-            </div>
-        
-            <div id="infectedDiv">
-                <div>
-                    <IonNote className="block">Infected</IonNote>
-                    <div className="textBox">
-                    <IonText className="centerText"><em><strong>{
-                        simulationDays[currentDay].infNo}</strong></em></IonText>
-                    </div>
-                </div>
-                <div className="flexDiv">
-                    <IonNote className="block">Inf. Rate</IonNote>
-                    <IonText className="block textBox centerText"><em><strong>{infRateReal}</strong></em></IonText>
-                </div>
-                <IonFabButton size="small" color="warning" onClick={()=>{
-                    console.log("insideSetChart")
-                    setShowCharts(true)
-                    }}><IonIcon icon={barChartOutline}></IonIcon></IonFabButton>
-            </div>
-            </div>
-        }
-           { simulationDays.length>0 &&
-            <div id="mapDiv">
-                <MyRouteMap forSimulation={true} currentDay={currentDay} route={simulationDays[currentDay].contactPoints.map(cp=> {return {latitude: cp.lat, longitude: cp.lng, timestamp: 0, noEncouters:cp.noEncouters}; })} markPosition={true} />
-            </div>
-        }
-       
-        {isModalOpened && 
-             <IonModal isOpen={isModalOpened} id="simModal"> 
-               <IonCard id="modalContainer">
-                <IonCardTitle id="modalTitle">Create new simulation</IonCardTitle>
-                <IonCardContent>
-                <AddSimulationComp openClose={openCloseAddModal} updateSimulations={getAllSim} updateAlertComp={updateAlertComponent}/>
-                </IonCardContent>
-                </IonCard>
-             </IonModal>  
-           }
-           { showCharts &&
-           <IonModal isOpen={showCharts} id="chartModal">
-            <IonCard id="chartCard">
-            <IonCardTitle className="cardTitle">{selectedSim.regionName+" - Simulation"}</IonCardTitle>
-                {barData.map(barData=>
-                <div>
-                <IonCardSubtitle className="subtitle">{barData.label2}</IonCardSubtitle>
-                <Line data={barData} type="line" options={lineOptions} className="lineChart"></Line>
-                </div>
-                )}
-                {/* <div id="pieDivContainer"> */}
-                    <IonCardSubtitle className="subtitle">Worst case scenario</IonCardSubtitle>
-                    <div id='pieDiv'>
-                    <Pie data={pieData} type="pie"></Pie>
-                    </div>
-                {/* </div> */}
-                <IonButton color="warning" id="closeChartModalButton" onClick={() => setShowCharts(false)}>Close</IonButton>
             </IonCard>
-            </IonModal>
-           }
-            </IonContent>
+        { simulationDays.length>0 &&
+            <IonCard id="mapDiv">
+                <div className="daysDiv">
+                        <div className="dayButtons">
+                            <IonFabButton color="warning" size="small" onClick={goBackward}><IonIcon icon={arrowBack}></IonIcon></IonFabButton>
+                            <div className="textBoxSmallMargin">
+                                <IonText><em><strong>{currentDay+1}</strong></em></IonText>
+                            </div>
+                            <IonFabButton color="warning" size="small" onClick={goForward}><IonIcon icon={arrowForward}></IonIcon></IonFabButton>
+                        </div>
+                    </div>
+                <div id="infectedDiv">
+                        <div>
+                            <IonNote className="block">Infected</IonNote>
+                            <div className="textBox">
+                            <IonText className="centerText"><em><strong>{
+                                simulationDays[currentDay].infNo}</strong></em></IonText>
+                            </div>
+                        </div>
+                        <div className="flexDiv">
+                            <IonNote className="block">Inf. Rate</IonNote>
+                            <IonText className="block textBox centerText"><em><strong>{infRateReal}</strong></em></IonText>
+                        </div>
+                        <IonFabButton size="small" color="warning" onClick={()=>{
+                            console.log("insideSetChart")
+                            setShowCharts(true)
+                            }}><IonIcon icon={barChartOutline}></IonIcon></IonFabButton>
+                    </div>
+                <MyRouteMap forSimulation={true} currentDay={currentDay} route={simulationDays[currentDay].contactPoints.map(cp=> {return {latitude: cp.lat, longitude: cp.lng, timestamp: 0, noEncouters:cp.noEncouters}; })} markPosition={true} />
+            </IonCard>
+        }
+         { simulationDays.length>0 &&
+        <IonCard id="chartCard">
+                <div className="controlChart">
+                    <Line data={barData} type="line" options={lineOptions} className="lineChart"></Line>
+                </div>
+                    {/* <div id='pieDiv'>
+                        <Pie data={pieData} type="pie"></Pie>
+                    </div> */}
+        </IonCard>  }
+        </IonContent>
         </IonPage>
     );
 }

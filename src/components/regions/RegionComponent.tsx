@@ -1,6 +1,5 @@
 import { IonButton, IonCard, IonCardContent, IonContent, IonInput, IonItem, IonList, IonNote, IonPage, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useContext,  useState } from 'react';
-import '../locationMonitor/Monitor.css';
 import MenuComponent from '../menuStuff/MenuComponent';
 import ToolbarComponent from '../menuStuff/ToolbarComponent';
 import { MenuContext } from '../menuStuff/MenuProvider';

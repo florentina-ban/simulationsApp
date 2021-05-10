@@ -1,0 +1,8 @@
+#simMenu{
+    width: 30vw;
+    height: 20vh;
+    margin-left: 0;
+    margin-bottom: 0;
+    overflow-y: auto;
+    display: inline-block;
+}

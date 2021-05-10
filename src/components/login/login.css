@@ -1,11 +1,10 @@
 
 #loginCard{
-    height: 55%;
-    width: 80%;
+    height: 50%;
+    width: 30%;
     margin: 0 auto;
     vertical-align: center;
     margin-top: 15vh;
-    overflow-y: auto;
 }
 #cardTitle{
     margin: 6%;

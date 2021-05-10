@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useState } from "react"
 import { CoordonatesProps } from "../interfaces/CoordonatesProps";
 import { SimpleCoordProps } from "../interfaces/SimpleCoordProps";
 import { AuthContext } from "../login/AuthProvider";
-import InfectedComponent from "../menuStuff/InfectedComponent";
 import MenuComponent from "../menuStuff/MenuComponent";
 import { MenuContext } from "../menuStuff/MenuProvider";
 import ToolbarComponent from "../menuStuff/ToolbarComponent";
@@ -79,7 +78,6 @@ const RoutesComponet: React.FC = () => {
                 </div>
                 }
                 <MenuComponent/>
-                <InfectedComponent/>
             </IonContent>
         </IonPage>
     )

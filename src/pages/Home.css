@@ -17,12 +17,12 @@
     z-index: 100;
 }
 #alertModal{
-    width: 60% !important;
-    height: 7% !important;
+    width: 10vw !important;
+    height: 4vh !important;
     border-radius:  50px 50px;
     position: absolute;
     top: 85%;
-    left: 35%;
+    left: 85%;
 }
  #alertDivOk{
     z-index: 200;
@@ -62,8 +62,15 @@
     /* transition: transform .2s; */
 }
 
-.locationCard:active{
-    /* transform: scale(1.5) !important;   */
+.menuButton{
+    height: 5vh;
+    width: 5vw;
+    margin-right: 5vw;
+    margin-top: 3vh;
+    cursor: pointer;
+}
+.menuButton:hover{
+    font-weight: bolder;
 }
 
 #routeCard{
