@@ -1,8 +1,6 @@
 import { IonButton, IonCard, IonCardContent, IonContent, IonInput, IonItem, IonList, IonNote, IonPage, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useContext,  useState } from 'react';
-import MenuComponent from '../menuStuff/MenuComponent';
 import ToolbarComponent from '../menuStuff/ToolbarComponent';
-import { MenuContext } from '../menuStuff/MenuProvider';
 import Region from './RegionProps';
 import { MyRouteMap } from '../myRoutes/Routes';
 import { sendBoundaries } from '../../utils/ServerApi';
@@ -24,7 +22,6 @@ const RegionComponent: React.FC<ContainerProps> = () => {
 const {token} = useContext(AuthContext);
   const [latitude, setlatitude] = useState(46.0);
 
-  const { isMenuOpened, updateMenuState} = useContext(MenuContext)
 
 const options: PositionOptions = {enableHighAccuracy: true}
 const saveRegion = ()=> {
@@ -65,9 +62,6 @@ const saveBoundary = (e: any) =>{
           <div id="mapContainer">
             <MyRouteMap route={boundaries} lat={latitude} markPosition={true} onMapClick={saveBoundary}/>
           </div>
-        {isMenuOpened &&
-          <MenuComponent/>
-        }
         </IonContent>
         </IonPage>
   );

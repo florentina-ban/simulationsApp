@@ -1,7 +1,6 @@
-import { IonButton, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonContent, IonFabButton, IonIcon, IonInput, IonItem, IonList, IonModal, IonNote, IonPage, IonSelect, IonSelectOption, IonText, IonTitle } from "@ionic/react";
+import { IonButton, IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonContent, IonFabButton, IonIcon, IonInput, IonItem, IonLabel, IonList, IonModal, IonNote, IonPage, IonSelect, IonSelectOption, IonText, IonTitle } from "@ionic/react";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../login/AuthProvider";
-import MenuComponent from "../menuStuff/MenuComponent";
 import ToolbarComponent from "../menuStuff/ToolbarComponent";
 import { MyRouteMap } from "../myRoutes/Routes";
 import { deleteSim, getAllSimulations, getSimulationDays } from "../../utils/ServerApi";
@@ -12,6 +11,7 @@ import "./sim.css"
 import "./mapCmpCss.css";
 import { arrowBack, arrowForward, barChartOutline } from "ionicons/icons";
 import AlertComponent from "../menuStuff/AlertComponent";
+import ChartsComp from "./ChartComponent";
 
 export interface SimulationProps{
     id: number,
@@ -19,7 +19,10 @@ export interface SimulationProps{
     regionName: String,
     noDays: number,
     noUsers: number,
-    noInfUsers: number
+    noInfUsers: number,
+    immunity: number,
+    mortality: number,
+    maskEfficiency: number;
 }
 
 export interface ContactPointProps{
@@ -35,18 +38,20 @@ export interface SimulationDayProps{
     infNo: number,
     contactPoints: ContactPointProps[],
     noImuneUsers: number,
+    noDeadUsers: number,
     noNewInfected: number,
+    scenario: number
 }
 
 export interface SimulationFull{
-    days: SimulationDayProps[]
+    days: SimulationDayProps[],
     options: string
 }
 
 const SimulationComp: React.FC = () => {  
     const emptyList: SimulationProps[] = [];
     const emptyDayList: SimulationDayProps[] = [];
-    const emptySim: SimulationProps = {id: 0, startInf:0, regionName: "", noDays: 0, noInfUsers: 0, noUsers:0}
+    const emptySim: SimulationProps = {id: 0, startInf:0, regionName: "", noDays: 0, noInfUsers: 0, noUsers:0, immunity:0, mortality:0, maskEfficiency:0}
     const {token} = useContext(AuthContext)
     const [allSimulations, setAllSim] = useState(emptyList)
     const [selectedSim, setSelectedSim] = useState(emptySim)
@@ -57,6 +62,7 @@ const SimulationComp: React.FC = () => {
     const [showCharts, setShowCharts]= useState(false)
     const [message, setMessage] = useState("");
     const [someError, setSomeError] = useState(false);
+    const [noCont, setNoCont] = useState(0);
 
     
     // const getClosedInstitusions = (options: string) => {
@@ -71,65 +77,11 @@ const SimulationComp: React.FC = () => {
     //     return myString;
     // }
 
-    const maxYAxis: number = Math.ceil((Math.max(...simulationDays.map(simD=>simD.infNo)))/100)*100
-    console.log("maxY: "+maxYAxis);
-    const lineOptions = {
-        responsive: true,
-        scales: {
-            y: {
-                suggestedMax: maxYAxis,
-                max: maxYAxis
-            }
-        },
-        lineAtIndex: 6,
-            legend: {
-              display: false
-            }
+    const showNoContacts = (no: number) => {
+        setNoCont(no)
     }
-
-    const getBarData = () => {
-        return {
-            labels: simulationDays.map(d=> d.dayNo),
-            datasets: [
-                {label: "Infected",
-                data: simulationDays.map(sim=>sim.infNo),
-                backgroundColor: '#f08d13',
-                borderColor: '#f01313',
-                borderWidth: 1,
-                pointBorderWidth: 1,
-                pointRadius: 1,
-                hoverBackgroundColor: '#f2f531',
-            },
-            {label: "Immune",
-                data: simulationDays.map(sim=>sim.noImuneUsers),
-                backgroundColor: '#0990e3',
-                borderColor: '#04127d',
-                borderWidth: 1,
-                pointRadius: 1,
-                hoverBackgroundColor: '#07e3df',
-                hoverBorderColor: '#0990e3',
-            },
-        ], 
-        }}
-    const barData = getBarData();
-    
-    const reducer = (acc: number, val: number) => acc + val;
-    const infections = simulationDays.map(simD=>simD.noNewInfected).reduce(reducer,0)
-    const immunes = simulationDays.map(simD=>simD.noImuneUsers).reduce(reducer,0)
-    const healthies = selectedSim.noUsers - infections - immunes
-    
-    const pieData={ 
-        labels: ['Infected','Healthy','Immune'],
-        datasets: [
-            {data: [infections, healthies, immunes],
-            backgroundColor: ['#f08d13','#05e30c','#0990e3'],
-            borderColor: ['#f01313','#046107','#04127d'],
-            borderWidth: 2,
-            hoverBackgroundColor: '#f2f531',
-        }],
-    }
-
-
+    console.log("scenarios: "+simulationDays.map(s=>s.scenario))
+   
     const getAllSim = (value?: number) =>{
         if (value){
             if (value = 0){
@@ -225,11 +177,11 @@ const SimulationComp: React.FC = () => {
     return(
         <IonPage>
         <ToolbarComponent/>
-        <MenuComponent/>
         <AlertComponent message={message} errorMes={someError} updateMessage={updateMessage}/> 
         <IonContent>
+            <div id="topDiv">
         <IonCard id="simMenu">
-            <IonCardTitle>Choose simulation</IonCardTitle>
+            <IonCardTitle className="title">Choose simulation</IonCardTitle>
                 <IonSelect class="simulationSelector" placeholder={"Choose Simulation"} onIonChange={e => {e.detail.value && setSelectedSim(e.detail.value);}}>
                     {allSimulations?.map(sim=>{
                         return <IonSelectOption key={sim.id} value={sim}> 
@@ -242,6 +194,35 @@ const SimulationComp: React.FC = () => {
                     <IonButton color="warning" onClick={delSim}>Delete</IonButton>
                 </div>
             </IonCard>
+        { selectedSim.id>0 &&
+            <IonCard id="detailsCard">
+                <IonCardTitle className="title">Simulation details: </IonCardTitle>
+                    <IonItem key="regionItem" id="regionItem" className="simItem1">
+                        <IonLabel>Region</IonLabel>
+                        <IonText>Cluj-Napoca</IonText>
+                    </IonItem>
+                    <IonItem key="noInfItem" id="noInfItem" className="simItem1">
+                        <IonLabel className="labelChild">Infected start</IonLabel>
+                        <IonText slot="end" className="inputNo" typeof="number">{selectedSim.startInf}</IonText>
+                    </IonItem>
+                    <IonItem key="simDaysItem" id="simDaysItem"className="simItem1">
+                        <IonLabel className="labelChild">Days</IonLabel>
+                        <IonText slot="end" className="inputNo">{selectedSim.noDays}</IonText>
+                    </IonItem>
+                    <IonItem key="dead" className="simItem1">
+                        <IonLabel>Mortality</IonLabel>
+                        <IonText>{selectedSim.mortality} %</IonText>
+                    </IonItem>
+                    <IonItem key="immune" className="simItem1">
+                        <IonLabel>Immunity</IonLabel>
+                        <IonText>{selectedSim.immunity} %</IonText>
+                    </IonItem>
+                    <IonItem key="maskEfficiency" id="maskEfficiency"className="simItem1">
+                        <IonLabel className="labelChild">Mask Efficiency</IonLabel>
+                        <IonText>{selectedSim.maskEfficiency} %</IonText>
+                    </IonItem>
+            </IonCard>
+        }
         { simulationDays.length>0 &&
             <IonCard id="mapDiv">
                 <div className="daysDiv">
@@ -265,23 +246,21 @@ const SimulationComp: React.FC = () => {
                             <IonNote className="block">Inf. Rate</IonNote>
                             <IonText className="block textBox centerText"><em><strong>{infRateReal}</strong></em></IonText>
                         </div>
+                        <div className="flexDiv">
+                            <IonNote className="block">No. Contacts</IonNote>
+                            <IonText className="block textBox centerText"><em><strong>{noCont}</strong></em></IonText>
+                        </div>
                         <IonFabButton size="small" color="warning" onClick={()=>{
                             console.log("insideSetChart")
                             setShowCharts(true)
                             }}><IonIcon icon={barChartOutline}></IonIcon></IonFabButton>
                     </div>
-                <MyRouteMap forSimulation={true} currentDay={currentDay} route={simulationDays[currentDay].contactPoints.map(cp=> {return {latitude: cp.lat, longitude: cp.lng, timestamp: 0, noEncouters:cp.noEncouters}; })} markPosition={true} />
+                <MyRouteMap forSimulation={true} currentDay={currentDay} onMarkerClick={showNoContacts} route={simulationDays[currentDay].contactPoints.map(cp=> {return {latitude: cp.lat, longitude: cp.lng, timestamp: 0, noEncouters:cp.noEncouters}; })} markPosition={true} />
             </IonCard>
         }
-         { simulationDays.length>0 &&
-        <IonCard id="chartCard">
-                <div className="controlChart">
-                    <Line data={barData} type="line" options={lineOptions} className="lineChart"></Line>
-                </div>
-                    {/* <div id='pieDiv'>
-                        <Pie data={pieData} type="pie"></Pie>
-                    </div> */}
-        </IonCard>  }
+        </div>
+        { simulationDays.length>0 &&
+            <ChartsComp  options={""} days={simulationDays}/>}
         </IonContent>
         </IonPage>
     );

@@ -1,0 +1,32 @@
+
+#alertModal{
+    width: 15vw !important;
+    height: 6vh !important;
+    border-radius:  50px 50px;
+    position: absolute;
+    top: 85vh;
+    left: 80vw;
+}
+.error{
+    --background: #a80303;
+}
+.ok{
+    --background: #00630d;
+}
+ .alertDiv{
+    z-index: 200;
+    margin: auto 0;
+    text-align: center;
+    border-radius:  50px 50px;
+    color: whitesmoke !important;
+} 
+.alertText{
+    float: left;
+    margin-left: 10%;
+}
+.alertIcon{
+    position: absolute;
+    float: right;
+    margin-top: -5px;
+ 
+}

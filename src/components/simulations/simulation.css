@@ -1,8 +1,10 @@
 .simulationSelector{
-    min-width: 100% !important;
-    width: 100% !important;
+    min-width: 90% !important;
+    width: 90% !important;
     background-color: honeydew;
-    margin-top: 10px;
+    margin-top: 2vh;
+    margin-bottom: 4vh;
+    margin-left: 1vw;
 }
 .topMargin{
     margin-top: 12%;
@@ -73,7 +75,7 @@
     align-items: flex-start;
 }
 #simDiv{
-    width: 28vw;
+    width: 20vw;
     margin-top: 10px;
     display: flex;
     justify-content: space-around; 
@@ -98,10 +100,20 @@
 
 /* add sim */
 #createSimCard{
-    width: 50vw;
+    width: 45vw;
     height: 80vh;
+    border: springgreen solid 2px;
 }
+#optionsCart{
+    width: 45vw;
+    height: 80vh;
+    border: springgreen solid 2px;
+}
+#flez{
+    display: flex;
+    justify-content: space-around;
 
+}
 /* modal */
 
 #modalContainer{
@@ -177,9 +189,7 @@
     padding-left: 2%;
 }
 #modalButtons{
-    margin-top: 10%;
-    display: flex;
-    justify-content: space-between;
+    margin-top: 7%;
 }
 .smallSize{
     font-size: small;
@@ -198,13 +208,23 @@
     width: 60%;
 }
 
-/* chart Modal */
-#chartCard{
+/* charts */
+#chartComponent{
     position: absolute;
-    width: 45vw !important;
-    height: 45vh;
-    top: 39vh;
-    overflow-y: auto;
+    width: 100vw !important;
+    height: 50vh;
+    top: 43vh;
+    overflow-y: auto;  
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+}
+.controlChart{
+    width: 45% !important;
+    height: 100% !important;
+    /* border: 2px solid black; */
+
 }
 .subtitle{
     margin-left: 2%;
@@ -215,11 +235,7 @@
 }
 .lineChart{
     padding-bottom: 5%;
-    height: 20% !important;
-}
-#closeChartModalButton{
-    float: right;
-    margin-top: 10%;
+    /* height: 20% !important; */
 }
 
 #pieDivContainer{

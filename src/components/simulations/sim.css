@@ -1,8 +1,37 @@
 #simMenu{
-    width: 30vw;
-    height: 20vh;
-    margin-left: 0;
+    width: 25vw;
+    height: 38vh;
+    margin-left: 0.6vw;
     margin-bottom: 0;
-    overflow-y: auto;
     display: inline-block;
+    border: springgreen 2px solid
+}
+.title{
+    margin-top: 2vh;
+    margin-bottom: 4vh;
+    margin-left: 1vw;
+}
+#detailsCard{
+    width: 25vw;
+    height: 38vh;   
+    position: relative;
+    /* top: -60vh;     */
+    display: inline-block;
+    border: springgreen 2px solid;
+}
+.simItem1{
+    --min-hight: 12px;
+    --heigh: 12px;
+    height: 30px;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+}
+#topDiv{
+    display: flex;
+    width: 100vw;
+    height: 40vh;
+    /* border: springgreen 2px solid; */
+
 }

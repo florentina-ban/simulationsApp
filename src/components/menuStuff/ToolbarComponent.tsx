@@ -1,21 +1,12 @@
-import { IonButton, IonButtons, IonHeader, IonIcon, IonMenuButton, IonTitle, IonToolbar } from "@ionic/react";
-import { checkmarkDoneOutline, sunnyOutline, thunderstormOutline } from "ionicons/icons";
-import React, { useContext, useState } from "react";
+import {IonButtons, IonHeader,IonTitle } from "@ionic/react";
+import React, { useContext} from "react";
 import { useHistory } from "react-router";
 import { AuthContext } from "../login/AuthProvider";
-import { MenuContext } from "./MenuProvider";
+import '../../pages/Home.css'
 
 const ToolbarComponent: React.FC = () => {
-    const { updateMenuState, updateInfectedState} = useContext(MenuContext)
     const history = useHistory();
     const { logout } = useContext(AuthContext);
-    const {infected, token} = useContext(AuthContext);
-
-    const openMenu = () => {
-        console.log("button clicked")
-        if  (updateMenuState)
-            updateMenuState(true); 
-    } 
 
     const logOut = () => {
         localStorage.clear();
@@ -24,7 +15,7 @@ const ToolbarComponent: React.FC = () => {
       }
 
     return (
-        <IonHeader>
+        <IonHeader className="header">
         <div>
           <IonButtons>
             <IonTitle>Simulation App</IonTitle>

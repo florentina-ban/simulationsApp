@@ -1,7 +1,7 @@
 import { IonIcon, IonModal, IonText } from "@ionic/react"
 import { checkmarkCircleOutline, closeCircleOutline } from "ionicons/icons";
 import React, { useEffect} from "react";
-import "../../pages/Home.css"
+import "./alert.css"
 
 export interface AlertProps{
     message: string,
@@ -22,22 +22,25 @@ const AlertComponent: React.FC<AlertProps> = ({message, errorMes, updateMessage}
     useEffect(removeAlert,[message]);
 
     return(
-       
-        <IonModal cssClass={"alertModal"} isOpen={message.length>0} id="alertModal">
-            { errorMes  &&
-            <div id="alertDivError">
-                <IonText className={"alertText"}>{message}</IonText>
-                <IonIcon className={"alertIcon"} size={"large"} icon={closeCircleOutline}></IonIcon>
-            </div>
-            }
-             { !errorMes  &&
-            <div id="alertDivOk">
+        <span>
+       { errorMes && 
+            <IonModal cssClass={"alertModal error"} isOpen={message.length>0} id="alertModal">
+                <div className="alertDiv">
+                    <IonText className={"alertText"}>{message}</IonText>
+                    <IonIcon className={"alertIcon"} size={"large"} icon={closeCircleOutline}></IonIcon>
+                </div>
+            </IonModal>
+        }
+        { !errorMes  &&
+            <IonModal cssClass={"alertModal ok"} isOpen={message.length>0} id="alertModal">
+            <div className="alertDiv">
                 <IonText className={"alertText"}>{message}</IonText>
                 <IonIcon className={"alertIcon"} size={"large"} icon={checkmarkCircleOutline}></IonIcon>
             </div>
-            }
-        </IonModal> 
-      
+            </IonModal> 
+
+        }
+      </span>
     );
 }
 export default AlertComponent;

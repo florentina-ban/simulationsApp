@@ -1,6 +1,6 @@
 import React from 'react';
 import { mapsApiKey } from './MyMapKey'
-import { Circle, GoogleMap, Marker, withGoogleMap, withScriptjs } from "react-google-maps"
+import { Circle, GoogleMap, withGoogleMap, withScriptjs } from "react-google-maps"
 import { Libraries } from '@react-google-maps/api/dist/utils/make-load-script-url';
 import { compose, withProps } from 'recompose';
 import { CoordonatesProps } from '../interfaces/CoordonatesProps';
@@ -10,7 +10,7 @@ interface MyRouteProps {
   forSimulation: boolean
   onMapClick?: (e: any) => void
   currentDay: number
-  // onMarkerClick?: (e: any) => void,
+  onMarkerClick?: (e: any) => void,
 }
 const mapStyles = {
   width: '100vw',
@@ -53,7 +53,7 @@ export const MyRouteMap = compose<MyRouteProps, any>(
         props.route &&  props.route.length>0 && props.forSimulation &&
         props.route.map( ({latitude, longitude, noEncouters}) => { 
           const a: google.maps.LatLng = new google.maps.LatLng({lat: latitude, lng: longitude})
-          return <Circle center={a} defaultRadius={17*noEncouters!} defaultOptions={ {fillColor:"red", strokeColor: "red"}} /> } ) }
+          return <Circle center={a} defaultRadius={noEncouters!} onClick={() => {props.onMarkerClick!(noEncouters)}} defaultOptions={ {fillColor:"red", strokeColor: "red"}} /> } ) }
     
   </GoogleMap> 
 )})

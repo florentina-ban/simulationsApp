@@ -3,17 +3,8 @@
     display: inline-flex;
     flex-direction: row;
     justify-content: space-around;
-    /* margin-top: -5%; */
-    /* margin-left: 8%; */
-    /* border: black 2px solid; */
 }
-.myDiv{
-    /* position: absolute;
-     top: 10%;
-     z-index: 200;  */
-     /* border: black 2px solid; */
- }
- .daysDiv{
+.daysDiv{
     position: absolute;
     top: 79%;
     left: 14%;
@@ -22,28 +13,23 @@
     background-color: honeydew;
 
  }
- .daysNote{
-     float: left;
- }
  #infectedDiv{
     background-color: honeydew;
     float: right;
     position: absolute;
     top: 79%;
-    left: 25%;
+    left: 31%;
     z-index: 200;
     /* margin-right: 2%; */
-    width: 30%;
+    width: 50%;
     display: inline-flex;
     justify-content: space-around;
     /* margin-top: 2%; */
 }
 #mapDiv{
-    height:37vh;
-    width: 68vw;
-    margin: 3%;
-    /* margin-left: 32%; */
-    position: relative;
-    top: -27vh;
-    left: 28%
+    height:38vh;
+    width: 45vw;
+    /* margin: 3%; */
+    border: springgreen solid 2px;
+    /* left: 50vw; */
 }

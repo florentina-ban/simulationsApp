@@ -1,12 +1,8 @@
-import { IonButton, IonButtons, IonCard, IonContent, IonDatetime, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonMenuButton, IonPage, IonTitle, IonToolbar } from "@ionic/react"
-import React, { useContext, useEffect, useState } from "react"
-import { CoordonatesProps } from "../interfaces/CoordonatesProps";
-import { SimpleCoordProps } from "../interfaces/SimpleCoordProps";
+import { IonButton, IonCard, IonContent, IonDatetime, IonItem, IonLabel,IonPage } from "@ionic/react"
+import React, { useContext, useState } from "react"
 import { AuthContext } from "../login/AuthProvider";
-import MenuComponent from "../menuStuff/MenuComponent";
-import { MenuContext } from "../menuStuff/MenuProvider";
 import ToolbarComponent from "../menuStuff/ToolbarComponent";
-import { getAllDestinations, getAllInitPoints, getRoutesForUser, getRoutesForUser1 } from "../../utils/ServerApi";
+import { getRoutesForUser1 } from "../../utils/ServerApi";
 import { MyRouteMap } from "./Routes"
 import './Routes.css'
 import AlertComponent from "../menuStuff/AlertComponent";
@@ -77,7 +73,6 @@ const RoutesComponet: React.FC = () => {
                     <MyRouteMap route={route} markPosition={true} forSimulation={false}/>
                 </div>
                 }
-                <MenuComponent/>
             </IonContent>
         </IonPage>
     )

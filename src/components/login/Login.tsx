@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router';
 import { IonCard, IonCardContent, IonCardTitle, IonContent, IonFabButton, IonHeader, IonIcon, IonInput, IonLoading, IonPage, IonSelect, IonSelectOption, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import { AuthContext } from './AuthProvider';
 import './login.css'
-import { contractOutline, logIn, personAdd } from 'ionicons/icons';
+import { logIn, personAdd } from 'ionicons/icons';
 
 interface LoginState {
   username?: string;
@@ -56,7 +56,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
                   username: e.detail.value || ''
                 })}
                 />
-              <IonInput placeholder="Password" value={password} onIonChange={e => setState({
+              <IonInput placeholder="Password" type="password" value={password} onIonChange={e => setState({
                   ...state,
                   password: e.detail.value || ''
                 })}
