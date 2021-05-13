@@ -171,6 +171,7 @@ const SimulationComp: React.FC = () => {
     const updateMessage = (mes:string) =>{
         setMessage(mes)
     }
+    console.log("noOfUsers -------------"+selectedSim.noUsers);
     const infRate = (simulationDays[currentDay]) ? ((simulationDays[currentDay].infNo/selectedSim.noUsers)*100) : Infinity 
     const infRateReal = isFinite(infRate) ? infRate.toFixed(2) : "--";
     

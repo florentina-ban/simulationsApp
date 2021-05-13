@@ -15,28 +15,66 @@
 .leftMargin{
     margin-left: 50%;
 }
-
+.saveScenButton{
+    margin-left: 22vw;
+}
 .swapCard{
-    min-width: 45% !important;
-    width: 40% !important;
-    height: 220px !important;
+    margin-left: 1vw;
+    width: 25vw !important;
+    height: fit-content;
+    min-height: 10vh;
     border: 2px solid gray;
-    display: inline-block;
-    width: 120%;
-    height: 100%;
-    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }
-.r{
-    cursor: url('../../resources/cursorR.png'), grab !important;
-}
-.l{
-    cursor: url('../../resources/cursorL.png'), grab !important;
+.swapElement{
+    /* cursor: url('../../resources/cursorR.png'), grab !important; */
+    cursor: grab;
 }
 .swapElement:hover{
     background-color: #b7f28f;
 }
+.location{
+    /* width: fit-content; */
+    /* padding-left: 1%;
+    padding-right: 1%;
+    margin-right: 5%; */
+    --height: 20px;
+    --min-height: 20px;
+    background-color: honeydew;
+}
 .block{
     display: block;
+}
+.placesList{
+    width: 18vw !important;
+}
+.inl{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 4px;
+    border-radius: 60%;
+}
+.green{
+    background-color: green;
+}
+.yellow{
+    background-color: yellow;
+}
+.red{
+    background-color: red;
+}
+.rowFlex{
+    border: 2px solid black;
+    width: 25vw;
+    height: 15vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start
+
 }
 .textBox{
     display: block;
@@ -53,6 +91,7 @@
 }
 .smallItem{
     --max-height: 15px;
+    margin-right: 5px;
 }
 .inlineDiv{
     display: inline-block;
@@ -92,7 +131,6 @@
     z-index: 200;
 }
 
-
 #simcard{
     background-color: lavender;
     height: 15%;
@@ -114,6 +152,11 @@
     justify-content: space-around;
 
 }
+.setDimensionsList{
+    width: 43vw;
+    height: 80vh;
+}
+
 /* modal */
 
 #modalContainer{
@@ -228,6 +271,12 @@
 }
 .subtitle{
     margin-left: 2%;
+}
+.subtitle1{
+    margin-left: 2.5%;
+}
+.subtitle1:hover{
+    font-weight: bolder;
 }
 .cardTitle{
     margin-bottom: 4%;

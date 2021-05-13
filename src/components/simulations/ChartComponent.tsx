@@ -79,7 +79,7 @@ const lineOptions = {
                             <Pie data={pieData} type="pie"></Pie>
                         </div> */}
             <div className="controlChart">
-                <Line data={barDataImmMo} type="line" options={lineOptions} className="lineChart"></Line>
+                <Line data={barDataImmMo} type="line" className="lineChart"></Line>
             </div>
         </IonCard> )
 }

@@ -5,8 +5,8 @@ import { ResponseProps, withLogs } from './utils';
 import Region from '../components/regions/RegionProps';
 import {SimulationDayProps, SimulationFull, SimulationProps } from '../components/simulations/SimulationComp';
 
-export const baseUrl = '192.168.100.2:8083/staySafe';
-//export const baseUrl = '35.224.29.21:3389/staySafe';
+//export const baseUrl = '192.168.100.2:8083/staySafe';
+export const baseUrl = '34.67.51.194:3389/staySafe';
 const addLocationsUrl = `http://${baseUrl}/addLocations`;
 const addregionUrl = `http://${baseUrl}/addRegion`;
 const coordsUrl = `http://${baseUrl}/coordsForUser1`;
