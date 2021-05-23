@@ -25,9 +25,10 @@ import Login from './components/login/Login';
 import { AuthProvider } from './components/login/AuthProvider';
 import RoutesComponet from './components/myRoutes/RoutesComponent';
 import { PrivateRoute } from './components/login/PrivateRoute';
-import SimulationComp from './components/simulations/SimulationComp';
-import { SimulationProvider } from './components/simulations/SimulationProvider';
-import AddSimulationComp from './components/simulations/AddSimulationComponent';
+import SimulationComp from './components/view/SimulationComp';
+import { SimulationProvider } from './components/view/SimulationProvider';
+import AddSimulationComp from './components/create/AddSimulationComponent';
+import CompareComp from './components/compare/CompareComp';
 
 const App: React.FC = () => (
   <IonApp>
@@ -39,6 +40,7 @@ const App: React.FC = () => (
               <PrivateRoute exact path="/create" component={AddSimulationComp} />
               <PrivateRoute exact path="/routes" component={RoutesComponet} />
               <PrivateRoute exact path="/view" component={SimulationComp}/>
+              <PrivateRoute exact path="/compare" component={CompareComp}/>
               <SimulationProvider>
                 <PrivateRoute exact path="/simulations" component={SimulationComp}/>
               </SimulationProvider>

@@ -84,7 +84,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     });
   }
 
-  function registerCallback(username?: string, password?: string, email?: string, infected?: number): void {
+  function registerCallback(username?: string, password?: string, email?: string): void {
     console.log('register');
     setState({
       ...state,
@@ -92,7 +92,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       username,
       password,
       email,
-      infected: infected!,
     });   
   }
   

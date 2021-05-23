@@ -1,44 +1,51 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router';
-import { IonCard, IonCardContent, IonCardTitle, IonContent, IonFabButton, IonHeader, IonIcon, IonInput, IonLoading, IonPage, IonSelect, IonSelectOption, IonText, IonTitle, IonToolbar } from '@ionic/react';
+import { IonCard, IonCardContent, IonCardTitle, IonContent, IonFabButton,IonIcon, IonInput,IonPage, IonSelect, IonSelectOption, IonText} from '@ionic/react';
 import { AuthContext } from './AuthProvider';
 import './login.css'
-import { logIn, personAdd } from 'ionicons/icons';
+import { logInOutline, personAddOutline } from 'ionicons/icons';
+import ToolbarComponent from '../menuStuff/ToolbarComponent';
+import AlertComponent from '../menuStuff/AlertComponent';
+import { isNull } from 'node:util';
 
 interface LoginState {
   username?: string;
   password?: string;
   email?: string;
-  infected?: number;
 }
 
 export const Login: React.FC<RouteComponentProps> = ({ history }) => {
-  const { isAuthenticated, login, register ,authenticationError } = useContext(AuthContext);
+  const { isAuthenticated, login, register, authenticationError } = useContext(AuthContext);
   const [state, setState] = useState<LoginState>({});
-  const { username, password, email, infected } = state;
+  const { username, password, email }= state;
   const [registerOn, setResigter] = useState(false);
-
+  const [message, setMessage]= useState("")
   const handleLogin = () => {
     console.log('handleLogin...');
     login?.(username, password);
   };
 
   const handleRegister = () => {
-    console.log('handleRegister...' + email+ " "+infected);
-    register?.(username, password, email, infected);
+    register?.(username, password, email);
   };
-  
+
+  useEffect(()=>{
+    console.log("ath error: ")
+    console.log(authenticationError)
+    setMessage( (authenticationError ) ? "UserName or password incorrect" : "")},[authenticationError])
   if (isAuthenticated) {
     return <Redirect to={{ pathname: '/' }} />
   }
+
+  const updateMessage = (mes:string) =>{
+    setMessage(mes)
+}
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar color="success">
-        <IonTitle>Stay Safe App</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <ToolbarComponent/>
+       <AlertComponent message={message} errorMes={true} updateMessage={updateMessage}/> 
+    
       <IonContent>
         <IonCard id="loginCard">
           {!registerOn &&
@@ -61,12 +68,12 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
                   password: e.detail.value || ''
                 })}
                 />
-              {authenticationError && (
+              {/* {authenticationError && (
                 <IonText id="errorText">{'Failed to authenticate: '+authenticationError.message }</IonText>
-              )} 
+              )}  */}
               <div className="loginDiv">
-                <IonFabButton id="loginButton" color="success" onClick={handleLogin}> <IonIcon icon={logIn}></IonIcon></IonFabButton>                     
-                <IonFabButton id="registerButton" color="success" onClick={()=>setResigter(true)}> <IonIcon icon={personAdd}></IonIcon></IonFabButton>                      
+                <IonFabButton id="loginButton" color="warning" onClick={handleLogin}> <IonIcon icon={logInOutline}></IonIcon></IonFabButton>                     
+                <IonFabButton id="registerButton" color="warning" onClick={()=>setResigter(true)}> <IonIcon icon={personAddOutline}></IonIcon></IonFabButton>                      
               </div>  
             </div>  
           }
@@ -78,7 +85,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
                   username: e.detail.value || ''
                 })}
                 />
-              <IonInput placeholder="Password" value={password} onIonChange={e => setState({
+              <IonInput placeholder="Password" type="password" value={password} onIonChange={e => setState({
                   ...state,
                   password: e.detail.value || ''
                 })} />
@@ -90,18 +97,13 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
                 });
               } }
                 />
-              <IonSelect className="addMarginClass" placeholder="infected?" value={infected} onIonChange={(e)=>{setState({...state, infected: e.detail.value})}}>
-                <IonSelectOption value={0}>All Good</IonSelectOption>
-                <IonSelectOption value={1}>Got Infected</IonSelectOption>
-                <IonSelectOption value={2}>Already behind</IonSelectOption>
-              </IonSelect>
-              {authenticationError && (
+              {/* {authenticationError && (
                   <IonText id="errorText">{'Failed to authenticate: '+authenticationError.message }</IonText>
-              )} 
+              )}  */}
 
               <div className="loginDiv">
-                <IonFabButton id="loginButton" color="success" onClick={()=>setResigter(false)}> <IonIcon icon={logIn}></IonIcon></IonFabButton>                     
-                <IonFabButton id="registerButton" color="success" onClick={()=>handleRegister()}> <IonIcon icon={personAdd}></IonIcon></IonFabButton>                      
+                <IonFabButton id="loginButton" color="warning" onClick={()=>setResigter(false)}> <IonIcon icon={logInOutline}></IonIcon></IonFabButton>                     
+                <IonFabButton id="registerButton" color="warning" onClick={()=>handleRegister()}> <IonIcon icon={personAddOutline}></IonIcon></IonFabButton>                      
               </div>  
             </div>
           }      

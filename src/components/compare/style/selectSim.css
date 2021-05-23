@@ -1,0 +1,12 @@
+#compareCard{
+    width: 30vw !important;
+    height: 30vh !important;
+    margin-left: 0;
+}
+#compareButton{
+    width: 90%;
+}
+#selectSimRoot{
+    height: fit-content;
+    width: 100%;
+}

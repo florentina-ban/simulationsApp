@@ -18,10 +18,11 @@
     float: right;
     position: absolute;
     top: 79%;
-    left: 32%;
+    left: 31%;
+    height: 21%;
     z-index: 200;
     /* margin-right: 2%; */
-    width: 50%;
+    width: 40%;
     display: inline-flex;
     justify-content: space-around;
     /* margin-top: 2%; */

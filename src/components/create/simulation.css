@@ -1,0 +1,230 @@
+#optionsCart::-webkit-scrollbar{
+    width: 4px;
+}
+#optionsCart::-webkit-scrollbar-thumb {
+    background-color: darkgreen;
+    outline: 1px solid darkorange;
+  }
+.simulationSelector{
+    min-width: 90% !important;
+    width: 90% !important;
+    background-color: honeydew;
+    margin-top: 2vh;
+    margin-bottom: 4vh;
+    margin-left: 1vw;
+}
+.topMargin{
+    margin-top: 12%;
+}
+.smallTopMargin{
+    margin-top: 2%;
+}
+.leftMargin{
+    margin-left: 50%;
+}
+.saveScenButton{
+    margin-left: 22vw;
+}
+.swapCard{
+    margin-left: 3vw;
+    width: 22vw !important;
+    height: fit-content;
+    min-height: 10vh;
+    border: 2px solid gray;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+.swapElement{
+    /* cursor: url('../../resources/cursorR.png'), grab !important; */
+    cursor: grab;
+}
+.swapElement:hover{
+    background-color: #b7f28f;
+}
+.location{
+    --height: 20px;
+    --min-height: 20px;
+    background-color: honeydew;
+}
+.placesList{
+    width: 18vw !important;
+}
+.inl{
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-right: 4px;
+    border-radius: 60%;
+}
+h2{
+    margin-left: 2vw;
+    margin-top: 1%;
+}
+.green{
+    background-color: green;
+}
+.yellow{
+    background-color: yellow;
+}
+.red{
+    background-color: red;
+}
+.rowFlex{
+    border: 2px solid black;
+    width: 25vw;
+    height: 15vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start
+
+}
+.textBox{
+    display: block;
+    margin-top: 20% ;
+    /* border: 2px solid red; */
+}
+.textBoxSmallMargin{
+    display: block;
+    margin-top: 13% ;
+    /* border: 2px solid red; */
+}
+.inl{
+    display: inline-block;
+}
+.smallItem{
+    --max-height: 15px;
+    margin-right: 5px;
+}
+.inlineDiv{
+    display: inline-block;
+  
+}
+.convertLabel{
+    margin-left: 5%;
+    font-size: 16px;
+    color: black;
+}
+.block{
+    display: block;
+    width: fit-content;
+    /* border: 2px solid red; */
+}
+.flexDiv{
+    /* border: 2px solid red;  */
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+#simDiv{
+    width: 100%;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-around; 
+    /* border: 2px solid red; */
+}
+#simcard{
+    background-color: lavender;
+    height: 15%;
+}
+
+/* add sim */
+#createSimCard{
+    width: 45vw;
+    height: 80vh;
+    border: springgreen solid 2px;
+}
+#optionsCart{
+    width: 45vw;
+    height: 80vh;
+    border: springgreen solid 2px;
+    overflow-y: auto; 
+}
+#flez{
+    display: flex;
+    justify-content: space-around;
+}
+.setDimensionsList{
+    width: 43vw;
+    height: 80vh;
+}
+
+/* modal */
+
+.flexDivRow{
+     width: 44vw;
+     height: 57vh;
+     margin-top: 5%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+}
+.simItem{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    --min-height: 45px;
+    --height: 45px;
+}
+.inputNo{
+    size: 1;
+    text-align: right;
+}
+.smallSize{
+    font-size: small;
+}
+#labelChild{
+    /* display: inline-block; */
+    width: 60%;
+}
+
+/* charts */
+#chartComponent{
+    position: absolute;
+    width: 100vw !important;
+    height: 50vh;
+    top: 39vh;
+    overflow-y: auto;  
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+}
+.controlChart{
+    width: 45% !important;
+    height: 100% !important;
+    /* border: 2px solid black; */
+
+}
+.subtitle1{
+    margin-left: 2.5%;
+    margin-bottom: 5%;
+    cursor: pointer;
+    font-weight: bolder;
+}
+.subtitle1:hover{
+    font-weight: bold;
+    background-color: #dfe6e0;
+}
+.cardTitle{
+    margin-bottom: 4%;
+    margin-left: 2%;
+}
+.lineChart{
+    padding-bottom: 5%;
+    /* height: 20% !important; */
+}
+.title{
+    font-weight: bolder;
+    margin-bottom: 3% !important;
+}
+
+#pieDivContainer{
+    margin: 0 auto;
+    width: 100%;
+    overflow-y: auto;
+    border: 2px sienna solid;
+    text-align: left;
+}

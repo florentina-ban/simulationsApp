@@ -1,0 +1,41 @@
+.mainDeepComp{
+    /* border: black 2px solid; */
+    width: 60vw;
+    height:45vh;
+    margin-top: 2vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+#infectedChart{
+    width: 40vw;
+    height: 42vh;
+    /* border: black 2px solid; */
+}
+#infectedChart::content{
+    height: fit-content;
+}
+.colorDiv{
+   display: inline-block;
+   margin-left: 2vw;
+    width: 20px;
+    height: 20px;
+    border-radius: 60%;
+    /* background-color: black; */
+}
+#rightDataDiv{
+    width: 17vw;
+    height: 43vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* border: black 2px solid; */
+}
+#rightDataDiv::-webkit-scrollbar{
+    width: 4px;
+}
+#rightDataDiv::-webkit-scrollbar-thumb {
+    background-color: darkgreen;
+    outline: 1px solid darkorange;
+  }

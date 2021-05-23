@@ -2,7 +2,7 @@ import { IonCard } from "@ionic/react"
 import React from "react"
 import { Line } from "react-chartjs-2";
 import { SimulationFull } from "./SimulationComp";
-import './simulation.css'
+import './style/simulation.css'
 
 const ChartsComp: React.FC<SimulationFull> = ({days}) => { 
     const  barDataInf = {

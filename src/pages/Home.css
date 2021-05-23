@@ -14,7 +14,7 @@
 
 .menuButton{
     height: 5vh;
-    width: 5vw;
+    width: fit-content;
     margin-right: 5vw;
     margin-top: 3vh;
     cursor: pointer;

@@ -18,7 +18,7 @@ const ToolbarComponent: React.FC = () => {
         <IonHeader className="header">
         <div>
           <IonButtons>
-            <IonTitle>Simulation App</IonTitle>
+            <IonTitle>Simulations' App</IonTitle>
             <div className="menuButton" onClick={()=> history.push({pathname: "/create"})}>Create</div>
             <div className="menuButton" onClick={()=> history.push({pathname: "/view"})}>View</div>
             <div className="menuButton" onClick={()=> history.push({pathname: "/compare"})}>Compare</div>

@@ -6,6 +6,7 @@
     position: absolute;
     top: 85vh;
     left: 80vw;
+    z-index: 300;
 }
 .error{
     --background: #a80303;

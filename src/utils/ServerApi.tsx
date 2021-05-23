@@ -3,10 +3,10 @@ import { CoordonatesProps } from '../components/interfaces/CoordonatesProps';
 import { clearCoords } from './LocalStorageApi';
 import { ResponseProps, withLogs } from './utils';
 import Region from '../components/regions/RegionProps';
-import {SimulationDayProps, SimulationFull, SimulationProps } from '../components/simulations/SimulationComp';
+import {SimulationDayProps, SimulationFull, SimulationProps } from '../components/view/SimulationComp';
 
-//export const baseUrl = '192.168.100.2:8083/staySafe';
-export const baseUrl = '34.67.51.194:3389/staySafe';
+export const baseUrl = '192.168.100.2:8083/staySafe';
+// export const baseUrl = '34.122.54.235:3389/staySafe';
 const addLocationsUrl = `http://${baseUrl}/addLocations`;
 const addregionUrl = `http://${baseUrl}/addRegion`;
 const coordsUrl = `http://${baseUrl}/coordsForUser1`;
@@ -16,7 +16,9 @@ const allSimUrl=`http://${baseUrl}/simulations`;
 const simDaysUrl=`http://${baseUrl}/simDays`;
 const delSimUrl=`http://${baseUrl}/deleteSim`;
 const startSimUrl=`http://${baseUrl}/startSimulation`;
-const updateStateUrl=`http://${baseUrl}/updateState`;
+const updateScenarioLUrl =`http://${baseUrl}/scenarios`;
+const updateScenarioLimUrl =`http://${baseUrl}/scenarioLimits`;
+const getSimToCompareUrl = `http://${baseUrl}/compare`;
 
 
 export const sendLocations: (list: CoordonatesProps[], token: string) => Promise<string> = (list: CoordonatesProps[], token:string) => {
@@ -62,14 +64,20 @@ export const deleteSim: (token: string, simId:number) => Promise<SimulationProps
   return withLogs(axios.post(delSimUrl,{id: simId}, addTokenConfig(token)),'deleteSimulation');
 }
 
-export const startSim: (token: string, simDays: number, infNo: number, mortality: number, immunity: number, maskEff: number) => Promise<number> = (token: string, simDays: number, infNo: number, mortality: number, immunity: number, maskEff: number) => {
-  return withLogs(axios.post(startSimUrl,{regionId: 14, infOnStart:infNo, dayNo: simDays, mortality, immunity, maskEfficiency: maskEff}, addTokenConfig(token)),'startSimulation');
+export const startSim: (token: string, simDays: number, infNo: number,pop: number, mortality: number, immunity: number, maskEff: number) => Promise<number> = (token: string, simDays: number, infNo: number, pop: number, mortality: number, immunity: number, maskEff: number) => {
+  return withLogs(axios.post(startSimUrl,{regionId: 14, infOnStart:infNo, dayNo: simDays, noUsersToPlayWith:pop, mortality, immunity, maskEfficiency: maskEff}, addTokenConfig(token)),'startSimulation');
 }
 
-export const updateUserState: (token: string, infState: number) => Promise<number> = (token: string, infState: number) => {
-  console.log("in ServerApi")
-  return withLogs(axios.post(updateStateUrl, { id: infState }, addTokenConfig(token)),'updateState');
+export const updateScenariosL: (token: string, green: string, yellow: string, red: string) => Promise<string> = (token: string, green: string, yellow: string, red: string) => {
+  return withLogs(axios.post(updateScenarioLUrl,{green, yellow, red}, addTokenConfig(token)),'update scenarios');
 }
+export const updateScenariosLim: (token: string, green: number, yellow: number, red: number) => Promise<string> = (token: string, green: number, yellow: number, red: number) => {
+  return withLogs(axios.post(updateScenarioLimUrl,{green, yellow, red}, addTokenConfig(token)),'update scenario limits');
+}
+export const getSimToCompare: (token: string, ids: number[]) => Promise<SimulationDayProps[][]> = (token: string, ids: number[]) =>{
+  return withLogs(axios.post(getSimToCompareUrl, {ids: ids}, addTokenConfig(token)),'compare simulations');
+}
+
 
 export function updateLocalStorage<T>(promise: Promise<ResponseProps<T>>, fnName: string): Promise<T> {
   console.log(`${fnName} - started`);

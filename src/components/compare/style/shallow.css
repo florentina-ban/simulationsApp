@@ -1,0 +1,42 @@
+.shallowTable{
+    width: 35vw;
+    height: auto;
+    table-layout: fixed;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    margin-left: 2vw;
+}
+
+#subtitleDiv{
+  font-weight: bolder;
+  font-size: 20px;
+  margin-left: 1vw;
+  margin-top: 2vh;
+  margin-bottom: 1vh;
+}
+td{
+    border-bottom: 2px solid darkgreen;
+    height: 7vh;
+    text-align: center;
+}
+th{
+    height: 7vh;
+    border-bottom: 2px solid darkgreen;
+}
+td.smallerCell{
+    width: 40px;
+}
+th.smallerCell{
+    width: 80px;
+}
+.locations{
+    font-size: 12px;
+}
+.smallerCell{
+    size: 2;
+    width: 40px;
+}
+.smallerForScrollBar{
+    width: 95%;
+    margin-bottom: 4vh;
+}

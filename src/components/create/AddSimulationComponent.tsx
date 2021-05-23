@@ -1,32 +1,21 @@
-import { IonButton, IonCard, IonCardSubtitle, IonCardTitle,IonContent, IonFabButton, IonIcon, IonInput, IonItem, IonLabel, IonList, IonNote, IonPage, IonRange, IonText} from "@ionic/react"
+import { IonButton, IonCard, IonCardTitle,IonContent, IonFabButton, IonIcon, IonInput, IonItem, IonItemDivider, IonLabel, IonList, IonNote, IonPage, IonRange, IonText} from "@ionic/react"
 import React, { useContext, useState } from "react"
 import { AuthContext } from "../login/AuthProvider";
-import { startSim } from "../../utils/ServerApi";
+import { startSim, updateScenariosL, updateScenariosLim } from "../../utils/ServerApi";
 import "./simulation.css";
 import ToolbarComponent from "../menuStuff/ToolbarComponent";
 import AlertComponent from "../menuStuff/AlertComponent";
-import { addOutline, saveOutline } from "ionicons/icons";
-import Draggable, { DraggableEventHandler } from 'react-draggable';
+import { arrowDownOutline, arrowForwardOutline, saveOutline } from "ionicons/icons";
+import { placeTypes } from "../../utils/utils";
+import { RangeChangeEventDetail, RangeValue } from "@ionic/core";
 
-interface PlaceType{
+export interface PlaceType{
     id: number,
     name: string,
     checked: boolean
 }
 
-var placeTypes: PlaceType[] = [
-    {id:0, name: "Administrative", checked: true},
-    {id:1, name: "Schools", checked: true},
-    {id:2, name: "Universities", checked: true},
-    {id:3, name: "Food Stores", checked: true},
-    {id:4, name: "Restaurants", checked: true},
-    {id:5, name: "Churches", checked: true},
-    {id:6, name: "Other Stores", checked: true},
-    {id:7, name: "Relaxation", checked: true},
-    {id:8, name: "Medical", checked: true},
-    {id:9, name: "Transportation", checked: true},
-    {id:10, name: "Lodging", checked: true},
-]
+
 var scenarioGreen: PlaceType[] = [
     {id:0, name: "Administrative", checked: true},
     {id:1, name: "Schools", checked: true},
@@ -40,7 +29,6 @@ var scenarioGreen: PlaceType[] = [
     {id:9, name: "Transportation", checked: true},
     {id:10, name: "Lodging", checked: true},
 ]
-
 var scenarioYellow: PlaceType[] = [
     {id:0, name: "Administrative", checked: true},
     {id:1, name: "Schools", checked: true},
@@ -83,6 +71,7 @@ const AddSimulationComp: React.FC<AddSimFunc> = ({updateSimulations}) => {
     const [startWithInf, setStartWithInf] = useState(0);
     const [noOfDays, setNoOfDays] = useState(0);
     const {token} = useContext(AuthContext)
+    const [population, setPopulation] = useState(0);
 
     const [ mortality, setMortality] = useState(0);
     const [ immunity, setImmunity] = useState(80);
@@ -92,22 +81,12 @@ const AddSimulationComp: React.FC<AddSimFunc> = ({updateSimulations}) => {
     const [yellow, setYellow] = useState(scenarioYellow)
     const [red, setRed] = useState(scenarioRed)
 
-    const [greenL, setGreenL] = useState (1)
-    const [yellowL, setYellowL] = useState(2)
-    const [redL, setRedL] = useState(3)
+    // const [greenL, setGreenL] = useState (1)
+    // const [yellowL, setYellowL] = useState(2)
+    // const [redL, setRedL] = useState(3)
 
-    // const codeTypes = ()=>{
-    //     var list: string[] = []
-    //     simTypeList.forEach(oneSimType=>{
-    //         var type: string=""
-    //         oneSimType.type.forEach(ty => {
-    //             type = ty.checked ? type+ty.id.toString() : type 
-    //         })
-    //         type = type.length==0 ? "0" : type
-    //         list.push(type)
-    //     })
-    //     return list;
-    // }
+    const [limits, setLimits] = useState({lower: 2, upper: 4})
+    // const [limitsR, setLimitsR] = useState({lower: 4, upper: 10})
 
     const updateAlertComp = (mess: string, isErr: boolean) => {
         setMessage(mess)
@@ -116,7 +95,7 @@ const AddSimulationComp: React.FC<AddSimFunc> = ({updateSimulations}) => {
 
     const startSimulation = () => {
         if (startWithInf>0 && noOfDays>0){
-            startSim(token,noOfDays,startWithInf,mortality, immunity, maskEff).then(val=>{
+            startSim(token,noOfDays,startWithInf,population, mortality, immunity, maskEff).then(val=>{
                 console.log("++++++++++++="+val)
                 if (val==0){
                     console.log("equals")
@@ -141,11 +120,22 @@ const AddSimulationComp: React.FC<AddSimFunc> = ({updateSimulations}) => {
     }
 
     const changeScenarios = () => {
-
+        const greenL = green.filter(val => val.checked).map(x=>x.id).join(",")
+        const yellowL = yellow.filter(val => val.checked).map(x=>x.id).join(",")
+        const redL = red.filter(val => val.checked).map(x=>x.id).join(",")
+        updateScenariosL(token, greenL, yellowL, redL).then(rez=>{
+            updateAlertComp("Scenarios updated", false)
+        }, rez=>{
+            updateAlertComp("Update failed", true)
+        })
     }
     
     const changeLimits = () => {
-
+        updateScenariosLim(token, limits.lower, limits.upper, 10).then(rez=>{
+            updateAlertComp("Scenarios updated", false)
+        }, rez=>{
+            updateAlertComp("Update failed", true)
+        }) 
     }
 
     const changeRed = (id: number, checked: boolean) => {
@@ -166,13 +156,6 @@ const AddSimulationComp: React.FC<AddSimFunc> = ({updateSimulations}) => {
         place!.checked=checked
         setGreen([...green])      
     }
-    // const addSimType = () => {
-    //     simTypeList.splice(0,0,{type: [...openPlaces]});
-    //     setSimtypeList([...simTypeList]);
-    //     const newOpenPlaces = openPlaces.map(place => {return {...place} })
-    //     setOpenPlaces(newOpenPlaces)
-    // }
-
     const updateMessage = (mes:string) =>{
         setMessage("")
     }
@@ -198,6 +181,16 @@ return(
                         <IonLabel className="labelChild">Days</IonLabel>
                         <IonInput slot="end" className="inputNo" value={noOfDays} onIonChange={(e)=> setNoOfDays(+e.detail.value!)}></IonInput>
                     </IonItem>
+                    <IonItem key="simTotalUsersItem" id="simDaysTotleUsersItem"className="simItem">
+                        <IonLabel className="labelChild">Population</IonLabel>
+                        <IonInput slot="end" className="inputNo" value={ population==0? "auto" : population} onIonChange={(e)=> {
+                            if (isNaN(+e.detail.value!)){
+                                setPopulation(0)
+                                console.log("is NAN:" +e.detail.value)
+                            }
+                            else
+                                setPopulation(+e.detail.value!) }}></IonInput>
+                    </IonItem>
                     <IonItem key="dead" className="simItem">
                         <IonLabel>Mortality</IonLabel>
                         <IonRange slot="end" className="inputNo" value={mortality} pin={true} step={1} min={0} max={10} onIonChange={(e)=>setMortality(e.detail.value? +e.detail.value : 0)}>
@@ -219,18 +212,25 @@ return(
                         <IonLabel slot="end">100%</IonLabel>
                         </IonRange>
                     </IonItem>
-                
-                <IonItem id="modalButtons"> 
-                    <IonButton color="warning" size="default" slot="end" onClick={() => startSimulation()}>Start Simulation </IonButton>
-                </IonItem>
+                    <IonItem id="modalButtons"> 
+                        <IonButton color="warning" size="default" slot="end" onClick={() => startSimulation()}>Start Simulation </IonButton>
+                    </IonItem>
             </IonList>
             </IonCard>
             <IonCard id="optionsCart">
                 <IonCardTitle className="title">Other options</IonCardTitle>
-                <IonCardSubtitle className="subtitle1" onClick={()=>setShowScenarios(!showScenarios)}>Open locations based on scenarios</IonCardSubtitle>
+                <IonItem className="subtitle1" onClick={()=>{
+                    setShowScenarios(!showScenarios)}}>
+                        <IonFabButton size="small" color="none"> 
+                        { !showScenarios && 
+                            <IonIcon icon={arrowForwardOutline}></IonIcon>}
+                        { showScenarios && 
+                            <IonIcon icon={arrowDownOutline}></IonIcon>}
+                        </IonFabButton>
+                        Open locations based on scenarios</IonItem>
                { showScenarios && 
                 <div className="flexDivRow" >
-                    <div>
+                    <div >
                     { openPlaces.map( op => 
                         <IonList className="placesList">
                             <IonItem key={op.name} className="location">{op.name}
@@ -243,7 +243,7 @@ return(
                         </IonList>  ) }   
                         </div>
                      <div className="setDimensionsList"> 
-                     <h2>Green</h2>
+                        <h2>Green</h2>
                         <div className="swapCard"> 
                                 { green.filter(op => op.checked).map( op => 
                                 <div className="smallItem" onClick={() => {changeGreen(op.id,false)}}>{op.name}
@@ -267,37 +267,64 @@ return(
                                 </div>
                             ) }
                         </div>
-                        <IonFabButton onClick={changeScenarios} className="saveScenButton" size="small" color="warning" slot="end"><IonIcon  icon={saveOutline}></IonIcon></IonFabButton>
-                    </div> 
+                        <IonFabButton onClick={changeScenarios} className="saveScenButton" size="small" color="warning" slot="end" ><IonIcon  icon={saveOutline}></IonIcon></IonFabButton>
+                    </div>
                     </div>
                 }
-                <IonCardSubtitle className="subtitle1" onClick={()=>setShowLimits(!showLimits)}>Infected limits</IonCardSubtitle>
+                <IonItem className="subtitle1" onClick={()=> {   
+                        setShowLimits(!showLimits)}}>
+                        <IonFabButton size="small" color="none"> 
+                            { !showLimits&& 
+                            <IonIcon icon={arrowForwardOutline}></IonIcon>}
+                            { showLimits && 
+                            <IonIcon icon={arrowDownOutline}></IonIcon>}
+                            </IonFabButton>
+                            Infected limits
+                    </IonItem>
                 { showLimits &&
                     <div >
                         <IonList>
                             < IonItem key="greenLimits">
                                 <IonLabel>Green Scenario</IonLabel>
-                                <IonRange slot="end" className="inputNo" value={greenL} pin={true} step={1} min={0} max={5} onIonChange={(e)=>setMortality(e.detail.value? +e.detail.value : 0)}>
+                                <IonRange slot="end"  dualKnobs={true} className="inputNo" value={{lower: 0, upper:limits.lower}} color="success" pin={true} step={1} min={0} max={10} 
+                                onIonChange={(e)=>{
+                                    const a=JSON.stringify(e.detail.value);
+                                    const b=JSON.parse(a);
+                                    setLimits({lower: b.upper, upper: limits.upper})
+                                }}>
                                 <IonLabel slot="start">0&#8240;</IonLabel>
-                                <IonLabel slot="end">5&#8240;</IonLabel>
+                                <IonLabel slot="end">10&#8240;</IonLabel>
                                 </IonRange>
                             </IonItem>
                             < IonItem key="yellowLimits">
                                 <IonLabel>Yellow Scenario</IonLabel>
-                                <IonRange slot="end" className="inputNo" value={yellowL} pin={true} step={1} min={0} max={5} onIonChange={(e)=>setMortality(e.detail.value? +e.detail.value : 0)}>
+                                <IonRange slot="end"  dualKnobs={true} className="inputNo" value={limits} color="warning" pin={true} step={1} min={0} max={10} 
+                                onIonChange={(e: CustomEvent<RangeChangeEventDetail>)=>{
+                                    const a=JSON.stringify(e.detail.value);
+                                    const b=JSON.parse(a);
+                                    setLimits({lower: b.lower, upper: b.upper})
+                                }
+                                }>
                                 <IonLabel slot="start">0&#8240;</IonLabel>
-                                <IonLabel slot="end">5&#8240;</IonLabel>
+                                <IonLabel slot="end">10&#8240;</IonLabel>
                                 </IonRange>
                             </IonItem>
                             < IonItem key="redLimits">
                                 <IonLabel>Red Scenario</IonLabel>
-                                <IonRange slot="end" className="inputNo" value={redL} pin={true} step={1} min={0} max={5} onIonChange={(e)=>setMortality(e.detail.value? +e.detail.value : 0)}>
+                                <IonRange slot="end" dualKnobs={true} className="inputNo" color="danger" value={{lower: limits.upper, upper: 10}} pin={true} step={1} min={0} max={10} 
+                                onIonChange={(e)=>{
+                                    const a=JSON.stringify(e.detail.value);
+                                    const b=JSON.parse(a);
+                                    setLimits({ ...limits, upper: b.lower})
+                                    
+                                }}>
                                 <IonLabel slot="start">0&#8240;</IonLabel>
-                                <IonLabel slot="end">5&#8240;</IonLabel>
+                                <IonLabel slot="end">10&#8240;</IonLabel>
                                 </IonRange>
                             </IonItem>
-                            <IonFabButton onClick={changeLimits} className="saveScenButton" size="small" color="warning" slot="end"><IonIcon  icon={saveOutline}></IonIcon></IonFabButton>
-
+                            <IonItem key="changeLimitsButton">
+                                <IonFabButton onClick={changeLimits} className="saveScenButton" size="small" color="warning" slot="end"><IonIcon  icon={saveOutline}></IonIcon></IonFabButton>
+                            </IonItem>
                             </IonList> 
                     </div>
                 }

@@ -15,7 +15,6 @@
     width: 25vw;
     height: 38vh;   
     position: relative;
-    /* top: -60vh;     */
     display: inline-block;
     border: springgreen 2px solid;
 }
@@ -28,10 +27,8 @@
     display: flex;
     justify-content: space-between;
 }
-#topDiv{
+#SimCompTopDiv  {
     display: flex;
     width: 100vw;
     height: 40vh;
-    /* border: springgreen 2px solid; */
-
 }

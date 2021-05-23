@@ -1,0 +1,39 @@
+
+.compareRoot{
+    width: 100% !important;
+    height: 90% !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    overflow-y: hidden;
+}
+#leftDivComp{
+    width: 38vw !important;
+    height: 90vh !important;
+    max-height: 90vh !important;
+    flex-direction: column;
+    display: flex;
+    margin-left: 0.6vw;
+    align-items: flex-start;
+    padding-bottom: 2vh;
+    overflow-y: auto;
+}
+#rightDiv{
+    border: 2px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.border{
+    border: 2px solid black;
+}
+#shallowDiv{
+    margin-top: 2vh;
+}
+#leftDivComp::-webkit-scrollbar{
+    width: 4px;
+}
+#leftDivComp::-webkit-scrollbar-thumb {
+    background-color: darkgreen;
+    outline: 1px solid darkorange;
+  }
