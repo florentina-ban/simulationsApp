@@ -12,6 +12,16 @@ const ShalowCompare: React.FC<SelectedSims> = ({sims}) => {
     const [showTable , setShowTable] = useState(false);
     const [showOpenLoc, setShowOpenLoc] = useState(false);
     const [showLimits, setShowLimits] = useState(false)
+    const [options, setOptions] = useState(-1);
+
+
+    const saveOptions = (e: React.MouseEvent<HTMLTableRowElement, MouseEvent>)=>{
+        if (e.type === 'click') {
+            console.log('Left click');
+          } else if (e.type === 'contextmenu') {
+            console.log('Right click');
+          }
+    }
 
     return (
         <div>
@@ -33,17 +43,17 @@ const ShalowCompare: React.FC<SelectedSims> = ({sims}) => {
             <tr key="thead">
                 <th key="region">Region</th>
                 <th key="infStart">Infected start</th>
-                <th key="populations">Population</th>
-                <th key="days">Time(Days)</th>
-                <th key="immunity">Immunity</th>
-                <th key="mortality">Mortality</th>
+                <th key="populations">Population size</th>
+                <th className="smallerCell" key="days">Time (Days)</th>
+                <th key="immunity">Immunity (%)</th>
+                <th key="mortality">Mortality (%)</th>
                 <th key="maskEff">Mask efficiency</th>
             </tr>
             </thead>
             <tbody>
             {sims.map(sim=>{
                 return (
-                    <tr key={sim.id}>
+                    <tr key={sim.id} onClick={(e)=>saveOptions(e)}>
                         <td key={"region"+sim.id}>{sim.regionName}</td>
                         <td key={"infStart"+sim.id}>{sim.startInf}</td>
                         <td key={"populations"+sim.id}>{sim.noUsers}</td>
@@ -71,19 +81,21 @@ const ShalowCompare: React.FC<SelectedSims> = ({sims}) => {
             { showOpenLoc &&
                 <table className="shallowTable">    
                     <thead>
-                        <th className="smallerCell">Region</th>
-                        <th>Green</th>
-                        <th>Yellow</th>
-                        <th>Red</th>
+                        <tr key="locationHead">
+                            <th key="r1" className="smallerCell2">Region</th>
+                            <th key="g1" >Green</th>
+                            <th key="y1">Yellow</th>
+                            <th key="re1">Red</th>
+                        </tr>
                     </thead>
                     <tbody>
                         {sims.map(sim=>{
                             return (
-                            <tr>
-                                <td className="smallerCell">{sim.regionName }</td>
-                                <td className="locations">{decodeLocationType(sim.greens)} </td>
-                                <td className="locations">{decodeLocationType(sim.greens)} </td>
-                                <td className="locations">{decodeLocationType(sim.reds)}</td>
+                            <tr key={"locations"+sim.id}>
+                                <td key={"r1"+sim.id} className="smallerCell">{sim.regionName }</td>
+                                <td key={"g1"+sim.id} className="locations">{decodeLocationType(sim.greens)} </td>
+                                <td key={"y1"+sim.id} className="locations">{decodeLocationType(sim.yellows)} </td>
+                                <td key={"re1"+sim.id} className="locations">{decodeLocationType(sim.reds)}</td>
                             </tr> )
                         })}
                     </tbody>
@@ -103,19 +115,21 @@ const ShalowCompare: React.FC<SelectedSims> = ({sims}) => {
             { showLimits &&
                 <table className="shallowTable lastTable">
                     <thead>
-                        <th className="smallerCell">Region</th>
-                        <th>Green (&#8240;)</th>
-                        <th>Yellow (&#8240;)</th>
-                        <th>Red (&#8240;)</th>
+                        <tr key="limitsHead">
+                        <th key="r2">Region</th>
+                        <th key="g2">Green (&#8240;)</th>
+                        <th key="y2">Yellow (&#8240;)</th>
+                        <th key="re2">Red (&#8240;)</th>
+                        </tr>
                     </thead>
                     <tbody>
                         {sims.map(sim=>{
                             return (
-                            <tr>
-                                <td className="smallerCell">{sim.regionName }</td>
-                                <td >{sim.greenl} </td>
-                                <td >{sim.yellowl} </td>
-                                <td >{sim.redl}</td>
+                            <tr key={"limits"+sim.id}>
+                                <td key={"r2"+sim.id} className="smallerCell">{sim.regionName }</td>
+                                <td key={"g2"+sim.id}>{sim.greenl} </td>
+                                <td key={"y2"+sim.id}>{sim.yellowl} </td>
+                                <td key={"re2"+sim.id}>{sim.redl}</td>
                             </tr> )
                         })}
                     </tbody>

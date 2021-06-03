@@ -184,19 +184,25 @@ h2{
 #chartComponent{
     position: absolute;
     width: 100vw !important;
-    height: 50vh;
-    top: 39vh;
+    height: 46vh;
+    top: 43vh;
     overflow-y: auto;  
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-
+    /* border: 1px solid darkorange; */
 }
+#chartComponent::-webkit-scrollbar{
+    width: 4px;
+}
+#chartComponent::-webkit-scrollbar-thumb {
+    background-color: darkgreen;
+    outline: 1px solid darkorange;
+  }
 .controlChart{
-    width: 45% !important;
-    height: 100% !important;
+    width: 43vw !important;
+    height: fit-content;
     /* border: 2px solid black; */
-
 }
 .subtitle1{
     margin-left: 2.5%;

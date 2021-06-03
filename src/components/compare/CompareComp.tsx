@@ -1,9 +1,9 @@
 import { IonCard, IonContent } from "@ionic/react";
 import React, { useContext, useEffect, useState } from "react";
-import { getAllSimulations, getSimToCompare } from "../../utils/ServerApi";
-import { AuthContext } from "../login/AuthProvider";
-import AlertComponent from "../menuStuff/AlertComponent";
-import ToolbarComponent from "../menuStuff/ToolbarComponent";
+import { getAllSimulations, getSimToCompare } from "../../services/ServerApi";
+import { AuthContext } from "../authentification/AuthProvider";
+import AlertComponent from "../toolbar/AlertComponent";
+import ToolbarComponent from "../toolbar/ToolbarComponent";
 import { SimulationDayProps, SimulationProps } from "../view/SimulationComp";
 import InfectedChartComponent from "./InfectedChartComp";
 import ResultsComponent from "./ResultsComp";
@@ -77,9 +77,9 @@ return(
             </IonCard>
             <div id="rightDiv">
             <InfectedChartComponent list={daysToCompare} sims={simForCharts}/>
-            <div>
+            {/* <div > */}
             <ResultsComponent list={daysToCompare} sims={simForCharts}/>
-            </div>
+            {/* </div> */}
             </div>
         </div>
     </IonContent>

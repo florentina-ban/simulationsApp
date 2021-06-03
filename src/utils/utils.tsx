@@ -41,7 +41,7 @@ export function withLogs<T>(promise: Promise<ResponseProps<T>>, fnName: string):
 
   export function decodeLocationType (list: string){
     const arr: string[] = []
-    var text: string=''
+    console.log(list)
       const types = list.split(',').forEach(type=>{
         if (type.length>0){
           const placeType = placeTypes.filter(t=>t.id==(+type))[0];
@@ -101,7 +101,7 @@ export function getCartData(daysList: SimulationDayProps[], label: string, indx:
     borderColor: chartColors[indx],
     borderWidth: 1,
     pointBorderWidth: 1,
-    pointRadius: 3,
+    pointRadius: 4,
     hoverBackgroundColor: '#f2f531',
   }) 
 }

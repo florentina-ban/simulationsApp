@@ -30,6 +30,7 @@
     height: 43vh;
     overflow-y: auto;
     overflow-x: hidden;
+
     /* border: black 2px solid; */
 }
 #rightDataDiv::-webkit-scrollbar{
@@ -38,4 +39,56 @@
 #rightDataDiv::-webkit-scrollbar-thumb {
     background-color: darkgreen;
     outline: 1px solid darkorange;
+  }
+
+  /* resultComponent */
+
+  .otherDeepComp{
+      margin-left: 1vw;
+      width: 60vw;
+      height:40vh;
+      /* border: 2px solid red; */
+  }
+  #summaryDiv{
+      width: 27vw;
+      height: 35vh;
+      /* border: 2px solid blue; */
+      overflow-y: auto;
+  }
+
+  #summaryDiv::-webkit-scrollbar{
+    width: 4px;
+}
+#summaryDiv::-webkit-scrollbar-thumb {
+    background-color: darkgreen;
+    outline: 1px solid darkorange;
+  }
+
+  #otherChart{
+    width: 30vw;
+    /* border: 2px solid blue; */
+  }
+  .flexDivRedsults{
+      margin-top: 4vh;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+  }
+  #summaryTable{
+      width: 26vw;
+      /* border: 2px solid blue; */
+  }
+  #summaryTitle{
+      font-weight: bolder;
+      margin-top: 2%;
+      margin-bottom: 2%;
+  }
+  .smallTH{
+      width: 5vw;
+  }
+  .smallerTH{
+      width: 3vw;
+  }
+  .upperTh{
+      width: 7vw;
   }

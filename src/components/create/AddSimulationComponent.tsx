@@ -1,10 +1,10 @@
 import { IonButton, IonCard, IonCardTitle,IonContent, IonFabButton, IonIcon, IonInput, IonItem, IonItemDivider, IonLabel, IonList, IonNote, IonPage, IonRange, IonText} from "@ionic/react"
 import React, { useContext, useState } from "react"
-import { AuthContext } from "../login/AuthProvider";
-import { startSim, updateScenariosL, updateScenariosLim } from "../../utils/ServerApi";
+import { AuthContext } from "../authentification/AuthProvider";
+import { startSim, updateScenariosL, updateScenariosLim } from "../../services/ServerApi";
 import "./simulation.css";
-import ToolbarComponent from "../menuStuff/ToolbarComponent";
-import AlertComponent from "../menuStuff/AlertComponent";
+import ToolbarComponent from "../toolbar/ToolbarComponent";
+import AlertComponent from "../toolbar/AlertComponent";
 import { arrowDownOutline, arrowForwardOutline, saveOutline } from "ionicons/icons";
 import { placeTypes } from "../../utils/utils";
 import { RangeChangeEventDetail, RangeValue } from "@ionic/core";

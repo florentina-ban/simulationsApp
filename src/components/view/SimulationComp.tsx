@@ -1,17 +1,16 @@
 import { IonButton, IonCard,IonCardTitle, IonContent, IonFabButton, IonIcon, IonItem, IonLabel, IonNote, IonPage, IonSelect, IonSelectOption, IonText } from "@ionic/react";
 import React, { useContext, useEffect, useState } from "react";
-import { arrowBack, arrowForward, barChartOutline } from "ionicons/icons";
 
-import { AuthContext } from "../login/AuthProvider";
-import ToolbarComponent from "../menuStuff/ToolbarComponent";
-import { MyRouteMap } from "../myRoutes/Routes";
-import { deleteSim, getAllSimulations, getSimulationDays } from "../../utils/ServerApi";
-import AlertComponent from "../menuStuff/AlertComponent";
+import { AuthContext } from "../authentification/AuthProvider";
+import ToolbarComponent from "../toolbar/ToolbarComponent";
+import { deleteSim, getAllSimulations, getSimulationDays } from "../../services/ServerApi";
+import AlertComponent from "../toolbar/AlertComponent";
 import ChartsComp from "./ChartComponent";
 
 import "./style/simulation.css";
 import "./style/sim.css"
 import "./style/mapCmpCss.css";
+import ViewMapComponent from "./ViewMapComp";
 
 export interface SimulationProps{
     id: number,
@@ -65,13 +64,8 @@ const SimulationComp: React.FC = () => {
     const [selectedSim, setSelectedSim] = useState(emptySim)
     const [simulationDays, setSimulationDays] = useState(emptyDayList)
     const [stateUpdated, setStateUpdated] = useState(false)
-    const [currentDay, setCurrentDay]=useState(0);
     const [message, setMessage] = useState("");
     const [someError, setSomeError] = useState(false);
-    const [noCont, setNoCont] = useState(0);
-    const showNoContacts = (no: number) => {
-        setNoCont(no)
-    }
    
     const getAllSim = (value?: number) =>{
         if (value){
@@ -112,7 +106,6 @@ const SimulationComp: React.FC = () => {
         getSimulationDays(token, selectedSim.id).then(sim=>{
             if (sim){
             setSimulationDays(sim)
-            setCurrentDay(0)
             setStateUpdated(!stateUpdated)
             updateAlertComponent("Got simulation", false)
             }
@@ -122,31 +115,12 @@ const SimulationComp: React.FC = () => {
         })
     }
 
-    const goForward = () => {
-        if (selectedSim.id>0 && currentDay+1<simulationDays.length){
-            console.log(JSON.stringify(simulationDays[currentDay+1]))
-            setCurrentDay(currentDay+1)
-        }
-        else 
-            updateAlertComponent("No more days", true)
-    }
-
-    const goBackward = () => {
-        if (selectedSim.id>0 && currentDay>0){
-            console.log(JSON.stringify(simulationDays[currentDay-1]))
-            setCurrentDay(currentDay-1)
-        }
-        else
-            updateAlertComponent("First day", true)
-    }
-
     const delSim = () => {
         if (selectedSim.id>0)
             deleteSim(token, selectedSim.id).then(sims =>{
                 if (sims){
                     setAllSim(sims)
                     setSelectedSim(emptySim)
-                    setCurrentDay(0)
                     updateAlertComponent("Simulation deleted", false)
                 }
                 else{
@@ -158,10 +132,7 @@ const SimulationComp: React.FC = () => {
     const updateMessage = (mes:string) =>{
         setMessage(mes)
     }
-    console.log("noOfUsers -------------"+selectedSim.noUsers);
-    const infRate = (simulationDays[currentDay]) ? ((simulationDays[currentDay].infNo/selectedSim.noUsers)*100) : Infinity 
-    const infRateReal = isFinite(infRate) ? infRate.toFixed(2) : "--";
-    
+  
     return(
         <IonPage>
         <ToolbarComponent/>
@@ -216,35 +187,7 @@ const SimulationComp: React.FC = () => {
                 </IonCard>
             }
             { simulationDays.length>0 &&
-                <IonCard id="mapDiv">
-                    <div className="daysDiv">
-                            <div className="dayButtons">
-                                <IonFabButton color="warning" size="small" onClick={goBackward}><IonIcon icon={arrowBack}></IonIcon></IonFabButton>
-                                <div className="textBoxSmallMargin">
-                                    <IonText><em><strong>{currentDay+1}</strong></em></IonText>
-                                </div>
-                                <IonFabButton color="warning" size="small" onClick={goForward}><IonIcon icon={arrowForward}></IonIcon></IonFabButton>
-                            </div>
-                        </div>
-                    <div id="infectedDiv">
-                            <div>
-                                <IonNote className="block">Infected</IonNote>
-                                <div className="textBox">
-                                <IonText className="centerText"><em><strong>{
-                                    simulationDays[currentDay].infNo}</strong></em></IonText>
-                                </div>
-                            </div>
-                            <div className="flexDiv">
-                                <IonNote className="block">Inf. Rate</IonNote>
-                                <IonText className="block textBox centerText"><em><strong>{infRateReal}</strong></em></IonText>
-                            </div>
-                            <div className="flexDiv">
-                                <IonNote className="block">Contacts</IonNote>
-                                <IonText className="block textBox centerText"><em><strong>{noCont}</strong></em></IonText>
-                            </div>
-                                </div>
-                    <MyRouteMap forSimulation={true} currentDay={currentDay} onMarkerClick={showNoContacts} route={simulationDays[currentDay].contactPoints.map(cp=> {return {latitude: cp.lat, longitude: cp.lng, timestamp: 0, noEncouters:cp.noEncouters}; })} markPosition={true} />
-                </IonCard>
+               <ViewMapComponent days={simulationDays} sim={selectedSim}/>
             }
         </div>
         { simulationDays.length>0 &&

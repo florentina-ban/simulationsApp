@@ -27,7 +27,10 @@ td.smallerCell{
     width: 40px;
 }
 th.smallerCell{
-    width: 80px;
+    width: 45px;
+}
+th.smallerCell2{
+    width: 60px;
 }
 .locations{
     font-size: 12px;

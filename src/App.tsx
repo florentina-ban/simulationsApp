@@ -21,10 +21,9 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import React from 'react';
-import Login from './components/login/Login';
-import { AuthProvider } from './components/login/AuthProvider';
-import RoutesComponet from './components/myRoutes/RoutesComponent';
-import { PrivateRoute } from './components/login/PrivateRoute';
+import Login from './components/authentification/Login';
+import { AuthProvider } from './components/authentification/AuthProvider';
+import { PrivateRoute } from './components/authentification/PrivateRoute';
 import SimulationComp from './components/view/SimulationComp';
 import { SimulationProvider } from './components/view/SimulationProvider';
 import AddSimulationComp from './components/create/AddSimulationComponent';
@@ -38,7 +37,6 @@ const App: React.FC = () => (
           <Route exact path="/login" component={Login}></Route>
               <Route exact path="/" render={() => <Redirect to="/create" />} />
               <PrivateRoute exact path="/create" component={AddSimulationComp} />
-              <PrivateRoute exact path="/routes" component={RoutesComponet} />
               <PrivateRoute exact path="/view" component={SimulationComp}/>
               <PrivateRoute exact path="/compare" component={CompareComp}/>
               <SimulationProvider>
@@ -47,7 +45,6 @@ const App: React.FC = () => (
         </AuthProvider>
       </IonRouterOutlet>
     </IonReactRouter>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYRUwvMWxSjJgyG1MFleM4v692c3u0io4"></script>
   </IonApp>
 );
 

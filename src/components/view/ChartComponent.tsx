@@ -1,4 +1,3 @@
-import { IonCard } from "@ionic/react"
 import React from "react"
 import { Line } from "react-chartjs-2";
 import { SimulationFull } from "./SimulationComp";
@@ -18,7 +17,7 @@ const ChartsComp: React.FC<SimulationFull> = ({days}) => {
             borderColor: '#f01313',
             borderWidth: 1,
             pointBorderWidth: 1,
-            pointRadius: 3,
+            pointRadius: 4,
             hoverBackgroundColor: '#f2f531',
         }], 
     }
@@ -32,7 +31,7 @@ const barDataImmMo =  {
         backgroundColor: '#0990e3',
         borderColor: '#04127d',
         borderWidth: 1,
-        pointRadius: 3,
+        pointRadius: 4,
         hoverBackgroundColor: '#07e3df',
         hoverBorderColor: '#0990e3',
          },
@@ -41,7 +40,7 @@ const barDataImmMo =  {
          backgroundColor: '#7d807e',
          borderColor: '#393b3a',
          borderWidth: 1,
-         pointRadius: 3,
+         pointRadius: 4,
          hoverBackgroundColor: '#07e3df',
          hoverBorderColor: '#0990e3',
           }  ], 
@@ -55,33 +54,16 @@ const lineOptions = {
         }
     },
 }
-// const reducer = (acc: number, val: number) => acc + val;
-// const infections = simulationDays.map(simD=>simD.noNewInfected).reduce(reducer,0)
-// const immunes = simulationDays.map(simD=>simD.noImuneUsers).reduce(reducer,0)
-// const healthies = selectedSim.noUsers - infections - immunes
 
-// const pieData={ 
-//     labels: ['Infected','Healthy','Immune'],
-//     datasets: [
-//         {data: [infections, healthies, immunes],
-//         backgroundColor: ['#f08d13','#05e30c','#0990e3'],
-//         borderColor: ['#f01313','#046107','#04127d'],
-//         borderWidth: 2,
-//         hoverBackgroundColor: '#f2f531',
-//     }],
-// }
     return( 
-        <IonCard id="chartComponent">
+        <div id="chartComponent">
             <div className="controlChart">
                 <Line data={barDataInf} type="line" options={lineOptions} className="lineChart"></Line>
             </div>
-                        {/* <div id='pieDiv'>
-                            <Pie data={pieData} type="pie"></Pie>
-                        </div> */}
             <div className="controlChart">
                 <Line data={barDataImmMo} type="line" className="lineChart"></Line>
             </div>
-        </IonCard> )
+        </div> )
 }
 
 export default ChartsComp;

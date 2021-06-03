@@ -1,10 +1,10 @@
 import { IonButton, IonCard, IonCardContent, IonContent, IonInput, IonItem, IonList, IonNote, IonPage, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useContext,  useState } from 'react';
-import ToolbarComponent from '../menuStuff/ToolbarComponent';
+import ToolbarComponent from '../toolbar/ToolbarComponent';
 import Region from './RegionProps';
-import { MyRouteMap } from '../myRoutes/Routes';
-import { sendBoundaries } from '../../utils/ServerApi';
-import { AuthContext } from '../login/AuthProvider';
+import { MyRouteMap } from '../map/MapComponent';
+import { sendBoundaries } from '../../services/ServerApi';
+import { AuthContext } from '../authentification/AuthProvider';
 
 export interface OrderedSimpleCoordProps {
   lat: number,
