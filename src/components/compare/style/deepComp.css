@@ -25,6 +25,9 @@
     border-radius: 60%;
     /* background-color: black; */
 }
+.addMargins{
+    margin-left: 40%;
+}
 #rightDataDiv{
     width: 17vw;
     height: 43vh;

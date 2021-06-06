@@ -6,7 +6,7 @@ import Region from '../components/regions/RegionProps';
 import {SimulationDayProps, SimulationProps } from '../components/view/SimulationComp';
 
 //export const baseUrl = '192.168.100.2:8083/staySafe';
-export const baseUrl = '34.134.243.62:3389/staySafe';
+export const baseUrl = '35.238.131.232:3389/staySafe';
 const addLocationsUrl = `http://${baseUrl}/addLocations`;
 const addregionUrl = `http://${baseUrl}/addRegion`;
 const coordsUrl = `http://${baseUrl}/coordsForUser1`;
@@ -64,8 +64,8 @@ export const deleteSim: (token: string, simId:number) => Promise<SimulationProps
   return withLogs(axios.post(delSimUrl,{id: simId}, addTokenConfig(token)),'deleteSimulation');
 }
 
-export const startSim: (token: string, simDays: number, infNo: number,pop: number, mortality: number, immunity: number, maskEff: number) => Promise<number> = (token: string, simDays: number, infNo: number, pop: number, mortality: number, immunity: number, maskEff: number) => {
-  return withLogs(axios.post(startSimUrl,{regionId: 14, infOnStart:infNo, dayNo: simDays, noUsersToPlayWith:pop, mortality, immunity, maskEfficiency: maskEff}, addTokenConfig(token)),'startSimulation');
+export const startSim: (token: string, simDays: number, infNo: number,pop: number, mortality: number, immunity: number, maskEff: number, name: string) => Promise<number> = (token: string, simDays: number, infNo: number, pop: number, mortality: number, immunity: number, maskEff: number, name: string) => {
+  return withLogs(axios.post(startSimUrl,{regionId: 14, infOnStart:infNo, dayNo: simDays, noUsersToPlayWith:pop, mortality, immunity, maskEfficiency: maskEff, name: name}, addTokenConfig(token)),'startSimulation');
 }
 
 export const updateScenariosL: (token: string, green: string, yellow: string, red: string) => Promise<string> = (token: string, green: string, yellow: string, red: string) => {

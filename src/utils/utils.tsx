@@ -75,8 +75,22 @@ export function getdaysList(maxNo: number){
 export const chartColors = ["rgb(0, 250, 250,0.4)","rgb(0, 117, 250,0.4)","rgb(153, 0, 255,0.4)",
           "rgb(255, 0, 230,0.4)","rgb(125, 121, 124,0.4)","rgb(82, 0, 61,0.4)"]
 
-export function getCartData(daysList: SimulationDayProps[], label: string, indx: number){
-  const data = daysList.map(sim=>sim.infNo)
+function getTotalInf(daysList: SimulationDayProps[]){
+  const data: number[] = [];
+  let sum=0;
+  for (var i=0; i<daysList.length; i++){
+    sum +=daysList[i].noNewInfected;
+    data.push(sum)
+  }
+  return data
+}
+
+function getNewInfected(dayList: SimulationDayProps[]){
+  return dayList.map(d=>d.noNewInfected)
+}
+
+export function getCartData(daysList: SimulationDayProps[], label: string, indx: number, type: string){
+  const data = type==='currentInf' ? daysList.map(sim=>sim.infNo) : (type==='totalInf') ? getTotalInf(daysList) : getNewInfected(daysList)
   return(
     { label: label,
       labes: daysList.map(day=> day.dayNo),

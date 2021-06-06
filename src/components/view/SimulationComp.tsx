@@ -1,4 +1,4 @@
-import { IonButton, IonCard,IonCardTitle, IonContent, IonFabButton, IonIcon, IonItem, IonLabel, IonNote, IonPage, IonSelect, IonSelectOption, IonText } from "@ionic/react";
+import { IonButton, IonCard,IonCardTitle, IonContent, IonFabButton, IonIcon, IonItem, IonLabel, IonNote, IonPage, IonSelect, IonSelectOption, IonSpinner, IonText } from "@ionic/react";
 import React, { useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "../authentification/AuthProvider";
@@ -27,7 +27,8 @@ export interface SimulationProps{
     reds: string,
     greenl: number,
     yellowl: number,
-    redl: number
+    redl: number,
+    name: string,
 }
 
 export interface ContactPointProps{
@@ -57,8 +58,8 @@ const SimulationComp: React.FC = () => {
     const emptyList: SimulationProps[] = [];
     const emptyDayList: SimulationDayProps[] = [];
     const emptySim: SimulationProps = {id: 0, startInf:0, regionName: "", noDays: 0, 
-    noInfUsers: 0, noUsers:0, immunity:0, mortality:0, maskEfficiency:0,
-    greens: "", yellows: "", reds: "", greenl: 0, yellowl: 0, redl: 0  }
+    noInfUsers: 0, noUsers:0, immunity:0, mortality:0, maskEfficiency:0, 
+    greens: "", yellows: "", reds: "", greenl: 0, yellowl: 0, redl: 0, name:""  }
     const {token} = useContext(AuthContext)
     const [allSimulations, setAllSim] = useState(emptyList)
     const [selectedSim, setSelectedSim] = useState(emptySim)
@@ -66,6 +67,7 @@ const SimulationComp: React.FC = () => {
     const [stateUpdated, setStateUpdated] = useState(false)
     const [message, setMessage] = useState("");
     const [someError, setSomeError] = useState(false);
+    const [selectSpinner, setSelectSpinner] = useState(false);
    
     const getAllSim = (value?: number) =>{
         if (value){
@@ -79,7 +81,9 @@ const SimulationComp: React.FC = () => {
                 return
             }
         }
+        
         console.log("token: "+token)
+        setSelectSpinner(true)
         getAllSimulations(token).then(sims =>{
             console.log("sims: " +sims)
             if (sims){
@@ -92,6 +96,7 @@ const SimulationComp: React.FC = () => {
                 setMessage("Get Simulations failed")
                 setSomeError(true)
             }   
+            setSelectSpinner(false)
         })
     }
 
@@ -121,6 +126,7 @@ const SimulationComp: React.FC = () => {
                 if (sims){
                     setAllSim(sims)
                     setSelectedSim(emptySim)
+                    setSimulationDays(emptyDayList)
                     updateAlertComponent("Simulation deleted", false)
                 }
                 else{
@@ -141,10 +147,15 @@ const SimulationComp: React.FC = () => {
             <div id="SimCompTopDiv">
             <IonCard id="simMenu">
                 <IonCardTitle className="title">Choose simulation</IonCardTitle>
-                <IonSelect class="simulationSelector" placeholder={"Choose Simulation"} onIonChange={e => {e.detail.value && setSelectedSim(e.detail.value);}}>
+                <IonSelect class="simulationSelector" placeholder={"Choose Simulation"} onIonChange={e => { 
+                        if (e.detail.value){
+                            setSelectedSim(e.detail.value)
+                            setSimulationDays(emptyDayList)
+                        }
+                        }}>
                     {allSimulations?.map(sim=>{
-                        return <IonSelectOption key={sim.id} value={sim}> 
-                                {sim.regionName} - {sim.startInf}
+                        return <IonSelectOption className="selectOption" key={sim.id} value={sim}> 
+                                {sim.name}
                             </IonSelectOption>
                     })}
                 </IonSelect>
@@ -152,6 +163,9 @@ const SimulationComp: React.FC = () => {
                     <IonButton color="warning" onClick={viewSimulation}>View</IonButton>
                     <IonButton color="warning" onClick={delSim}>Delete</IonButton>
                 </div>
+                {selectSpinner &&
+                    <IonSpinner color="warning" className="alignRight" name='dots' />
+                }
             </IonCard>
             { selectedSim.id>0 &&
                 <IonCard id="detailsCard">

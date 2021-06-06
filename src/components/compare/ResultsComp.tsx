@@ -8,7 +8,7 @@ import './style/deepComp.css'
 const ResultsComponent: React.FC<ListOfListOfDays> = ({list, sims}) => {
     const immDecData = {
         labels: ['immune', 'decesed'],
-        datasets: list.map((days, indx)=>getImmuneDecData(days,sims[indx].regionName+" - "+sims[indx].startInf, indx))
+        datasets: list.map((days, indx)=>getImmuneDecData(days,sims[indx].name, indx))
     }
     console.log(immDecData.datasets)
     const lineoptions = {

@@ -1,10 +1,13 @@
 .simulationSelector{
-    min-width: 90% !important;
-    width: 90% !important;
+    min-width: 30vw !important;
+    max-width: 30vw !important;
     background-color: honeydew;
     margin-top: 2vh;
     margin-bottom: 4vh;
     margin-left: 1vw;
+}
+.selectOption{
+    width: 30vw !important
 }
 .topMargin{
     margin-top: 12%;
@@ -209,6 +212,13 @@ h2{
     height: 100% !important;
     /* border: 2px solid black; */
 
+}
+.chartButtonsDiv{
+    width: 4vw;
+    height: 40vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }
 .subtitle1{
     margin-left: 2.5%;

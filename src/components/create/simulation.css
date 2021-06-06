@@ -57,19 +57,36 @@
     height: 15px;
     margin-right: 4px;
     border-radius: 60%;
+    cursor: pointer;
+    border: 2px solid
 }
+
 h2{
     margin-left: 2vw;
     margin-top: 1%;
 }
 .green{
     background-color: green;
+    border-color: black;
 }
 .yellow{
     background-color: yellow;
+    border-color: black;
 }
 .red{
     background-color: red;
+    border-color: black;
+}
+.disabled{
+    cursor:auto;
+    border-color: gray;
+}
+.alignRight{
+    margin-top: 4%;
+    margin-left: 45%;
+}
+.chageCursor{
+    cursor: move;
 }
 .rowFlex{
     border: 2px solid black;
@@ -132,12 +149,12 @@ h2{
 /* add sim */
 #createSimCard{
     width: 45vw;
-    height: 80vh;
+    height: 85vh;
     border: springgreen solid 2px;
 }
 #optionsCart{
     width: 45vw;
-    height: 80vh;
+    height: 85vh;
     border: springgreen solid 2px;
     overflow-y: auto; 
 }

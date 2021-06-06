@@ -72,6 +72,7 @@ const AddSimulationComp: React.FC<AddSimFunc> = ({updateSimulations}) => {
     const [noOfDays, setNoOfDays] = useState(0);
     const {token} = useContext(AuthContext)
     const [population, setPopulation] = useState(0);
+    const [name , setName] = useState("")
 
     const [ mortality, setMortality] = useState(0);
     const [ immunity, setImmunity] = useState(80);
@@ -81,12 +82,7 @@ const AddSimulationComp: React.FC<AddSimFunc> = ({updateSimulations}) => {
     const [yellow, setYellow] = useState(scenarioYellow)
     const [red, setRed] = useState(scenarioRed)
 
-    // const [greenL, setGreenL] = useState (1)
-    // const [yellowL, setYellowL] = useState(2)
-    // const [redL, setRedL] = useState(3)
-
     const [limits, setLimits] = useState({lower: 2, upper: 4})
-    // const [limitsR, setLimitsR] = useState({lower: 4, upper: 10})
 
     const updateAlertComp = (mess: string, isErr: boolean) => {
         setMessage(mess)
@@ -94,17 +90,14 @@ const AddSimulationComp: React.FC<AddSimFunc> = ({updateSimulations}) => {
     }
 
     const startSimulation = () => {
-        if (startWithInf>0 && noOfDays>0){
-            startSim(token,noOfDays,startWithInf,population, mortality, immunity, maskEff).then(val=>{
-                console.log("++++++++++++="+val)
+        if (startWithInf>0 && noOfDays>0 && name.length>0){
+            startSim(token,noOfDays,startWithInf,population, mortality, immunity, maskEff, name).then(val=>{
                 if (val==0){
                     console.log("equals")
                     updateAlertComp("Simulation stared",false)
-                    // updateSimulations(0);
                 }
                 else{
                     updateAlertComp("Cannot simulate", true);
-                    //updateSimulations(-1)
                 }
             }, ()=>{
                 updateAlertComp("Cannot simulate", true);
@@ -113,9 +106,13 @@ const AddSimulationComp: React.FC<AddSimFunc> = ({updateSimulations}) => {
         else{
             if (startWithInf==0)
                 updateAlertComp("Add infected no", true)
-            else {
-                updateAlertComp("Add simulation days", true)
-            }
+            else 
+                if (noOfDays==0){
+                    updateAlertComp("Add simulation days", true)
+                }
+                else{
+                    updateAlertComp("Add simulation name", true)
+                }
         }
     }
 
@@ -156,8 +153,12 @@ const AddSimulationComp: React.FC<AddSimFunc> = ({updateSimulations}) => {
         place!.checked=checked
         setGreen([...green])      
     }
-    const updateMessage = (mes:string) =>{
+    const updateMessage = () =>{
         setMessage("")
+    }
+
+    const alreadyInList = (list: PlaceType[], locId: number) => {
+        return list.find(el=>el.id==locId)?.checked ? " disabled" : ""
     }
 
 return(
@@ -172,6 +173,10 @@ return(
                     <IonItem key="regionItem" id="regionItem" className="simItem">
                         <IonLabel>Region</IonLabel>
                         <IonText>Cluj-Napoca</IonText>
+                    </IonItem>
+                    <IonItem key="regionItem" id="regionItem" className="simItem">
+                        <IonLabel>Name</IonLabel>
+                        <IonInput slot="end" className="inputNo" value={name} placeholder="Simulation Name" onIonChange={(e)=> setName(e.detail.value!)}></IonInput>
                     </IonItem>
                     <IonItem key="noInfItem" id="noInfItem" className="simItem">
                         <IonLabel className="labelChild">Infected</IonLabel>
@@ -218,7 +223,7 @@ return(
             </IonList>
             </IonCard>
             <IonCard id="optionsCart">
-                <IonCardTitle className="title">Other options</IonCardTitle>
+                <IonCardTitle className="title">Scenarios</IonCardTitle>
                 <IonItem className="subtitle1" onClick={()=>{
                     setShowScenarios(!showScenarios)}}>
                         <IonFabButton size="small" color="none"> 
@@ -235,9 +240,9 @@ return(
                         <IonList className="placesList">
                             <IonItem key={op.name} className="location">{op.name}
                             <div slot="end">
-                            <div className="inl green" onClick={() =>changeGreen(op.id, true)}></div>
-                            <div className="inl yellow" onClick={() =>changeYellow(op.id, true)}></div>
-                            <div className="inl red" onClick={() =>changeRed(op.id, true)}></div>
+                            <div className={"inl green"+alreadyInList(green, op.id)} onClick={() =>changeGreen(op.id, true)}></div>
+                            <div className={"inl yellow"+alreadyInList(yellow, op.id)} onClick={() =>changeYellow(op.id, true)}></div>
+                            <div className={"inl red"+alreadyInList(red, op.id)} onClick={() =>changeRed(op.id, true)}></div>
                             </div>
                             </IonItem>
                         </IonList>  ) }   
@@ -246,24 +251,21 @@ return(
                         <h2>Green</h2>
                         <div className="swapCard"> 
                                 { green.filter(op => op.checked).map( op => 
-                                <div className="smallItem" onClick={() => {changeGreen(op.id,false)}}>{op.name}
-                                    {/* <IonLabel className="smallSize swapElement">{op.name}</IonLabel> */}
+                                <div className="smallItem chageCursor" onClick={() => {changeGreen(op.id,false)}}>{op.name}
                                 </div>
                             ) }
                         </div>
                         <h2>Yellow</h2>
                         <div className="swapCard"> 
                                 { yellow.filter(op => op.checked).map( op => 
-                                <div className="smallItem" onClick={() => {changeYellow(op.id, false)}}>{op.name}
-                                    {/* <IonNote className="smallSize swapElement"></IonNote> */}
+                                <div className="smallItem chageCursor" onClick={() => {changeYellow(op.id, false)}}>{op.name}
                                 </div>
                             ) }
                         </div>
                         <h2>Red</h2>
                         <div className="swapCard"> 
                                 { red.filter(op => op.checked).map( op => 
-                                <div className="smallItem" onClick={() => {changeRed(op.id, false)}}>{op.name}
-                                    {/* <IonNote className="smallSize swapElement">{op.name}</IonNote> */}
+                                <div className="smallItem chageCursor" onClick={() => {changeRed(op.id, false)}}>{op.name}
                                 </div>
                             ) }
                         </div>

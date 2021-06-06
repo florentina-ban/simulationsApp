@@ -15,7 +15,7 @@ const CompareComp: React.FC = () => {
     const emptyDayList: SimulationDayProps[][] = [];
     const emptyList: SimulationProps[] = [];
     const emptySim: SimulationProps = {id: 0, startInf:0, regionName: "", noDays: 0, noInfUsers: 0, 
-    noUsers:0, immunity:0, mortality:0, maskEfficiency:0,
+    noUsers:0, immunity:0, mortality:0, maskEfficiency:0, name: "",
     greens: "", yellows: "", reds: "", greenl: 0, yellowl: 0, redl: 0}
     const {token} = useContext(AuthContext)
 
@@ -23,7 +23,6 @@ const CompareComp: React.FC = () => {
     const [someError, setSomeError] = useState(false);
     
     const [allSimulations, setAllSim] = useState(emptyList)
-    const ids: number[] = []
     const [selectedSimulations, setSelectedSimulations] = useState(emptyList)
     const [simForCharts, setSimForCharts] = useState(emptyList)
     const [daysToCompare, setDaysToCompare] = useState(emptyDayList)
@@ -59,7 +58,6 @@ const CompareComp: React.FC = () => {
     const compare = () => {
         getSimToCompare(token, selectedSimulations.map(v=>v.id)).then(val=>{
             setDaysToCompare(val)
-           
         })
         setSimForCharts(selectedSimulations)
     }
@@ -69,17 +67,15 @@ return(
         <AlertComponent message={message} errorMes={someError} updateMessage={updateMessage}/> 
         <div className="compareRoot">
             <IonCard id="leftDivComp">
-                <SelectSimComponent allSims={allSimulations} selectedSims={selectedSimulations} updateSelectedSims={updateSelectedSims} compare={compare}></SelectSimComponent>
+                <SelectSimComponent allSims={allSimulations} selectedSims={selectedSimulations} updateSelectedSims={updateSelectedSims} compare={compare} ></SelectSimComponent>
                 <div id="shallowDiv">
                     { selectedSimulations.length>0 &&
                     <ShallowCompare sims={selectedSimulations}/>}
                 </div>
             </IonCard>
             <div id="rightDiv">
-            <InfectedChartComponent list={daysToCompare} sims={simForCharts}/>
-            {/* <div > */}
-            <ResultsComponent list={daysToCompare} sims={simForCharts}/>
-            {/* </div> */}
+            <InfectedChartComponent list={daysToCompare} sims={simForCharts} />
+            <ResultsComponent list={daysToCompare} sims={simForCharts} />
             </div>
         </div>
     </IonContent>

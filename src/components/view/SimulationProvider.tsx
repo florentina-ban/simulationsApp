@@ -33,7 +33,6 @@ export const SimulationProvider: React.FC<SimProviderProps> = ({ children }) => 
   const getSim = useCallback<getSimFn>(getSimCallback, []);
   const {token} = useContext(AuthContext);
   useEffect(getSimulationsEfect, [gettingSimulations])
- // useEffect(localStorageEffect, []);
 
   const value = { getSimError, gotSimulations, gettingSimulations, getSim, allSimulations};
   return (

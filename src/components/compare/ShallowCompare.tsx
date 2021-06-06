@@ -41,7 +41,7 @@ const ShalowCompare: React.FC<SelectedSims> = ({sims}) => {
             <table className="shallowTable">
             <thead>
             <tr key="thead">
-                <th key="region">Region</th>
+                <th key="region">Name</th>
                 <th key="infStart">Infected start</th>
                 <th key="populations">Population size</th>
                 <th className="smallerCell" key="days">Time (Days)</th>
@@ -54,7 +54,7 @@ const ShalowCompare: React.FC<SelectedSims> = ({sims}) => {
             {sims.map(sim=>{
                 return (
                     <tr key={sim.id} onClick={(e)=>saveOptions(e)}>
-                        <td key={"region"+sim.id}>{sim.regionName}</td>
+                        <td key={"name"+sim.id}>{sim.name}</td>
                         <td key={"infStart"+sim.id}>{sim.startInf}</td>
                         <td key={"populations"+sim.id}>{sim.noUsers}</td>
                         <td key={"days"+sim.id}>{sim.noDays}</td>
@@ -82,7 +82,7 @@ const ShalowCompare: React.FC<SelectedSims> = ({sims}) => {
                 <table className="shallowTable">    
                     <thead>
                         <tr key="locationHead">
-                            <th key="r1" className="smallerCell2">Region</th>
+                            <th key="r1" className="smallerCell2">Name</th>
                             <th key="g1" >Green</th>
                             <th key="y1">Yellow</th>
                             <th key="re1">Red</th>
@@ -92,7 +92,7 @@ const ShalowCompare: React.FC<SelectedSims> = ({sims}) => {
                         {sims.map(sim=>{
                             return (
                             <tr key={"locations"+sim.id}>
-                                <td key={"r1"+sim.id} className="smallerCell">{sim.regionName }</td>
+                                <td key={"r1"+sim.id} className="smallerCell">{sim.name }</td>
                                 <td key={"g1"+sim.id} className="locations">{decodeLocationType(sim.greens)} </td>
                                 <td key={"y1"+sim.id} className="locations">{decodeLocationType(sim.yellows)} </td>
                                 <td key={"re1"+sim.id} className="locations">{decodeLocationType(sim.reds)}</td>
@@ -116,7 +116,7 @@ const ShalowCompare: React.FC<SelectedSims> = ({sims}) => {
                 <table className="shallowTable lastTable">
                     <thead>
                         <tr key="limitsHead">
-                        <th key="r2">Region</th>
+                        <th key="r2">Name</th>
                         <th key="g2">Green (&#8240;)</th>
                         <th key="y2">Yellow (&#8240;)</th>
                         <th key="re2">Red (&#8240;)</th>
@@ -126,10 +126,10 @@ const ShalowCompare: React.FC<SelectedSims> = ({sims}) => {
                         {sims.map(sim=>{
                             return (
                             <tr key={"limits"+sim.id}>
-                                <td key={"r2"+sim.id} className="smallerCell">{sim.regionName }</td>
-                                <td key={"g2"+sim.id}>{sim.greenl} </td>
-                                <td key={"y2"+sim.id}>{sim.yellowl} </td>
-                                <td key={"re2"+sim.id}>{sim.redl}</td>
+                                <td key={"r2"+sim.id} className="smallerCell">{sim.name }</td>
+                                <td key={"g2"+sim.id}>{"<"}{sim.greenl} </td>
+                                <td key={"y2"+sim.id}>{"<"}{sim.yellowl} </td>
+                                <td key={"re2"+sim.id}>{">"}{sim.yellowl}</td>
                             </tr> )
                         })}
                     </tbody>
