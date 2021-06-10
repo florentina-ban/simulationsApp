@@ -4,7 +4,7 @@
 #optionsCart::-webkit-scrollbar-thumb {
     background-color: darkgreen;
     outline: 1px solid darkorange;
-  }
+}
 .simulationSelector{
     min-width: 90% !important;
     width: 90% !important;

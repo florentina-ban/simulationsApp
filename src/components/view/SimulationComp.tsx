@@ -51,7 +51,8 @@ export interface SimulationDayProps{
 
 export interface SimulationFull{
     days: SimulationDayProps[],
-    options: string
+    options: string,
+    population: number
 }
 
 const SimulationComp: React.FC = () => {  
@@ -85,14 +86,13 @@ const SimulationComp: React.FC = () => {
         console.log("token: "+token)
         setSelectSpinner(true)
         getAllSimulations(token).then(sims =>{
-            console.log("sims: " +sims)
             if (sims){
                 setMessage("Got simulations")
                 setAllSim(sims)
                 setSomeError(false)
             }
             else {
-                setStateUpdated(!stateUpdated) 
+                // setStateUpdated(!stateUpdated) 
                 setMessage("Get Simulations failed")
                 setSomeError(true)
             }   
@@ -111,7 +111,7 @@ const SimulationComp: React.FC = () => {
         getSimulationDays(token, selectedSim.id).then(sim=>{
             if (sim){
             setSimulationDays(sim)
-            setStateUpdated(!stateUpdated)
+            // setStateUpdated(!stateUpdated)
             updateAlertComponent("Got simulation", false)
             }
             else{
@@ -205,7 +205,7 @@ const SimulationComp: React.FC = () => {
             }
         </div>
         { simulationDays.length>0 &&
-            <ChartsComp  options={""} days={simulationDays}/>}
+            <ChartsComp  options={""} days={simulationDays} population={selectedSim.noUsers}/>}
         </IonContent>
         </IonPage>
     );

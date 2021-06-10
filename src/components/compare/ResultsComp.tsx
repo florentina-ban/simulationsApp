@@ -1,6 +1,6 @@
 import { IonItem, IonLabel } from "@ionic/react";
 import { Bar } from "react-chartjs-2";
-import { chartColors, getImmuneDecData } from "../../utils/utils";
+import { chartColors, getImmuneDecData } from "../../utils/prepareData";
 import { ListOfListOfDays } from "./InfectedChartComp";
 
 import './style/deepComp.css'
@@ -10,7 +10,6 @@ const ResultsComponent: React.FC<ListOfListOfDays> = ({list, sims}) => {
         labels: ['immune', 'decesed'],
         datasets: list.map((days, indx)=>getImmuneDecData(days,sims[indx].name, indx))
     }
-    console.log(immDecData.datasets)
     const lineoptions = {
         options:{
         responsive: true,

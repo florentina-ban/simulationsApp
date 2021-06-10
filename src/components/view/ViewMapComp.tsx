@@ -29,7 +29,6 @@ const ViewMapComponent: React.FC<SimDays> = ({days, sim}) =>{
 
     const goForward = () => {
         if (sim.id>0 && currentDay+1<days.length){
-            console.log(JSON.stringify(days[currentDay+1]))
             setCurrentDay(currentDay+1)
         }
         else 
@@ -38,7 +37,6 @@ const ViewMapComponent: React.FC<SimDays> = ({days, sim}) =>{
 
     const goBackward = () => {
         if (sim.id>0 && currentDay>0){
-            console.log(JSON.stringify(days[currentDay-1]))
             setCurrentDay(currentDay-1)
         }
         else
@@ -47,7 +45,7 @@ const ViewMapComponent: React.FC<SimDays> = ({days, sim}) =>{
 
     return (
         <IonCard id="mapDiv">
-        <div className="daysDiv">
+        <div className="daysDiv" key="leftDivOnMap">
                 <div className="dayButtons">
                     <IonFabButton color="warning" size="small" onClick={goBackward}><IonIcon icon={arrowBack}></IonIcon></IonFabButton>
                     <div className="textBoxSmallMargin">
@@ -56,7 +54,7 @@ const ViewMapComponent: React.FC<SimDays> = ({days, sim}) =>{
                     <IonFabButton color="warning" size="small" onClick={goForward}><IonIcon icon={arrowForward}></IonIcon></IonFabButton>
                 </div>
             </div>
-        <div id="infectedDiv">
+        <div id="infectedDiv" key="RightDivOnMap">
             <div id="addMarginTop">
                 <IonNote className="block">Infected</IonNote>
                 <div className="textBox">
@@ -73,7 +71,7 @@ const ViewMapComponent: React.FC<SimDays> = ({days, sim}) =>{
                     <IonText className="block textBox centerText"><em><strong>{noCont}</strong></em></IonText>
                 </div>
             </div>
-        <MyRouteMap forSimulation={true} currentDay={currentDay} onMarkerClick={showNoContacts} route={days[currentDay].contactPoints.map(cp=> {return {latitude: cp.lat, longitude: cp.lng, timestamp: 0, noEncouters:cp.noEncouters}; })} markPosition={true} />
+        <MyRouteMap key={'contactMap'} forSimulation={true} currentDay={currentDay} onMarkerClick={showNoContacts} route={days[currentDay].contactPoints.map(cp=> {return {latitude: cp.lat, longitude: cp.lng, timestamp: 0, noEncouters:cp.noEncouters}; })} markPosition={true} />
     </IonCard>
     )
 }

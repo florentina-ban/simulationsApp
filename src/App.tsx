@@ -28,13 +28,15 @@ import SimulationComp from './components/view/SimulationComp';
 import { SimulationProvider } from './components/view/SimulationProvider';
 import AddSimulationComp from './components/create/AddSimulationComponent';
 import CompareComp from './components/compare/CompareComp';
+import HelpComp from './components/help/HelpComp';
 
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <IonRouterOutlet>
         <AuthProvider>   
-          <Route exact path="/login" component={Login}></Route>
+          <Route exact path="/login" component={Login}/>
+          <Route exact path="/help" component={HelpComp}/>
               <Route exact path="/" render={() => <Redirect to="/create" />} />
               <PrivateRoute exact path="/create" component={AddSimulationComp} />
               <PrivateRoute exact path="/view" component={SimulationComp}/>

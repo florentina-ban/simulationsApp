@@ -174,7 +174,7 @@ return(
                         <IonLabel>Region</IonLabel>
                         <IonText>Cluj-Napoca</IonText>
                     </IonItem>
-                    <IonItem key="regionItem" id="regionItem" className="simItem">
+                    <IonItem key="nameItem" id="regionItem" className="simItem">
                         <IonLabel>Name</IonLabel>
                         <IonInput slot="end" className="inputNo" value={name} placeholder="Simulation Name" onIonChange={(e)=> setName(e.detail.value!)}></IonInput>
                     </IonItem>
@@ -218,7 +218,7 @@ return(
                         </IonRange>
                     </IonItem>
                     <IonItem id="modalButtons"> 
-                        <IonButton color="warning" size="default" slot="end" onClick={() => startSimulation()}>Start Simulation </IonButton>
+                        <IonButton color="warning" size="default" slot="end" onClick={startSimulation}>Start Simulation </IonButton>
                     </IonItem>
             </IonList>
             </IonCard>

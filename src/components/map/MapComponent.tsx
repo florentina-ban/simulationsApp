@@ -37,6 +37,9 @@ export const MyRouteMap = compose<MyRouteProps, any>(
 
 )(props => {
   console.log("contactPointsSize: "+ props.route.length)
+  if (props.route.length>100){
+    props.route.sort((a,b)=>{return a.noEncouters!-b.noEncouters!})
+  }
   return(
     
   <GoogleMap
@@ -45,15 +48,15 @@ export const MyRouteMap = compose<MyRouteProps, any>(
       onClick={props.onMapClick}
   >  
   { props.route &&  props.route.length>0 && props.forSimulation==false &&
-    props.route.map( ({latitude, longitude}) => { 
+    props.route.slice(0,100).map( ({latitude, longitude}) => { 
       const a: google.maps.LatLng = new google.maps.LatLng({lat: latitude, lng: longitude})
-      return <Circle center={a} defaultRadius={15} defaultOptions={ {fillColor:"red", strokeColor: "red"}} /> } ) }
+      return <Circle key={latitude+'_'+longitude} center={a} defaultRadius={15} defaultOptions={ {fillColor:"red", strokeColor: "red"}} /> } ) }
 
       {
         props.route &&  props.route.length>0 && props.forSimulation &&
-        props.route.map( ({latitude, longitude, noEncouters}) => { 
+        props.route.map( ({latitude, longitude, noEncouters, coord_id}) => { 
           const a: google.maps.LatLng = new google.maps.LatLng({lat: latitude, lng: longitude})
-          return <Circle center={a} defaultRadius={noEncouters!} onClick={() => {props.onMarkerClick!(noEncouters)}} defaultOptions={ {fillColor:"red", strokeColor: "red"}} /> } ) }
+          return <Circle key={coord_id} center={a} defaultRadius={noEncouters!>150 ? 150 : noEncouters} onClick={() => {props.onMarkerClick!(noEncouters)}} defaultOptions={ {fillColor:"red", strokeColor: "red"}} /> } ) }
     
   </GoogleMap> 
 )})

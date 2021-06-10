@@ -1,4 +1,4 @@
-import { chartColors, getCartData, getdaysList } from '../../utils/utils'
+import { chartColors, getCartData, getdaysList } from '../../utils/prepareData'
 import { SimulationDayProps, SimulationProps } from '../view/SimulationComp'
 import { Bar, Line } from "react-chartjs-2";
 import './style/deepComp.css'
@@ -23,7 +23,7 @@ const InfectedChartComponent: React.FC<ListOfListOfDays> = ({list, sims}) => {{
 
     const infectedData = {
             labels: days,
-            datasets: list.map((days, indx)=>getCartData(days,sims[indx].name, indx, "currentInf"))
+            datasets: list.map((days, indx)=>getCartData(days,sims[indx].name, indx, "currentInf", 0))
     }
     
     const lineoptions = {
@@ -38,7 +38,6 @@ const InfectedChartComponent: React.FC<ListOfListOfDays> = ({list, sims}) => {{
     const maxInfPerday = list.map(val=>{
         const allNumbers = val.map(elem=>elem.noNewInfected)
         const max=Math.max(...allNumbers)
-        console.log("numbers: "+JSON.stringify(allNumbers))
         return { maxNewInf: max };
 
     })
@@ -76,13 +75,11 @@ const InfectedChartComponent: React.FC<ListOfListOfDays> = ({list, sims}) => {{
                         <IonFabButton onClick={downloadChart} slot="start" size="small" color="warning"><IonIcon icon={saveOutline}></IonIcon></IonFabButton>
                         { type==0 &&
                         <IonFabButton slot="end" size="small" color="warning" onClick={()=>{
-                                        console.log("insideSetChart")
                                         setType(1)
                                         }}><IonIcon icon={barChartOutline}></IonIcon></IonFabButton>
                         } 
                         { type==1 &&
                         <IonFabButton slot="end" size="small" color="warning" onClick={()=>{
-                                        console.log("insideSetChart")
                                         setType(0)
                                         }}><IonIcon icon={analyticsOutline}></IonIcon></IonFabButton>
                         } 

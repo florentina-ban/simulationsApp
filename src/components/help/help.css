@@ -1,0 +1,26 @@
+#rootDiv{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+.comp{
+    width: 30vw !important;
+    overflow-y: auto;
+    border: springgreen solid 2px;
+    height: 85vh;
+}
+.comp::-webkit-scrollbar{
+    width: 4px;
+}
+.comp::-webkit-scrollbar-thumb {
+    background-color: darkgreen;
+    outline: 1px solid darkorange;
+}
+.sublist1{
+    padding-left: 10%;
+}
+.title{
+    font-weight: bolder;
+    margin-top: 5%;
+}
